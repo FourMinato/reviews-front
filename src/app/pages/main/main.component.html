@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&family=Prompt:wght@300;400;500;700&family=Mitr:wght@300;400;500;700&family=Noto+Sans+Thai:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Kanit', 'Prompt', 'Mitr', 'Noto Sans Thai', sans-serif;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    height: 100dvh;
+    max-width: 1096px;
+    width: 85%;
+    margin: 0 auto;
+    font-size: 1rem;
+}
+
+header,
+footer {
+    width: 100%;
+    height: 4rem;
+}
+
+main {
+    border-top: 2px solid black;
+    border-bottom: 2px solid black;
+    flex-grow: 1;
+}
+
+nav {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+a:hover{
+    cursor: pointer;
+}
+
+.nav-buttons {
+    display: flex;
+    gap: 1rem;
+}
+
+.contact-btn {
+    padding: 0.5rem 1.5rem;
+    border: none;
+    color: black;
+    cursor: pointer;
+    font-size: 1.1rem;
+    border-radius: 5px;
+    background-color: white;
+    transition: background-color 0.3s;
+}
+.contact-btn:hover {
+  background-color: black;
+  color: white;
+}
+.login-btn {
+    padding: 0.5rem 1.5rem;
+    border: none;
+    cursor: pointer;
+    font-size: 1.1rem;
+    border-radius: 5px;
+    background-color: #ED5565;
+    color: white;
+}
+.logout-btn {
+    padding: 0.5rem 1.5rem;
+    border: none;
+    cursor: pointer;
+    font-size: 1.1rem;
+    border-radius: 5px;
+    background-color: #ED5565;
+    color: white;
+}
+
+.content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    
+}
+
+.title {
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.msu {
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.border-descriptions {
+    margin-top: 1.5rem;
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    text-align: center;
+    line-height: 1.5;
+}
+
+/* Search Container */
+.search-container {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    margin-top: 2rem;
+}
+
+.search-input {
+    width: 100%;
+    padding: 1rem 70px 1rem 1.5rem;
+    font-size: 1.1rem;
+    border: 2px solid #6d6d6d;
+    border-radius: 10px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.search-input:focus {
+    border-color: black;
+}
+
+.search-btn {
+    position: absolute;
+    right: 7px;
+    top: 7px;
+    bottom: 7px;
+    padding: 0;
+     background-color: #50C878;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 55px;
+    height: auto;
+}
+
+.search-btn:hover {
+     background-color: #48C9B0  ;
+    transform: scale(1.05);
+}
+
+.search-btn span {
+    font-size: 1.8rem;
+}
+
+/* Category Section */
+.select-title {
+    align-self: flex-start;
+    width: 100%;
+    max-width: 85%;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.select-title span {
+    font-size: clamp(1.2rem, 2.5vw, 1.5rem);
+    font-weight: 500;
+    color: #222;
+}
+
+.category-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 100%;
+    margin: 0 auto;
+    max-width: 85%;
+    align-self: flex-start;
+    padding: 0 1rem;
+}
+
+.category-checkboxes {
+    display: contents;
+}
+
+/* ซ่อน checkbox จริง */
+.category-checkboxes input[type="checkbox"] {
+    display: none;
+}
+
+/* Style สำหรับ label */
+.category-checkboxes label {
+    padding: 0.7rem 1.5rem;
+    border: 2px solid black;
+    border-radius: 8px;
+    background-color: white;
+    color: black;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    user-select: none;
+    white-space: nowrap;
+}
+
+.category-checkboxes label:hover {
+    background-color: #f0f0f0;
+}
+
+.category-checkboxes input[type="checkbox"]:checked + label {
+    background-color: #ED5565  ;
+    color: white;
+    border-color: #ED5565;
+}
+
+/* ปุ่มค้นหา */
+.category-search-btn {
+    padding: 0.7rem 2.7rem;
+    background-color: #ED5565;
+    color: white;
+    border: 2px solid #ED5565;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    
+}
+
+.category-search-btn:hover {
+    background-color: #E57373 ;
+    border-color: #E57373 ;
+}
+
+.category-search-btn:active {
+    transform: scale(0.98);
+}
+  /* --- Styles สำหรับ Dropdown Menu (ส่วนที่เพิ่มใหม่) --- */
+  .dropdown {
+    position: relative;
+    display: inline-block;
+}
+button{
+    cursor: pointer;
+}
+
+.menu-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1.5rem ;
+    font-size: 1.1rem;
+    border: none;
+    background-color: transparent;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.menu-btn:hover {
+    background-color:#FFCE54   ;
+    color: white;
+}
+
+.menu-btn:active {
+    background-color:#FFCE54   ;
+    color: white;
+}
+
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0; /* ให้เมนูชิดขวาของปุ่ม */
+    background-color: #ffffff;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 10;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    overflow: hidden;
+    /* margin-top: 5px; */
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    font-size: 1rem;
+        display: flex;
+    align-items: center;
+    justify-content: space-between; /* ข้อความอยู่ซ้าย จุดอยู่ขวา */
+    transition: background-color 0.2s;
+}
+
+.dropdown-content a:hover {
+    background-color:#FFCE54   ;
+    color: white;
+}
+
+
+/* แสดง dropdown เมื่อเอาเมาส์ชี้ */
+.dropdown:hover .dropdown-content  {
+    display: block;
+}
+.dropdown-content.show {
+    display: block;
+}
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+/* Tablet (768px - 1024px) */
+@media (max-width: 1024px) {
+    body {
+        width: 90%;
+    }
+    .title{
+        font-size: clamp(3rem, 6vw, 4rem);
+    }
+
+    .category-container {
+        max-width: 90%;
+    }
+
+    .select-title {
+        max-width: 90%;
+    }
+
+
+}
+/* Mobile Large (481px - 768px) */
+@media (max-width: 900px) {
+    body {
+        width: 90%;
+    }
+
+
+
+    /* ปรับ Category เป็น 2 แถว 3 คอลัมน์ (รวมปุ่มค้นหา) */
+    .category-container {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.8rem;
+        max-width: 95%;
+        padding: 0;
+        align-self: flex-start;
+    }
+
+    .category-checkboxes {
+        display: contents;
+    }
+
+    .category-checkboxes label {
+        padding: 0.8rem 0.5rem;
+        text-align: center;
+        font-size: 0.95rem;
+    }
+
+    /* ปุ่มค้นหาเป็น 1 ช่องใน grid (ช่องที่ 6) */
+    .category-search-btn {
+       padding: 0.8rem 0.5rem;
+      }
+
+    /* Search box */
+    .search-container {
+        margin-top: 1.5rem; /* ลดจาก 2rem */
+    }
+    
+    .select-title {
+        margin-top: 2rem; /* ลดจาก 2.5rem */
+        margin-bottom: 0.8rem; /* ลดจาก 1rem */
+    }
+
+    .search-input {
+        font-size: 1rem;
+        padding: 0.9rem 60px 0.9rem 1.2rem;
+    }
+
+    .search-btn {
+        width: 50px;
+    }
+
+    .search-btn span {
+        font-size: 1.5rem;
+    }
+
+    /* Header */
+    .contact-btn,
+    .login-btn {
+        font-size: 1rem;
+        padding: 0.4rem 1.2rem;
+    }
+        .logout-btn {
+        font-size: 1rem;
+        padding: 0.4rem 1.2rem;
+    }
+
+    header h1 {
+        font-size: 1.5rem;
+    }
+}
+
+/* Mobile Small (320px - 480px) */
+@media (max-width: 480px) {
+    body {
+        width: 95%;
+        font-size: 0.9rem;
+    }
+
+    footer {
+        height: 3rem;
+    }
+    .contact-btn{
+display: none;
+    }
+
+    /* Title & MSU */
+    .title {
+        font-size: clamp(2.2rem, 6vw, 2.5rem);
+        white-space: normal;
+        text-align: center;
+        line-height: 1.2;
+    }
+
+    .msu {
+        font-size: clamp(1.7rem, 6vw, 2.5rem);
+        white-space: normal;
+        text-align: center;
+        margin-bottom: 1.5rem;
+        line-height: 1.2;
+    }
+        /* ซ่อน Description บนมือถือ */
+    .border-descriptions {
+        display: none;
+    }
+
+
+    /* Category: 2 คอลัมน์บนหน้าจอเล็กมาก */
+    .category-checkboxes {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.6rem;
+    }
+
+    .category-checkboxes label {
+        padding: 0.7rem 0.3rem;
+        font-size: 0.85rem;
+    }
+    
+
+    .category-search-btn {
+        padding: 0.7rem 0.3rem;
+        font-size: 0.85rem;
+    }
+
+    /* Search Input */
+    .search-input {
+        font-size: 0.9rem;
+        padding: 0.8rem 55px 0.8rem 1rem;
+    }
+
+    .search-input::placeholder {
+        font-size: 0.85rem;
+    }
+
+    .search-btn {
+        width: 45px;
+    }
+
+    .search-btn span {
+        font-size: 1.3rem;
+    }
+
+    /* Header Buttons */
+    nav {
+        gap: 0.5rem;
+    }
+
+    .nav-buttons {
+        gap: 0.5rem;
+    }
+
+    .contact-btn, .menu-btn,
+    .login-btn {
+        font-size: 0.9rem;
+        padding: 0.4rem 1rem;
+    }
+        .logout-btn {
+        font-size: 0.9rem;
+        padding: 0.4rem 1rem;
+    }
+
+
+    header h1 {
+        font-size: 1.3rem;
+    }
+
+    /* Select Title */
+    .select-title {
+        margin-top: 2rem;
+        margin-bottom: 0.8rem;
+    }
+}
+
+/* Mobile Extra Small (< 360px) */
+@media (max-width: 360px) {
+    footer {
+    height: 2rem;
+}
+    .category-checkboxes label {
+        padding: 0.6rem 0.2rem;
+        font-size: 0.8rem;
+    }
+    .category-search-btn{
+         padding: 0.6rem 0.2rem;
+        font-size: 0.8rem;
+    }
+
+    .title {
+        font-size: 1.5rem;
+    }
+
+    .msu {
+        font-size: 1.2rem;
+    }
+
+    .search-input::placeholder {
+        font-size: 0.75rem;
+    }
+}
+
+.custom-font {
+    font-family: 'Kanit', 'Prompt', 'Mitr', 'Noto Sans Thai', sans-serif !important;
+  }
+
+
+    </style>
+</head>
+<style>
+</style>
+
+<body>
+    <header>
+        <nav>
+            <div>
+                <h1>RevMSU</h1>
+            </div>
+            <div class="nav-buttons">
+               
+             
+                <div class="dropdown">
+                    
+                    <button class="menu-btn" (click)="toggleMenu()" *ngIf="isLoggedIn">
+                        <span>เมนู</span> <span class="material-symbols-outlined">arrow_drop_down</span>
+                        <span class="notification-dot menu-dot" *ngIf="hasUnreadMessages"></span>
+                        </button>
+                    <div class="dropdown-content" [class.show]="isMenuOpen">
+                        <a (click)="admin()" *ngIf="isAdmin">จัดการระบบ</a>
+                        <a (click)="profile()">โปรไฟล์</a>
+                        <a (click)="favorite()">รายการโปรด</a>
+                        <a (click)="message()">ข้อความ
+                            <span class="notification-dot list-dot" *ngIf="hasUnreadMessages"></span>
+                        </a>
+                         
+                        <a (click)="contact()">ติดต่อ</a>
+                        <a (click)="logout()">ออกจากระบบ</a>
+                     
+                    </div>
+                </div>
+                <button class="contact-btn" (click)="contact()" *ngIf="isLoggedIn === false">ติดต่อ</button>
+                    <button class="login-btn" (click)="question()">โพสต์คำถาม</button>
+                <button class="login-btn" (click)="login()" *ngIf="isLoggedIn === false">เข้าสู่ระบบ</button>
+
+            </div>
+        </nav>
+    </header>
+    <main>
+        <div class="content">
+            <div class="border-title">
+                <h1 class="title">รีวิวรายวิชาศึกษาทั่วไป</h1>
+            </div>
+            <div class="border-uni">
+                <h1 class="msu">มหาวิทยาลัยมหาสารคาม</h1>
+            </div>
+            <div class="border-descriptions">
+                <span>เว็บไวต์นี้จัดทำขึ้นเพื่อตอบสนองต่อกลุ่มผู้ใช้ที่ต้องการตัดสินใจในการลงทะเบียนเรียน
+                    <br>โดยที่ผู้ใช้สามารถอ่านรีวิวจากประสบการณ์จริงของผู้ใช้อื่นได้
+                    และเพื่อเป็นส่วนหนึ่งในการตัดสินใจที่จะลงทะเบียนของผู้ใช้</span>
+            </div>
+            <div class="search-container">
+                <input type="text" class="search-input" [(ngModel)]="subcode" (keyup.enter)="search(subcode)" placeholder="ค้นหาด้วยรหัสวิชา เช่น 0041001">
+                <button class="search-btn" (click)="search(subcode)">
+                    <span class="material-symbols-outlined">search</span>
+                </button>
+            </div>
+            <div class="select-title">
+                <span>เลือกหมวดหมู่ที่ต้องการจะดูรีวิว</span>
+            </div>
+            <div class="category-container">
+                <div class="category-checkboxes">
+                    <input type="checkbox" #dataSelect id="cat1" name="category" value="1">
+                    <label for="cat1">หมวดหมู่ที่ 1</label>
+
+                    <input type="checkbox" #dataSelect id="cat2" name="category" value="2">
+                    <label for="cat2">หมวดหมู่ที่ 2</label>
+
+                    <input type="checkbox" #dataSelect id="cat3" name="category" value="3">
+                    <label for="cat3">หมวดหมู่ที่ 3</label>
+
+                    <input type="checkbox" #dataSelect id="cat4" name="category" value="4">
+                    <label for="cat4">หมวดหมู่ที่ 4</label>
+
+                    <input type="checkbox" #dataSelect id="cat5" name="category" value="5">
+                    <label for="cat5">หมวดหมู่ที่ 5</label>
+                </div>
+
+                <button class="category-search-btn" (click)="select()">ค้นหา</button>
+            </div>
+        </div>
+
+    </main>
+    <footer>
+    </footer>
+</body>
+
+</html>

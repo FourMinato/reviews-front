@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&family=Prompt:wght@300;400;500;700&family=Mitr:wght@300;400;500;700&family=Noto+Sans+Thai:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        /* --- Global Reset --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Kanit', 'Prompt', 'Mitr', 'Noto Sans Thai', sans-serif;
+        }
+
+        body {
+            width: 100%; /* เปลี่ยนจาก 85% เป็น 100% เพื่อให้จัดการง่ายขึ้นใน mobile */
+            min-height: 100vh; /* ใช้ min-height แทน height */
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden; /* ป้องกันการเลื่อนซ้ายขวาของหน้าจอหลัก */
+        }
+
+        /* Wrapper เพื่อคุมความกว้างกลางจอเหมือนเดิม */
+        .container-wrapper {
+            width: 90%; /* Mobile ใช้ 90% */
+            max-width: 1096px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        @media (min-width: 768px) {
+            .container-wrapper {
+                width: 85%; /* PC กลับไปใช้ 85% */
+            }
+        }
+
+        header, footer {
+            width: 100%;
+            height: 4rem;
+            flex-shrink: 0; /* ไม่ให้หดตัว */
+        }
+
+        main {
+            flex-grow: 1;
+            border-top: 2px solid black;
+            border-bottom: 2px solid black;
+            display: flex;
+            flex-direction: column; /* เปลี่ยนเป็น column เพื่อให้จัดการ layout ภายในง่ายขึ้น */
+            padding: 1rem 0;
+            overflow: hidden; /* ซ่อนส่วนเกิน */
+        }
+
+        nav {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-btn {
+            padding: 0.5rem 1.5rem; /* ลด padding ด้านข้างนิดหน่อย */
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            border-radius: 5px;
+             background-color: #50C878;
+            color: white;
+            transition: background-color 0.3s ease;
+            white-space: nowrap; /* ป้องกันข้อความตัดบรรทัด */
+        }
+
+        .back-btn:hover {
+                 background-color: #48C9B0  ;
+        }
+
+        .logo h1 {
+            font-size: 1.5rem; /* ปรับขนาดฟอนต์ให้พอดี */
+        }
+
+        .content {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- Sorting Section (Radio Buttons) --- */
+        .check-border {
+            width: 100%;
+            padding-bottom: 10px; 
+            /* ยกเลิก fixed height เพื่อให้ยืดหยุ่น */
+            min-height: 4.2rem; 
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 0.5rem;
+            
+            /* Responsive: ทำให้เลื่อนซ้ายขวาได้ในมือถือ */
+            overflow-x: auto; 
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch; /* ให้เลื่อนลื่นๆ ใน iOS */
+            
+            /* ซ่อน Scrollbar แต่ยังเลื่อนได้ */
+            scrollbar-width: none; 
+            -ms-overflow-style: none;
+        }
+
+        .check-border::-webkit-scrollbar {
+            display: none;
+        }
+
+        .radio-wrapper {
+            display: inline-flex; /* เปลี่ยนเป็น inline-flex */
+            align-items: center;
+            flex-shrink: 0; /* ห้ามหดตัว */
+        }
+
+        .radio-wrapper input[type="radio"] {
+            display: none;
+        }
+
+        .radio-label {
+            padding: 0.5rem 1rem; /* ลด padding ลงเล็กน้อย */
+            border: 2px solid black;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            background-color: white;
+            color: black;
+            transition: all 0.3s ease;
+            user-select: none;
+            display: block;
+        }
+
+        .radio-wrapper input[type="radio"]:checked+.radio-label {
+            background-color: #ED5565  ;
+            color: white;
+            border-color: #ED5565  ;
+        }
+
+        /* --- Main List Section --- */
+        .main-border {
+            width: 100%;
+            flex-grow: 1; /* ให้ยืดเต็มพื้นที่ที่เหลือ */
+            overflow-y: auto; /* scroll แนวตั้ง */
+            padding: 0.5rem 5px; /* เพิ่ม padding ขวานิดหน่อยกัน Scrollbar ทับ */
+        }
+
+        /* Custom Scrollbar for Main List */
+        .main-border::-webkit-scrollbar {
+            width: 6px;
+        }
+        .main-border::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        .main-border::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 3px;
+        }
+        .main-border::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+
+        /* --- Subject Card Styles --- */
+        .subject-card {
+            width: 90%;
+            margin: 0 auto;
+            /* ยกเลิก height: 9rem; เปลี่ยนเป็น auto */
+            min-height: 8rem; 
+            height: auto;
+            border: 2px solid black;
+            margin-bottom: 1rem; /* ใช้ margin-bottom แทน margin auto */
+            border-radius: 15px;
+            display: flex;
+            align-items: center; /* จัดกลางแนวตั้ง */
+            justify-content: space-between;
+            padding: 1rem; /* เพิ่ม padding ภายใน */
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background-color: white;
+            color: black;
+            gap: 2rem; /* เว้นระยะห่างระหว่าง elements */
+        }
+
+        .subject-card:hover {
+             background-color: #50C878;
+            color: white;
+            transform: scale(1.02); /* ลด scale ลงหน่อยไม่ให้บังเพื่อน */
+            border: none;
+        }
+
+        .subject-code {
+            /* กำหนดความกว้างขั้นต่ำของรหัสวิชา */
+            min-width: 80px; 
+            font-size: 1.5rem; /* ลดขนาดลงเล็กน้อย */
+            font-weight: 800;
+            text-align: center;
+        }
+
+        .subject-name-rate-review {
+            flex-grow: 1; /* ให้กินพื้นที่ที่เหลือทั้งหมด */
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            overflow: hidden; /* ป้องกันเนื้อหาล้น */
+        }
+
+        .halft {
+            width: 95%;
+            border-bottom: 2px solid black;
+            padding-bottom: 5px;
+            font-size: 1.2rem;
+            white-space: nowrap;
+            overflow-x: auto; /* ชื่อยาวเลื่อนได้ */
+            scrollbar-width: none;
+        }
+        .halft::-webkit-scrollbar { display: none; }
+
+        .subject-card:hover .halft {
+            border-bottom-color: white;
+        }
+
+        .halfb {
+            width: 95%;
+            display: flex;
+            justify-content: space-between;
+            font-size: 1rem;
+            color:black;
+        }
+        
+        .subject-card:hover .halfb {
+            color: white;
+        }
+
+        .halfl, .halfr {
+            /* ไม่ fix width 50% ให้ยืดตาม content */
+            display: flex;
+            align-items: center;
+        }
+
+        /* --- Responsive Design (Mobile) --- */
+        @media (max-width: 768px) {
+            .subject-card {
+                flex-direction: column; /* เปลี่ยนเป็นแนวตั้ง */
+                align-items: flex-start; /* ชิดซ้าย */
+                padding: 1rem;
+            }
+
+            .subject-code {
+                width: 100%;
+                text-align: left; /* รหัสวิชาชิดซ้าย */
+                margin-bottom: 0.5rem;
+                font-size: 2rem;
+            }
+
+            .subject-name-rate-review {
+                width: 100%;
+            }
+
+            .halft {
+                font-size: 1.3rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .halfb {
+                flex-direction: row; /* คงแนวนอนไว้สำหรับคะแนน */
+                justify-content: space-between;
+                font-size: 0.9rem;
+            }
+            
+            .check-border {
+                /* เพิ่ม padding ด้านข้างเพื่อให้ scroll แล้วตัวแรก/ตัวท้ายไม่ชิดขอบจอเกินไป */
+                padding-left: 5px;
+                padding-right: 5px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-wrapper">
+        <header>
+            <nav>
+                <div>
+                    <button class="back-btn" (click)="back()">กลับ</button>
+                </div>
+                <div class="logo">
+                    <h1>Select Subject</h1>
+                </div>
+            </nav>
+        </header>
+        <main>
+            <div class="content">
+                <div class="check-border">
+                    <div class="radio-wrapper">
+                        <input type="radio" name="sort" id="sort-code" value="sort-code" checked [(ngModel)]="selectedOrder" (change)="sortSubjects()">
+                        <label for="sort-code" class="radio-label">รหัสวิชา</label>
+                    </div>
+                    <div class="radio-wrapper">
+                        <input type="radio" name="sort" id="sort-review" value="sort-review" [(ngModel)]="selectedOrder" (change)="sortSubjects()">
+                        <label for="sort-review" class="radio-label">จำนวนรีวิว</label>
+                    </div>
+                    <div class="radio-wrapper">
+                        <input type="radio" name="sort" id="sort-rate" value="sort-rate" [(ngModel)]="selectedOrder" (change)="sortSubjects()">
+                        <label for="sort-rate" class="radio-label">คะแนนรีวิว</label>
+                    </div>
+                </div>
+
+                <div class="main-border">
+                    <div class="subject-card" *ngFor="let item of subjects" (click)="linkToSubject(item.subid)">
+                        <div class="subject-code">
+                            <span>{{ item.subcode }}</span>
+                        </div>
+                        <div class="subject-name-rate-review">
+                            <div class="halft">
+                                <span>{{ item.name }}</span>
+                            </div>
+                            <div class="halfb">
+                                <div class="halfl">
+                                    <span>รีวิวทั้งหมด {{ item.review_count }}</span>
+                                </div>
+                                <div class="halfr">
+                                    <span>คะแนนรีวิว {{ item.avg_rate
+ }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </main>
+   
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;800&display=swap" rel="stylesheet">
+    <title>Create New Subject</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Kanit', sans-serif;
+        }
+
+        body {
+            width: 100%;
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            /* เปลี่ยนพื้นหลังเป็นสีเทาอ่อนให้เหมือนหน้า Dashboard */
+            background-color: #F3F4F6; 
+        }
+
+        .page-wrapper {
+            width: 85%;
+            max-width: 1096px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        header {
+            width: 100%;
+            height: 5rem;
+            display: flex;
+            align-items: center;
+            /* ย้ายเส้นขอบมาไว้ที่ Header แทนและทำสีให้ซอฟต์ลง */
+            border-bottom: 2px solid #E5E7EB; 
+            margin-bottom: 2rem;
+        }
+
+        nav {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* ปรับปุ่มกลับให้เป็นสไตล์ Secondary Button ดูกลืนไปกับความคลีน */
+        .back-btn {
+            background-color: #ffffff;
+            color: #374151;
+            border: 1px solid #D1D5DB;
+            padding: 8px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .back-btn:hover {
+            background-color: #F9FAFB;
+            color: #111827;
+            border-color: #9CA3AF;
+        }
+
+        .logo {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        main {
+            width: 100%;
+            flex: 1;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            /* เอาเส้นดำทึบๆ ออก */
+        }
+
+        /* ปรับ Card ให้ขอบมนและเงาเหมือนหน้า Dashboard */
+        .card {
+            width: 100%;
+            max-width: 500px;
+            padding: 2.5rem;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            border: none;
+        }
+
+        .create-title {
+            font-size: 1.6rem;
+            font-weight: 800;
+            text-align: center;
+            color: #111827;
+            margin-bottom: 0.5rem;
+        }
+
+        .input-group {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        label {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #4B5563;
+            margin-left: 4px;
+        }
+
+        /* ปรับสไตล์ช่องกรอกข้อมูล */
+        input,
+        select {
+            width: 100%;
+            height: 50px;
+            padding: 0 1rem;
+            font-size: 1rem;
+            color: #1F2937;
+            border: 1px solid #D1D5DB;
+            border-radius: 10px;
+            outline: none;
+            background-color: #ffffff;
+            transition: all 0.2s ease;
+        }
+
+        input::placeholder {
+            color: #9CA3AF;
+        }
+
+        /* ลูกเล่นตอนคลิกพิมพ์ (Focus) ให้เป็นสีเขียว Semantic Color */
+        input:focus,
+        select:focus {
+            border-color: #10B981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+        }
+
+        /* ปรับปุ่ม Create ให้เป็นสีเขียว (Success Color) */
+        .create-btn {
+            width: 85%;
+            background-color: #10B981;
+            color: white;
+            padding: 0.8rem 1rem;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            margin-top: 1rem;
+            margin: 0 auto;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.2);
+        }
+
+        .create-btn:hover {
+            background-color: #059669;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px -1px rgba(16, 185, 129, 0.3);
+        }
+
+        .create-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Responsive มือถือ */
+        @media (max-width: 600px) {
+            .page-wrapper {
+                width: 100%;
+                padding: 0 20px;
+            }
+
+            header {
+                height: 4.5rem;
+                margin-bottom: 1rem;
+            }
+
+            .card {
+                padding: 2rem 1.5rem;
+                /* ให้ Card ยังคงเป็นกล่องขาวบนมือถือ จะได้ดูเป็นสัดส่วน */
+                box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1); 
+            }
+
+            .logo {
+                font-size: 1rem;
+            }
+
+            .create-title {
+                font-size: 1.4rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-wrapper">
+        <header>
+            <nav>
+                <button class="back-btn" (click)="back()">กลับ</button>
+                <div class="logo">
+                    <span>Create Subject</span>
+                </div>
+            </nav>
+        </header>
+
+        <main>
+            <div class="card">
+                <div class="create-title">เพิ่มรายวิชา</div>
+
+                <div class="input-group">
+                    <label>หมวดหมู่รายวิชา</label>
+                    <select [(ngModel)]="cateID">
+                        <option value="0" disabled selected>กรุณาเลือกหมวดหมู่</option>
+                        <option *ngFor="let cate of categories" [value]="cate">{{ cate }}</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>รหัสวิชา</label>
+                    <input type="text" placeholder="เช่น 0041001" [(ngModel)]="subcode">
+                </div>
+
+                <div class="input-group">
+                    <label>ชื่อรายวิชา</label>
+                    <input type="text" placeholder="ระบุชื่อวิชา" [(ngModel)]="name">
+                </div>
+
+                <button class="create-btn" (click)="create()">เพิ่มรายวิชา</button>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>

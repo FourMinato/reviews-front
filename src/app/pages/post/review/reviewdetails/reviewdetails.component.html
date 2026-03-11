@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&family=Sarabun:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Kanit', sans-serif;
+        }
+
+        body {
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: white;
+            color: #000;
+        }
+
+        /* --- Layout Container --- */
+        .page-wrapper {
+            /* ปรับ width ให้เต็มกว่าเดิมในมือถือ (95%) และจำกัดไม่เกิน 85% ในจอใหญ่ */
+            width: clamp(95%, 90vw, 85%);
+            max-width: 1096px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            padding-bottom: 40px;
+        }
+
+        /* --- Header Section --- */
+        header {
+            width: 100%;
+            height: auto;
+            min-height: 4rem;
+            display: flex;
+            align-items: center;
+        }
+
+        nav {
+            width: 100%;
+            display: flex;
+            align-items: center;
+        }
+
+        .back-btn {
+            padding: 0.5rem 1.5rem;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            border-radius: 5px;
+            background-color: black;
+            color: white;
+            transition: background-color 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .back-btn:hover {
+            background-color: #333;
+        }
+
+        /* --- Main Content --- */
+        main {
+            width: 100%;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            border-top: 2px solid black;
+            padding-top: 20px;
+        }
+
+        .content {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .post-header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            /* เพิ่ม gap กันชนเวลาจอมือถือเล็กมากๆ */
+        }
+
+        .post-header .title {
+            /* clamp(ขนาดต่ำสุด, ขนาดแนะนำตามจอ, ขนาดสูงสุด) */
+            font-size: clamp(1.2rem, 4vw, 2rem);
+        }
+
+        .report-btn {
+            background-color: #F35C5C;
+            color: white;
+            border: none;
+            padding: clamp(8px, 1.5vw, 10px) clamp(12px, 2vw, 24px);
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: clamp(0.8rem, 2vw, 1rem);
+            flex-shrink: 0;
+        }
+
+        .edit-btn {
+            background-color: black;
+            color: white;
+            border: none;
+            padding: clamp(8px, 1.5vw, 10px) clamp(12px, 2vw, 24px);
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: clamp(0.8rem, 2vw, 1rem);
+            flex-shrink: 0;
+        }
+
+        /* ส่วนผู้เขียนโพสต์ */
+        .author-section {
+            display: flex;
+            align-items: center;
+            gap: clamp(10px, 2vw, 15px);
+            margin-bottom: 15px;
+            padding: 0 2rem 0 0;
+            border-radius: 8px;
+            width: fit-content;
+            min-width: unset;
+            /* เอา min-width ออกเพื่อให้ไม่ดันจอแตกในมือถือ */
+        }
+
+        .avatar-box {
+            width: clamp(4rem, 15vw, 8rem);
+            height: clamp(4rem, 15vw, 8rem);
+            background-color: #fff;
+            border: 1px solid black;
+            overflow: hidden;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        /* เพิ่ม CSS สำหรับรูปภาพ */
+        .avatar-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .author-info {
+            height: 100%;
+            display: flex;
+            justify-content: space-evenly;
+            flex-direction: column;
+        }
+
+        .author-name {
+            font-weight: 600;
+            /* ชื่อผู้โพสต์ย่อขยายได้ */
+            font-size: clamp(1.2rem, 5vw, 1.8rem);
+        }
+
+        .post-date {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        /* กล่องข้อความโพสต์ */
+        .post-content-box {
+            background-color: #f5f5f5;
+            padding: clamp(1rem, 3vw, 2rem);
+            /* padding ยืดหด */
+            border-radius: 4px;
+            margin-bottom: 20px;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+        }
+
+        /* ส่วนช่องพิมพ์คอมเม้นท์ */
+        .comment-input-section {
+            width: 100%;
+            /* เปลี่ยนเป็น 100% ของ container */
+            margin: 0 auto;
+            margin-bottom: 30px;
+        }
+
+        .input-wrapper {
+            display: flex;
+            border: 1px solid #333;
+            padding: 0.5rem;
+            border-radius: 10px;
+            background: white;
+            gap: 5px;
+        }
+
+        .input-wrapper input {
+            flex-grow: 1;
+            border: none;
+            padding: 5px;
+            outline: none;
+            font-size: 1rem;
+            /* ป้องกันการซูมของ iOS เวลากดพิมพ์ */
+            font-size: clamp(16px, 1rem, 1.2rem);
+            min-width: 0;
+            /* แก้บั๊ก flexbox ล้นจอ */
+        }
+
+        .send-btn {
+            background-color: #000;
+            color: #fff;
+            border: none;
+            /* ลดขนาดปุ่มในมือถือ */
+            padding: clamp(10px, 2vw, 20px) clamp(15px, 3vw, 25px);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: clamp(0.9rem, 2vw, 1rem);
+            border-radius: 5px;
+            white-space: nowrap;
+            /* ห้ามตัดบรรทัดคำว่า ส่ง */
+        }
+
+        .send-btn:hover {
+            opacity: 0.8;
+        }
+
+        /* --- Global Reset & Styles --- */
+        .comments-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            /* ลดระยะห่างระหว่างคอมเม้นท์หลัก */
+            width: 100%;
+
+        }
+
+        .comment-card {
+            background-color: #fff;
+            /* เอาเส้นขอบออกให้ดูคลีนขึ้น หรือจะใส่บางๆ ก็ได้ */
+            /* border: 1px solid #f0f0f0; */
+            border-radius: 8px;
+            padding: 10px 0;
+            /* ลด padding บนล่าง */
+            display: flex;
+            flex-direction: column;
+
+        }
+
+        /* --- Layout หลัก (Main Row) --- */
+        .card-main-row {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            padding-right: 5px;
+            /* เผื่อที่ให้ปุ่มเมนูขวาสุด */
+        }
+
+        /* 1. ส่วนรูปภาพ (Fixed Size) */
+        .avatar-section,
+        .nested-avatar-area {
+            flex-shrink: 0;
+            /* ห้ามโดนบีบ */
+        }
+
+        .comment-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+
+        .avatar-image,
+        .avatar-image-nested {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        /* 2. ส่วนเนื้อหา (Flexible) */
+        .content-section,
+        .nested-content-area {
+            flex-grow: 1;
+            /* ขยายเต็มพื้นที่ที่เหลือ */
+            min-width: 0;
+            /* หัวใจสำคัญ: ป้องกัน text ดัน Layout แตก */
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* กล่องข้อความแบบบรรทัดเดียว (Inline) */
+        .inline-message-box {
+            font-size: 0.95rem;
+            line-height: 1.4;
+            padding-right: 5px;
+        }
+
+        .username,
+        .nested-user {
+            font-weight: 700;
+            color: #000;
+            margin-right: 4px;
+            font-size: 0.95rem;
+        }
+
+        .message-text,
+        .nested-text {
+            color: #1c1e21;
+            word-wrap: break-word;
+            /* ตัดคำยาวๆ */
+
+            overflow-wrap: break-word;
+        }
+
+        /* Tag ตอบกลับ */
+        .reply-tag {
+            color: #65676b;
+            margin-right: 6px;
+            font-size: 0.9rem;
+        }
+
+        .reply-tag b {
+            font-weight: 600;
+            color: #1c1e21;
+        }
+
+        /* แถวปุ่ม Action ด้านล่าง (เวลา, ตอบกลับ) */
+        .reply-action-row,
+        .nested-actions-bottom {
+            display: flex;
+            gap: 12px;
+            margin-top: 4px;
+            font-size: 0.8rem;
+            align-items: center;
+        }
+
+        .action-time {
+            color: #65676b;
+        }
+
+        .action-link,
+        .action-reply {
+            color: #65676b;
+            font-weight: 600;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .action-link:hover,
+        .action-reply:hover {
+            color: #000;
+            text-decoration: underline;
+        }
+
+        /* 3. ปุ่มเมนูเพิ่มเติม (3 จุด) */
+        .status-section,
+        .nested-status-area {
+            flex-shrink: 0;
+            position: relative;
+            /* ห้ามโดนบีบ */
+        }
+
+        .btn-more,
+        .btn-more-mini {
+            background: transparent;
+            border: none;
+            font-size: 1.2rem;
+            /* ขนาดจุด */
+            color: #65676b;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+            margin-top: -5px;
+            /* ดึงขึ้นบนนิดนึงให้เสมอชื่อ */
+        }
+
+        .btn-more:hover,
+        .btn-more-mini:hover {
+
+            /* Hover แล้วมีวงกลมสีเทา */
+            color: #000;
+        }
+
+        /* --- ส่วนดูการตอบกลับ (View Replies Link) --- */
+        .view-reply-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: 52px;
+            /* ให้ตรงกับแนว text ด้านบน (40px รูป + 12px gap) */
+            margin-top: 5px;
+        }
+
+        .reply-line-connector {
+            width: 20px;
+            height: 1px;
+            /* เส้นขีดแนวนอน */
+            background-color: #ccc;
+        }
+
+        .view-reply-link {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #65676b;
+            cursor: pointer;
+        }
+
+        /* --- Nested Replies Container --- */
+        .nested-replies-container {
+            display: flex;
+            flex-direction: column;
+            /* ดันกล่องลูกทั้งหมดไปขวานิดนึง */
+            margin-left: 52px;
+            /* ให้ตรงกับแนว text ของแม่ */
+            margin-top: 10px;
+        }
+
+        .nested-comment-card {
+            display: flex;
+            gap: 10px;
+            padding: 6px 0;
+            position: relative;
+        }
+
+        .avatar-image-nested {
+            width: 28px;
+            /* รูปคนตอบย่อยให้เล็กลงหน่อย */
+            height: 28px;
+        }
+
+        /* Zone สำหรับลูกซ้อนหลาน */
+        /* โซนลูก (Sub-replies) */
+        .sub-reply-zone {
+            margin-top: 5px;
+            /* เว้นระยะห่างบนล่างนิดนึงให้หายใจสะดวก */
+            transition: all 0.2s;
+        }
+
+        .no-comments-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        /* --- Mobile Responsive Adjustment --- */
+        @media (max-width: 480px) {
+            .card-main-row {
+                gap: 8px;
+            }
+
+            .comment-avatar {
+                width: 32px;
+                height: 32px;
+            }
+
+            .username,
+            .nested-user {
+                font-size: 0.9rem;
+            }
+
+            .message-text,
+            .nested-text {
+                font-size: 0.9rem;
+            }
+
+            /* ปรับระยะห่างในมือถือให้น้อยลงอีก */
+            .view-reply-wrapper {
+                margin-left: 40px;
+            }
+
+            .nested-replies-container {
+                margin-left: 40px;
+            }
+
+            .sub-reply-zone {
+                /* ในมือถือ ถ้าชั้นแรกให้ขยับน้อยหน่อย */
+                /* แต่ถ้าชั้นลึกๆ HTML จะสั่งเป็น 0px ให้เอง */
+
+                padding-left: 8px;
+            }
+        }
+
+        /* ฉากหลัง: สีดำจางๆ + เบลอฉากหลังนิดๆ */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            /* ดำเข้มขึ้นนิดนึง */
+            backdrop-filter: blur(3px);
+            /* เอฟเฟกต์เบลอฉากหลัง (ดูแพง) */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            animation: fadeIn 0.3s ease-out;
+            /* อนิเมชั่นฉากหลัง */
+        }
+
+        /* กล่อง Popup */
+        .popup-box {
+            background: white;
+            width: 90%;
+            /* เผื่อจอมือถือ */
+            max-width: 600px;
+            /* จอคอมให้กว้างสุด 600px (ใหญ่ขึ้น) */
+            padding: 25px;
+            border-radius: 12px;
+            /* มุมมนสวยๆ */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            /* เงานุ่มๆ */
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            /* ระยะห่างระหว่างหัวข้อ กล่องพิมพ์ และปุ่ม */
+            animation: scaleUp 0.3s ease-out;
+            /* อนิเมชั่นกล่องเด้ง */
+        }
+
+        .popup-header h3 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: #333;
+            text-align: left;
+            /* จัดชิดซ้ายดูทางการกว่า */
+        }
+
+        /* พื้นที่พิมพ์ข้อความ */
+        .inputReply {
+            width: 100%;
+            min-height: 120px;
+            /* สูงเริ่มต้น 120px */
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: inherit;
+            resize: vertical;
+            /* ให้ user ลากขยายสูงต่ำได้ */
+            outline: none;
+            box-sizing: border-box;
+            /* สำคัญ! ป้องกันกล่องทะลุ */
+            transition: border-color 0.2s;
+        }
+
+        .inputReply:focus {
+            border-color: #000;
+            /* เวลาคลิกพิมพ์ ให้ขอบเป็นสีดำ */
+        }
+
+        /* ปุ่มกด */
+        .popup-buttons {
+            display: flex;
+            justify-content: flex-end;
+            /* ดันปุ่มไปขวาสุด */
+            gap: 12px;
+            /* ระยะห่างระหว่างปุ่ม */
+        }
+
+        button {
+            cursor: pointer;
+            padding: 10px 24px;
+            /* ปุ่มใหญ่ขึ้น กดง่าย */
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn-cancel {
+            background: transparent;
+            border: 1px solid #ccc;
+            color: #666;
+        }
+
+        .btn-cancel:hover {
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        .btn-send {
+            background: #000;
+            /* สีดำด้าน */
+            color: white;
+            border: none;
+        }
+
+        .btn-send:hover {
+            background: #333;
+            /* เอาเมาส์วางแล้วจางลงนิดนึง */
+            transform: translateY(-1px);
+            /* ขยับขึ้นนิดนึงให้ดูมีมิติ */
+        }
+
+        .clickable {
+            cursor: pointer;
+        }
+
+        .clickable:hover {
+            text-decoration: underline;
+        }
+
+        .post-content {
+            width: 100%;
+            margin-top: clamp(0.5rem, 2.5vw, 0.75rem);
+            margin-bottom: clamp(0.5rem, 2.5vw, 1rem);
+            padding: 2rem 1rem;
+            border: 1px dashed #ccc;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            font-size: clamp(1rem, 2.5vw, 1.25rem);
+        }
+
+        /* คอนเทนเนอร์สำหรับแต่ละ Reply */
+        .reply-wrapper {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        /* ส่วนที่จะขยับขวาสำหรับการตอบกลับซ้อน */
+        .sub-replies {
+            /* แก้ไขจุดนี้: ลดระยะร่นในแต่ละชั้นให้น้อยที่สุดเท่าที่จะสวย */
+            /* จากเดิม 40px หรือ 5vw ให้เหลือแค่นิดเดียวพอให้เห็นเส้น */
+            padding-left: clamp(10px, 3vw, 15px);
+
+            border-left: 2px solid #dcdcdc;
+            /* สีเส้นให้จางลงนิดนึงจะได้ไม่รก */
+
+            /* ขยับ margin ซ้ายนิดเดียวเพื่อให้เส้นตรงกับกึ่งกลางรูปโปรไฟล์ของแม่มัน */
+            margin-left: 12px;
+        }
+
+        /* ปรับ nested-item เดิมเล็กน้อยเพื่อให้เข้ากับ structure ใหม่ */
+        .nested-item {
+            border-bottom: none;
+            /* เอาเส้นเดิมออกเพราะเราจะใช้ structure ใหม่ */
+            padding-bottom: 10px;
+            padding-top: 10px;
+        }
+
+        /* Wrapper ของแต่ละ Node (ตัวแม่ + ลูกๆ ของมัน) */
+        .reply-tree-node {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        /* --- Layout ของตัวการ์ด (เหมือน Main Comment) --- */
+        .nested-comment-card {
+            display: flex;
+            /* หัวใจสำคัญ: เรียง ซ้าย-กลาง-ขวา */
+            gap: 12px;
+            padding: 8px 0;
+            /* เว้นบนล่างนิดหน่อย */
+            align-items: flex-start;
+            /* ให้ทุกอย่างเริ่มที่บรรทัดบนสุด */
+        }
+
+        /* กล่องรวมข้อความแบบ Inline */
+        .inline-message-box {
+            font-size: 0.95rem;
+            line-height: 1.4;
+            color: #333;
+            /* การจัดวางแบบ inline-block หรือ block ก็ได้ เพราะข้างในเราใช้ span */
+        }
+
+        /* 1. ชื่อผู้ใช้ */
+        .nested-user {
+            font-weight: 700;
+            color: #000;
+
+        }
+
+        /* 2. แท็ก "ตอบกลับ ..." */
+        .reply-tag {
+            color: #666;
+            /* สีเทาจางลงหน่อยเพื่อแยกแยะ */
+            margin-right: 5px;
+            font-size: 0.7rem;
+        }
+
+        .reply-tag b {
+            color: #333;
+            /* ชื่อคนที่เราตอบกลับให้เข้มขึ้นนิดนึง */
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        /* 3. เนื้อหาคอมเมนต์ */
+        .nested-text {
+            color: #111;
+            word-wrap: break-word;
+        }
+
+        /* 1. ซ้าย: รูปโปรไฟล์ */
+        .nested-avatar-area {
+            flex-shrink: 0;
+        }
+
+        .avatar-image-nested {
+            width: 32px;
+            /* ขนาดรูปย่อย */
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        /* 2. กลาง: เนื้อหา (ขยายเต็มที่) */
+        .nested-content-area {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            /* แก้บั๊ก Flexbox ดันทะลุ */
+        }
+
+
+
+
+
+        /* ปุ่มตอบกลับด้านล่าง */
+        .nested-actions-bottom {
+            margin-top: 6px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-reply {
+            font-size: 0.8rem;
+            color: #888;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .action-reply:hover {
+            color: black;
+            text-decoration: underline;
+        }
+
+        /* 3. ขวา: ปุ่มรายงาน */
+        .nested-status-area {
+            flex-shrink: 0;
+            /* ไม่ต้องกำหนดอะไรเพิ่ม เพราะ align-items: flex-start ของพ่อมันทำให้มันอยู่บนสุดเอง */
+        }
+
+        .btn-report-mini {
+            background: transparent;
+            border: none;
+            color: #aaa;
+            /* สีจางๆ หน่อยจะได้ไม่แย่งซีน */
+            font-size: 0.75rem;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .btn-report-mini:hover {
+            color: #F35C5C;
+        }
+
+        .sub-reply-zone {
+            margin-top: 5px;
+            transition: all 0.2s;
+
+            /* ลบ margin-left, border-left, padding-left ออกให้หมด 
+       เพราะเราย้ายไปคุมใน HTML แทนแล้วครับ */
+        }
+
+        /* === Animation Keyframes === */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes scaleUp {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .pointer {
+            cursor: pointer;
+        }
+
+        .pointer:hover {
+            text-decoration: underline;
+        }
+
+        /* ปุ่ม 3 จุด */
+        .btn-menu-dots {
+            background: transparent;
+            border: none;
+            font-size: 1.3rem;
+            /* ขนาดจุด */
+            line-height: 1;
+            color: #65676b;
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s;
+        }
+
+        .btn-menu-dots:hover {
+
+            color: #000;
+        }
+
+        /* ตัวกล่อง Popup เมนู */
+        .action-popup {
+            position: absolute;
+            top: 35px;
+            /* ให้เด้งลงมาจากปุ่มนิดนึง */
+            right: 0;
+            /* ชิดขวาให้ตรงกับปุ่ม */
+            width: 150px;
+            /* ความกว้างเมนู */
+            background-color: black;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            /* เงาฟุ้งๆ */
+            border-radius: 8px;
+            padding: 8px 0;
+            z-index: 1000;
+            /* ให้ลอยอยู่บนสุด */
+            border: 1px solid #ddd;
+        }
+
+        /* รายการข้างในเมนู */
+        .popup-item {
+            padding: 5px 10px;
+            font-size: 0.9rem;
+            color: #fff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.2s;
+        }
+
+        .icon-report {
+            font-size: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-wrapper">
+        <header>
+            <nav>
+                <button class="back-btn" onclick="history.back()">กลับ</button>
+            </nav>
+        </header>
+        <main>
+            <div class="content" *ngFor="let data of reviews">
+                <div class="post-header">
+                    <h1 class="title">โพสต์ของ {{data.name}}</h1>
+                    <button class="report-btn" *ngIf="!isOwner" (click)="reportReview(data.pid)">รายงาน</button>
+                    <button class="edit-btn" *ngIf="isOwner" (click)="edtitReview()">แก้ไขรีวิว</button>
+                </div>
+                <div class="author-section">
+                    <div class="avatar-box">
+                        <img class="avatar-img" [src]="data.profile" alt="Profile Picture">
+                    </div>
+                    <div class="author-info">
+                        <div class="author-name" *ngIf="isAnonymous">{{data.name}}</div>
+                        <div class="author-name pointer" *ngIf="!isAnonymous" (click)="linkToProfile(data.uid)">
+                            {{data.name}}</div>
+
+                        <div class="post-date">{{ data.date | date:'yyyy-MM-dd' }}</div>
+                    </div>
+                </div>
+                <div class="post-content">
+                    <p class="content-text">{{data.descriptions}}</p>
+                </div>
+                <div class="comment-input-section">
+                    <div class="input-wrapper">
+                        <input type="text" [(ngModel)]="commentText" placeholder="พิมพ์ความคิดเห็นของคุณที่นี่">
+                        <button class="send-btn" (click)="createComment()">ส่ง</button>
+                    </div>
+                </div>
+                <div class="comments-list">
+                    <div class="no-comments-state" *ngIf="!comments || comments.length === 0">
+                        <h3>ยังไม่มีความคิดเห็น</h3>
+                        <p>เป็นคนแรกที่แสดงความคิดเห็นในโพสต์นี้เลย!</p>
+                    </div>
+                    <div class="comment-wrapper" *ngFor="let comment of comments">
+
+                        <div class="comment-card">
+                            <div class="card-main-row">
+                                <div class="avatar-section">
+                                    <div class="comment-avatar">
+                                        <img [src]="comment.avatarUrl" alt="" class="avatar-image">
+                                    </div>
+                                </div>
+
+                                <div class="content-section">
+                                    <div class="inline-message-box">
+                                        <span *ngIf="comment.isAnonymous" class="username anonymous">
+                                            {{ comment.username }}
+                                        </span>
+                                        <span *ngIf="!comment.isAnonymous" (click)="linkToProfile(comment.uid)"
+                                            class="username clickable">
+                                            {{ comment.username }}
+                                        </span>
+                                        <span class="message-text">{{ comment.content }}</span>
+                                    </div>
+
+                                    <div class="reply-action-row">
+                                        <span class="action-link" (click)="openPopup(comment.id)">ตอบกลับ</span>
+                                    </div>
+                                </div>
+
+                                <div class="status-section" style="position: relative;"> <button class="btn-more"
+                                        (click)="toggleMenu(comment, $event)">&#8942;</button>
+
+                                    <div class="action-popup" *ngIf="comment.showMenu">
+
+                                        <div class="popup-item" *ngIf="comment.uid === userID || isAdmin === true">
+                                            <span class="icon-report" (click)="deleteComment(comment.id)">ลบความคิดเห็นนี้</span>
+                                        </div>
+
+                                        <div class="popup-item" *ngIf="comment.uid !== userID && !isAdmin"
+                                            (click)="reportComment(comment.id, $event)">
+                                            <span class="icon-report">รายงาน</span>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="view-reply-wrapper" *ngIf="comment.replies && comment.replies.length > 0">
+                                <div class="reply-line-connector"></div> <span class="view-reply-link"
+                                    (click)="toggleReplies(comment)">
+                                    {{ comment.showReplies ? 'ซ่อนการตอบกลับ' : 'ดูการตอบกลับ (' +
+                                    comment.replies.length + ' รายการ)' }}
+                                </span>
+                            </div>
+
+                            <div class="nested-replies-container" *ngIf="comment.showReplies">
+
+                                <ng-template #replyTemplate let-replyList let-parentName="parentName" let-depth="depth">
+                                    <div class="reply-tree-node"
+                                        *ngFor="let reply of comment.showReplies ? replyList : []">
+
+                                        <div class="nested-comment-card">
+                                            <div class="nested-avatar-area">
+                                                <img [src]="reply.avatarUrl" alt="" class="avatar-image-nested">
+                                            </div>
+
+                                            <div class="nested-content-area">
+                                                <div class="inline-message-box">
+                                                    <span class="nested-user" *ngIf="reply.isAnonymous">{{
+                                                        reply.username }}</span>
+                                                    <span class="nested-user clickable" *ngIf="!reply.isAnonymous"
+                                                        (click)="linkToProfile(reply.uid)">{{ reply.username }}</span>
+                                                    <span class="reply-tag" *ngIf="parentName">
+                                                        ตอบกลับ
+                                                        <b *ngIf="comment.isAnonymous">{{ parentName }}</b>
+                                                        <b *ngIf="!comment.isAnonymous" class="clickable"
+                                                            (click)="linkToProfile(comment.uid)">{{ parentName }}</b>
+                                                    </span>
+                                                    <span class="nested-text">{{ reply.content }}</span>
+                                                </div>
+
+                                                <div class="nested-actions-bottom">
+                                                    <span class="action-reply"
+                                                        (click)="openPopup(reply.id)">ตอบกลับ</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="nested-status-area" style="position: relative;">
+
+                                                <button class="btn-menu-dots" (click)="toggleReplyMenu(reply, $event)">
+                                                    &#8942;
+                                                </button>
+
+                                                <div class="action-popup" *ngIf="reply.showMenu">
+                                                    <div class="popup-item"
+                                                        *ngIf="reply.uid === userID || isAdmin === true">
+                                                        <span class="icon-report"  (click)="deleteComment(reply.id)">ลบความคิดเห็นนี้</span>
+                                                    </div>
+
+                                                    <div class="popup-item" *ngIf="reply.uid !== userID && !isAdmin"
+                                                        (click)="reportComment(reply.id, $event)">
+                                                        <span class="icon-report">รายงาน</span>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="sub-reply-zone" *ngIf="reply.replies && reply.replies.length > 0"
+                                            [style.marginLeft.px]="depth < 1 ? 44 : 0"
+                                            [style.borderLeft]="depth < 1 ? '2px solid #eee' : 'none'"
+                                            [style.paddingLeft.px]="depth < 1 ? 10 : 0"> <ng-container
+                                                *ngTemplateOutlet="replyTemplate; context:{
+        $implicit: reply.replies, 
+        parentName: reply.username,
+        depth: depth + 1
+    }"></ng-container>
+                                        </div>
+
+                                    </div>
+                                </ng-template>
+
+                                <ng-container *ngTemplateOutlet="replyTemplate; context:{
+        $implicit: comment.replies, 
+        parentName: comment.username,
+        depth: 0
+    }"></ng-container>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+    <div class="popup-overlay" *ngIf="showPopup == true">
+        <div class="popup-box">
+            <h3>ตอบกลับความคิดเห็น</h3>
+            <input type="text" class="inputReply" #messageBox placeholder="พิมพ์ข้อความ..." [(ngModel)]="repliesText">
+            <div class="popup-buttons">
+                <button class="btn-cancel" (click)="showPopup = false">ยกเลิก</button>
+
+                <button class="btn-send" (click)="sendReply(); showPopup = false">ส่ง</button>
+            </div>
+        </div>
+    </div>
+
+</body>

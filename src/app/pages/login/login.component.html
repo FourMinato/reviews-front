@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&family=Prompt:wght@300;400;500;700&family=Mitr:wght@300;400;500;700&family=Noto+Sans+Thai:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Kanit', 'Prompt', 'Mitr', 'Noto Sans Thai', sans-serif;
+        }
+
+        body {
+            width: 85%;
+            height: 100dvh;
+            max-width: 1096px;
+            margin: 0 auto;
+            font-size: 1rem;
+            
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            width: 100%;
+            height: 4rem;
+            
+        }
+
+        footer {
+            width: 100%;
+            height: 4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: black;
+        }
+
+        main {
+            flex-grow: 1;
+            border-top: 2px solid black;
+            border-bottom: 2px solid black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem 0;
+        }
+
+        nav {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .content {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .back-btn {
+            padding: 0.5rem 1.5rem;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            border-radius: 5px;
+           background-color: #50C878;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background-color: #48C9B0  ;
+        }
+
+        .card {
+            width: 28rem;
+            height: auto;
+            min-height: 32rem;
+            padding: 2.5rem;
+            border: 2px solid black;
+            border-radius: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 0.6rem;
+            background-color: #ffffff;
+        }
+
+        .title {
+            margin-bottom: 0.5rem;
+        }
+
+        .email-border,
+        .password-border {
+            width: 100%;
+        }
+
+        input {
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            width: 100%;
+            height: 3.5rem;
+            padding: 0 1rem;
+            font-size: 1.1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: black;
+        }
+
+        .reset-password {
+            font-size: 0.9rem;
+            color: blue;
+            cursor: pointer;
+            text-decoration: underline;
+            align-self: flex-end;
+            margin-top: -0.5rem;
+        }
+
+        .reset-password:hover {
+            color: #0056b3;
+        }
+
+        a {
+            color: blue;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .login-btn,
+        .login-with-google {
+            width: 85%;
+            padding: 0.9rem 0;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .login-btn {
+            background-color:#FFCE54   ;
+            color: white;
+        }
+
+        .login-btn:hover {
+            background-color: #333;
+        }
+
+        .login-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .login-with-google {
+            background-color: #50C878;
+            border: 1px solid black;
+            color: white;
+        }
+
+        .login-with-google:hover {
+            background-color: #333;
+            color: white;
+        }
+
+        .login-with-google img {
+            width: 1.5rem;
+            height: 1.5rem;
+            object-fit: contain;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            gap: 1rem;
+            color: #666;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background-color: #ccc;
+        }
+
+        .recaptcha-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            transform: scale(0.85);
+            transform-origin: center;
+            margin: -0.5rem 0; /* ลดพื้นที่ว่างด้านบน-ล่าง */
+        }
+
+        #recaptcha-container {
+            transform: scale(0.85);
+            transform-origin: center;
+        }
+
+        .create-new {
+            text-align: center;
+            color: #666;
+        }
+
+        /* ============= Responsive Design ============= */
+        
+        /* Tablet และมือถือขนาดใหญ่ */
+        @media (max-width: 768px) {
+            body {
+                width: 90%;
+            }
+
+            header {
+                height: 4rem;
+            }
+
+            footer {
+                height: 3rem;
+            }
+
+            nav h1 {
+                font-size: 1.3rem;
+            }
+
+            .back-btn {
+                padding: 0.4rem 1.5rem;
+                font-size: 1rem;
+            }
+
+            .card {
+                width: 100%;
+                max-width: 26rem;
+                min-height: auto;
+                padding: 2rem;
+                gap: 0.8rem;
+            }
+
+            .title h2 {
+                font-size: 1.5rem;
+            }
+
+            input {
+                height: 3rem;
+                font-size: 1rem;
+            }
+
+            .login-btn,
+            .login-with-google {
+                width: 85%;
+                padding: 0.8rem 0;
+                font-size: 1rem;
+            }
+
+            .recaptcha-container {
+                transform: scale(0.85);
+            }
+        }
+
+        /* มือถือขนาดกลาง (iPhone 14, 13, 12 Pro Max) */
+        @media (max-width: 430px) {
+            body {
+                width: 92%;
+            }
+
+            header {
+                height: 4rem;
+            }
+
+            footer {
+                display: none;
+            }
+
+            nav h1 {
+                font-size: 1.2rem;
+            }
+
+            .back-btn {
+                padding: 0.4rem 1.2rem;
+                font-size: 0.95rem;
+            }
+
+            .card {
+                width: 100%;
+                padding: 1.5rem;
+                gap: 0.7rem;
+                border-radius: 12px;
+            }
+
+            .title h2 {
+                font-size: 1.3rem;
+            }
+
+            input {
+                height: 2.8rem;
+                font-size: 0.95rem;
+                padding: 0 0.8rem;
+                border-radius: 8px;
+            }
+
+            .reset-password {
+                font-size: 0.85rem;
+            }
+
+            .login-btn,
+            .login-with-google {
+                width: 85%;
+                padding: 0.75rem 0;
+                font-size: 0.95rem;
+            }
+
+            .login-with-google img {
+                width: 1.3rem;
+                height: 1.3rem;
+            }
+
+            .divider {
+                font-size: 0.9rem;
+            }
+
+            .recaptcha-container {
+                transform: scale(0.7);
+                margin: -0.7rem 0;
+            }
+
+            .create-new {
+                font-size: 0.9rem;
+            }
+
+            .footer-content span {
+                font-size: 0.85rem;
+            }
+        }
+
+        /* มือถือขนาดเล็ก (iPhone SE, จอแคบมาก) */
+        @media (max-width: 375px) {
+            body {
+                width: 95%;
+            }
+
+            .card {
+                padding: 1.2rem;
+                gap: 0.6rem;
+            }
+
+            .title h2 {
+                font-size: 1.2rem;
+            }
+
+            input {
+                height: 2.6rem;
+                font-size: 0.9rem;
+            }
+
+            .login-btn,
+            .login-with-google {
+                padding: 0.7rem 0;
+                font-size: 0.9rem;
+            }
+
+            .recaptcha-container {
+                transform: scale(0.65);
+                margin: -0.9rem 0;
+            }
+
+            .create-new {
+                font-size: 0.85rem;
+            }
+        }
+
+        /* มือถือจอยาวมาก (iPhone 14 Pro Max, 15 Pro Max) */
+        @media (max-width: 430px) and (min-height: 800px) {
+            main {
+                padding: 2rem 0;
+            }
+
+            .card {
+                gap: 0.9rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div>
+                <button class="back-btn" (click)="back()">กลับ</button>
+            </div>
+            <div class="logo">
+                <h1>RevMSU</h1>
+            </div>
+        </nav>
+    </header>
+    <main>
+        <div class="content">
+            <div class="card">
+                <div class="title">
+                    <h2>เข้าสู่ระบบ</h2>
+                </div>
+                
+                <div class="email-border">
+                    <input type="email" placeholder="อีเมล" [(ngModel)]="email">
+                </div>
+                
+                <div class="password-border">
+                    <input type="password" placeholder="รหัสผ่าน" [(ngModel)]="password">
+                </div>
+                
+                <div class="reset-password" (click)="openForgotPasswordPopup()">
+                    <span>ลืมรหัสผ่าน?</span>
+                </div>
+
+                <div class="recaptcha-container">
+                    <div id="recaptcha-container"></div>
+                </div>
+
+                <button class="login-btn" (click)="login()">เข้าสู่ระบบ</button>
+
+                <div class="divider">
+                    <span>หรือ</span>
+                </div>
+
+                <button class="login-with-google" (click)="googleLogin()">
+                    เข้าสู่ระบบด้วย 
+                    <img src="/assets/images/google.png" alt="Google logo">
+                </button>
+
+                <div class="create-new">
+                    <span>ยังไม่มีบัญชี? <a href="/register">สมัครสมาชิก</a></span>
+                </div>
+            </div>
+        </div>
+    </main>
+<div class="modal-overlay" *ngIf="isForgotPasswordOpen">
+    <div class="modal-card">
+        <button class="close-btn" (click)="closeForgotPasswordPopup()">&times;</button>
+
+        <ng-container *ngIf="forgotPasswordStep === 1">
+            <h3 class="modal-title">ลืมรหัสผ่าน</h3>
+            <p class="modal-desc">กรุณากรอกอีเมลของคุณเพื่อรับรหัส OTP</p>
+            <input type="email" placeholder="อีเมล" [(ngModel)]="resetEmail" class="modal-input">
+            <button class="login-btn " (click)="requestOtp()">ส่งรหัส OTP</button>
+        </ng-container>
+
+        <ng-container *ngIf="forgotPasswordStep === 2">
+            <h3 class="modal-title">ยืนยันตัวตน</h3>
+            <p class="modal-desc">กรุณากรอกรหัส OTP ที่ส่งไปยัง<br><b>{{resetEmail}}</b></p>
+            <input type="text" placeholder="รหัส OTP 6 หลัก" [(ngModel)]="otpCode" class="modal-input" maxlength="6">
+            <button class="login-btn" (click)="verifyOtp()">ยืนยันรหัส OTP</button>
+            <span class="back-link" (click)="forgotPasswordStep = 1">ย้อนกลับไปแก้ไขอีเมล</span>
+        </ng-container>
+
+        <ng-container *ngIf="forgotPasswordStep === 3">
+            <h3 class="modal-title">ตั้งรหัสผ่านใหม่</h3>
+            <p class="modal-desc">กรุณากำหนดรหัสผ่านใหม่ของคุณ</p>
+            <input type="password" placeholder="รหัสผ่านใหม่" [(ngModel)]="newPassword" class="modal-input" style="margin-bottom: 10px;">
+            <input type="password" placeholder="ยืนยันรหัสผ่านใหม่" [(ngModel)]="confirmPassword" class="modal-input">
+            <button class="login-btn" (click)="resetPassword()">บันทึกรหัสผ่านใหม่</button>
+        </ng-container>
+    </div>
+</div>
+</body>
+
+</html>

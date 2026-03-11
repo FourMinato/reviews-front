@@ -1,0 +1,405 @@
+ 
+
+ *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Kanit', 'Prompt', 'Mitr', 'Noto Sans Thai', sans-serif;
+        }
+
+        body {
+            width: 100%;
+            min-height: 100vh;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        .container-wrapper {
+            width: 90%;
+            max-width: 1096px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        @media (min-width: 768px) {
+            .container-wrapper {
+                width: 85%;
+            }
+        }
+
+        header,
+        footer {
+            width: 100%;
+            height: 4rem;
+            flex-shrink: 0;
+        }
+
+        main {
+            flex-grow: 1;
+            border-top: 2px solid black;
+            /* เอา border-bottom ออกเพื่อให้ scroll ลงได้เรื่อยๆ */
+            /* border-bottom: 2px solid black; */
+            display: flex;
+            flex-direction: column;
+            padding: 1rem 0 3rem 0;
+            /* เพิ่ม padding ล่าง */
+        }
+
+        nav {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-btn {
+            padding: 0.5rem 1.5rem;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            border-radius: 5px;
+            background-color: #50C878;
+            color: white;
+            transition: background-color 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .back-btn:hover {
+            background-color: #48C9B0;
+        }
+
+        /* --- Font Sizes --- */
+        .name-border {
+            font-size: clamp(1.2rem, 2vw, 2rem);
+            /* ปรับให้เล็กลงหน่อยเพื่อความสวยงาม */
+            margin-bottom: 1rem;
+            text-align: start;
+        }
+
+        .subcode-border {
+            font-size: clamp(1.5rem, 2vw, 2.5rem);
+            font-weight: 600;
+            text-align: start;
+        }
+
+        /* --- Create Post Button (แก้ไข Responsive) --- */
+        .create-post-btn {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .create-post-btn-text {
+            /* เปลี่ยนจาก Padding ด้านข้างเยอะๆ เป็นการคุม Width แทน */
+            width: 100%;
+            max-width: 600px;
+            padding: 12px 0;
+            font-size: 1.2rem;
+            font-weight: 500;
+            border-radius: 8px;
+            border: none;
+           background-color: #ED5565  ;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        /* --- Sorting & Radio --- */
+        .order-border-text {
+            font-size: 1.3rem;
+        }
+
+        .check-border {
+            width: 100%;
+            padding-bottom: 10px;
+            min-height: 4.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 0.5rem;
+            overflow-x: auto;
+            white-space: nowrap;
+            scrollbar-width: none;
+            margin-bottom: 1rem;
+        }
+
+        .radio-wrapper {
+            display: inline-flex;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .radio-wrapper input[type="radio"] {
+            display: none;
+        }
+
+        .radio-label {
+            padding: 0.5rem 1.2rem;
+            border: 2px solid black;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            // font-weight: 500;
+            background-color: white;
+            color: black;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+
+        .radio-wrapper input[type="radio"]:checked+.radio-label {
+            background-color: #ED5565  ;
+            color: white;
+            border-color: #ED5565;
+        }
+
+        /* --- Card Styling (ส่วนที่เพิ่มใหม่และแก้ไข) --- */
+        .card-list-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            /* ระยะห่างระหว่างการ์ด */
+            align-items: center;
+            /* จัดการ์ดให้อยู่ตรงกลาง */
+        }
+
+        .card-border {
+            width: 100%;
+            max-width: 600px;
+            /* จำกัดความกว้างสูงสุดให้ดูดีบน PC */
+            /* เอา height: 250px ออก เพื่อให้ยืดตามเนื้อหา */
+            height: auto;
+            min-height: 200px;
+            border: 1px solid #aaa;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            padding: 1.2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            /* เพิ่มเงาเล็กน้อย */
+            background-color: white;
+        }
+
+        /* Card Header */
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .user-profile {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .avatar-circle {
+            width: 50px;
+            height: 50px;
+            background-color: #eee;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #ccc;
+        }
+        .avatar-image{
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-info .username {
+            font-weight: 500;
+            font-size: 0.8rem;
+        }
+
+        .user-info .date {
+            font-size: 0.75rem;
+            color: #666;
+        }
+
+        .rating-box {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-end;
+            gap: 5px;
+        }
+
+        .stars {
+            font-size: 1.2rem;
+            /* ดาวใหญ่ขึ้นนิดหน่อย */
+            letter-spacing: 2px;
+        }
+
+
+
+        /* Card Body */
+        .card-body {
+            background-color: #f5f5f5;
+            /* สีพื้นหลังเทาอ่อนตามรูป */
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            color: #333;
+            min-height: 80px;
+        }
+
+        /* Card Footer */
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .action-btn {
+            flex: 1;
+            /* ปันส่วนพื้นที่เท่าๆ กัน */
+            background-color: white;
+            border: 1px solid black;
+            padding: 8px 0;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            color: black;
+            transition: background-color 0.2s;
+        }
+
+
+
+        /* --- Global Reset & Fonts --- */
+        @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap');
+
+        /* Container เพื่อให้จัดตำแหน่ง Dropdown เทียบกับปุ่ม */
+        .report-wrapper {
+            position: relative;
+            /* สำคัญ */
+            display: inline-block;
+        }
+
+        /* ปรับปุ่ม Report เดิมนิดหน่อย */
+        .report-btn {
+
+            color: black;
+            text-decoration: underline;
+            border: none;
+            font-size: clamp(1.5rem, 2vw, 1.7rem);
+            padding: 1px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            position: relative;
+            z-index: 1;
+            /* ให้ปุ่มอยู่ชั้นปกติ */
+            background-color: white;
+            line-height: 1; text-decoration: none;
+        }
+
+        .report-btn:hover,
+        .report-btn.active {
+            background-color: black;
+            color: white;
+        }
+
+        /* ตัวเมนู Dropdown */
+        .report-dropdown {
+            position: absolute;
+            top: 110%;
+            /* ให้ลงมาจากปุ่มนิดนึง */
+            right: 0;
+            /* ชิดขวาเพื่อให้ตรงกับขอบปุ่ม */
+            width: 160px;
+            /* ความกว้างของเมนู */
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            /* เงาให้ดูลอยขึ้นมา */
+            z-index: 100;
+            /* สำคัญ: ต้องสูงกว่า Card อื่นๆ */
+            overflow: hidden;
+            text-align: left;
+            animation: fadeIn 0.2s ease;
+        }
+
+        /* รายการข้างใน */
+        .report-item {
+            padding: 8px 12px;
+            font-size: 0.85rem;
+            color: #333;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+            transition: background-color 0.2s;
+        }
+
+        .report-item:last-child {
+            border-bottom: none;
+        }
+
+        .report-item:hover {
+            background-color: #fcebeb;
+            /* สีแดงจางๆ เวลาเอาเมาส์ชี้ */
+            color: #d94141;
+        }
+.no-data-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* --- Mobile Specific --- */
+        @media (max-width: 768px) {
+            .subcode-border {
+                font-size: 1.8rem;
+            }
+
+            .name-border {
+                font-size: 1.3rem;
+            }
+
+            .create-post-btn-text {
+                width: 90%;
+                /* มือถือปุ่มกว้าง 90% */
+            }
+
+            .card-border {
+                width: 95%;
+                /* การ์ดในมือถือเกือบเต็มจอ */
+            }
+
+            .rating-box {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .action-btn {
+                font-size: 0.8rem;
+                /* ลดขนาดตัวหนังสือปุ่มล่างในมือถือ */
+                padding: 6px 0;
+            }
+        }

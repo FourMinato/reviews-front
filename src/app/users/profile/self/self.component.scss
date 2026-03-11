@@ -1,0 +1,300 @@
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Kanit', sans-serif;
+        }
+
+        body {
+            width: 100%;
+            min-height: 100vh;
+            background-color: white;
+            color: #000;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* --- Global & Layout --- */
+        .page-wrapper {
+            width: 90%;
+            max-width: 1096px;
+            padding: 10px 0;
+            margin: 0 auto;
+            /* จัดกลางหน้าจอ */
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            margin-bottom: 10px;
+        }
+
+        .back-btn {
+            background-color: #000;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.2s;
+        }
+
+        .back-btn:hover {
+            background-color: #333;
+        }
+
+        .divider {
+            border-top: 2px solid #000;
+            margin: 15px 0 20px 0;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        /* --- Grid Layout (2 Columns) --- */
+        .profile-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            /* ซ้าย 280px, ขวาที่เหลือ */
+            gap: 50px;
+            align-items: start;
+        }
+
+        /* --- Left Column: Sidebar & Form --- */
+        .profile-sidebar {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        /* กล่องใส่รูป (เพิ่ม position: relative เพื่อให้ overlay อ้างอิงได้) */
+        .profile-img-box {
+            width: 180px;
+            height: 180px;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            overflow: hidden;
+            background-color: #f9f9f9;
+
+            /* เพิ่ม 2 บรรทัดนี้เพื่อให้กดได้ */
+            position: relative;
+            cursor: pointer;
+        }
+
+        .profile-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+            /* เพิ่มลูกเล่นขยายรูปนิดหน่อย */
+        }
+
+        /* --- ส่วนที่เพิ่มใหม่: Overlay --- */
+        .img-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            /* สีดำโปร่งแสง 50% */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            opacity: 0;
+            /* ซ่อนไว้ก่อน */
+            transition: opacity 0.3s ease;
+        }
+
+        /* ไอคอนกล้อง */
+        .camera-icon {
+            width: 40px;
+            height: 40px;
+            fill: white;
+            margin-bottom: 5px;
+        }
+
+        /* เมื่อเอาเมาส์ชี้ที่กล่อง (.profile-img-box:hover) ให้แสดง overlay */
+        .profile-img-box:hover .img-overlay {
+            opacity: 1;
+        }
+
+        /* เมื่อเอาเมาส์ชี้ ให้รูปขยายนิดนึง */
+        .profile-img-box:hover .profile-img {
+            transform: scale(1.1);
+        }
+
+        /* Form Styles */
+        .form-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .form-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #444;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+            transition: border 0.2s;
+        }
+
+        .form-input:focus {
+            border-color: #000;
+            /* สีเมื่อกดพิมพ์ */
+        }
+
+        /* --- Password Input Wrapper --- */
+        .password-input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .password-input-wrapper .form-input {
+            padding-right: 40px;
+            /* Space for the icon */
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #888;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .toggle-password:hover {
+            color: #333;
+        }
+
+        .toggle-password svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        /* ปุ่ม Save */
+        .save-btn {
+            background-color: black;
+            /* สีเขียวสื่อถึงการบันทึก */
+            color: white;
+            border: none;
+            padding: 12px 0;
+            width: 100%;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.2s;
+        }
+
+        .save-btn:hover {
+            background-color: #333;
+        }
+
+        /* --- Right Column: Tabs --- */
+        .tabs-header {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px 0;
+            background: none;
+            border: none;
+            font-size: 16px;
+            color: #888;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            color: #000;
+            font-weight: 700;
+            border-bottom: 3px solid #000;
+        }
+
+        /* List Items */
+        .list-item {
+            background-color: #fff;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+            transition: transform 0.2s;
+        }
+
+        .list-item:hover {
+            transform: translateY(-3px);
+            cursor: pointer;
+        }
+
+        .item-code {
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .item-date {
+            font-size: 14px;
+            color: #777;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #999;
+            margin-top: 30px;
+        }
+
+
+        /* --- Responsive (Mobile) --- */
+        @media (max-width: 768px) {
+            .profile-container {
+                grid-template-columns: 1fr;
+                /* เรียงแนวตั้ง */
+                gap: 30px;
+            }
+
+            .profile-sidebar {
+                border-bottom: 1px solid #eee;
+                padding-bottom: 30px;
+            }
+
+            .profile-img-box {
+                width: 140px;
+                height: 140px;
+            }
+        }

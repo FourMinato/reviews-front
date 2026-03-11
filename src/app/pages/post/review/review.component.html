@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&family=Prompt:wght@300;400;500;700&family=Mitr:wght@300;400;500;700&family=Noto+Sans+Thai:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+
+
+    </style>
+</head>
+
+<body>
+    <div class="container-wrapper">
+        <header>
+            <nav>
+                <button class="back-btn" onclick="history.back()">กลับ</button>
+            </nav>
+        </header>
+
+        <main>
+            <div class="subcode-border" *ngFor="let subject of subjectData">
+                <span class="subcode-border-text">{{ subject.subcode }}</span>
+            </div>
+            <div class="name-border" *ngFor="let subject of subjectData">
+                <span class="name-border-text">{{ subject.name }}</span>
+            </div>
+
+            <div class="create-post-btn">
+                <button class="create-post-btn-text" (click)="createReview()">สร้างโพสต์ของคุณ</button>
+            </div>
+
+            <div class="order-border">
+                <span class="order-border-text">เรียงลำดับตาม</span>
+            </div>
+
+
+            <div class="check-border">
+                <div class="radio-wrapper">
+                    <input type="radio" name="sort" id="sort-date" value="sort-date" checked [(ngModel)]="selectedOrder"
+                        (change)="checkBox()">
+                    <label for="sort-date" class="radio-label">โพสต์ล่าสุด</label>
+                </div>
+                <div class="radio-wrapper">
+                    <input type="radio" name="sort" id="sort-like" value="sort-like" [(ngModel)]="selectedOrder"
+                        (change)="checkBox()">
+                    <label for="sort-like" class="radio-label">จำนวนไลค์</label>
+                </div>
+            </div>
+
+            <div class="card-list-container">
+
+                <ng-container *ngIf="reviews && reviews.length > 0; else noDataBlock">
+
+                    <div class="card-border" *ngFor="let review of reviews">
+                        <div class="card-header">
+                            <div class="user-profile">
+                                <div class="avatar-circle">
+                                    <img [src]="review.profile" alt="profile" class="avatar-image">
+                                </div>
+                                <div class="user-info">
+                                    <span class="username">{{ review.name }}</span>
+                                    <span class="date">{{ review.date | date:'yyyy-MM-dd' }}</span>
+                                </div>
+                            </div>
+
+                            <div class="rating-box">
+                                <div class="stars">
+                                    <span *ngFor="let star of getStars(review.rate)">
+                                        <i [style.color]="star <= review.rate ? '#FFCE54' : '#ccc'">★</i>
+                                    </span>
+                                </div>
+                                <div class="report-wrapper">
+                                    <button class="report-btn" (click)="toggleReportMenu(review.pid, $event)">
+                                        &#8943;
+                                    </button>
+                                    <div class="report-dropdown" *ngIf="activeReportId === review.pid">
+                                        <div class="report-item" *ngIf="review.uid === userID" (click)="edtitReview(review.pid)">
+                                            <span>แก้ไขโพสต์ของคุณ</span>
+                                        </div>
+                                         <div class="report-item" *ngIf="review.uid === userID" (click)="deleteThisReview(review.pid)">
+                                            <span>ลบโพสต์ของคุณ</span>
+                                        </div>
+                                        <div class="report-item" *ngIf="review.uid !== userID && isAdmin === false"  (click)="reportReview(review.pid)">
+                                            <span>รายงานรีวิวนี้</span>
+                                        </div>
+                                        <div class="report-item" *ngIf="isAdmin" (click)="closeThisReview(review.pid)">
+                                            <span>ปิดการมองเห็นโพสต์นี้</span>
+                                        </div>
+                                        <div class="report-item" *ngIf="isAdmin" (click)="adminDeleteThisReview(review.pid)">
+                                            <span>ลบโพสต์นี้</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-body">
+                            <p>{{ review.descriptions }}</p>
+                        </div>
+
+                        <div class="card-footer">
+                            <button class="action-btn like-btn" [class.liked]="review.is_liked"
+                                (click)="toggleLike(review.pid)" [ngStyle]="{
+                                'color': review.is_liked ? 'white' : 'black',
+                                'background-color': review.is_liked ? '#ED5565' : 'white',
+                                'border-color': review.is_liked ? '#ED5565' : 'black'
+  }">
+                                <i class="fa" [class.fa-heart]="review.is_liked"
+                                    [class.fa-heart-o]="!review.is_liked"></i>
+                                {{ review.is_liked ? 'ถูกใจแล้ว' : 'ถูกใจ' }} {{ review.like_count }}
+                            </button>
+                            <button class="action-btn" (click)="linkToDetails(review.pid)">ความคิดเห็น</button>
+                            <button class="action-btn" (click)="saveReviewToFavorites(review.pid)" [ngStyle]="{
+          'background-color': review.is_saved ? '#50C878' : 'white',
+          'color': review.is_saved ? 'white' : 'black',
+          'border-color': review.is_saved ? '#50C878' : 'black'
+        }">
+                                {{ review.is_saved ? 'บันทึกแล้ว' : 'บันทึกโพสต์' }}
+                            </button>
+                        </div>
+                    </div>
+
+                </ng-container>
+
+                <ng-template #noDataBlock>
+                    <div class="no-data-container">
+                        <h3>ไม่พบโพสต์รีวิว</h3>
+                        <p>ยังไม่มีการรีวิวในขณะนี้!</p>
+                    </div>
+                </ng-template>
+
+            </div>
+        </main>
+    </div>
+
+
+</body>
+
+</html>

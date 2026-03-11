@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&family=Sarabun:wght@300;400;600&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>รายการที่บันทึกไว้</title>
+</head>
+<body>
+
+    <div class="page-wrapper">
+        <header>
+            <button class="back-btn" onclick="history.back()">กลับ</button>
+            <div class="logo">RevMSU</div>
+        </header>
+
+        <main>
+            <h2 class="page-title">รายการที่บันทึกไว้</h2>
+
+            <div class="tab-container">
+                <div class="tab-item" 
+                     [class.active]="currentTab === 'review'" 
+                     (click)="setTab('review')">
+                    โพสต์รีวิวรายวิชา
+                </div>
+                <div class="tab-item" 
+                     [class.active]="currentTab === 'qa'" 
+                     (click)="setTab('qa')">
+                    โพสต์ถามตอบ
+                </div>
+            </div>
+
+            <div class="sort-section" *ngIf="currentTab === 'review'">
+                <span class="sort-label">เรียงลำดับตาม</span>
+                <div class="sort-buttons">
+                    <button class="sort-btn" 
+                            [class.active]="sortBy === 'subject-code'" 
+                            (click)="sortReviews('subject-code')">
+                        รหัสวิชา
+                    </button>
+                    <button class="sort-btn" 
+                            [class.active]="sortBy === 'date'" 
+                            (click)="sortReviews('date')">
+                        วันที่บันทึก
+                    </button>
+                </div>
+            </div>
+
+            <div class="list-container">
+                
+                <ng-container *ngIf="currentTab === 'review'">
+                    <div class="item-card" *ngFor="let item of myFavoriteReviews" (click)="linkToDetails(item.pid)">
+                        <div class="card-left">
+                            <span class="subject-code">{{ item.subcode }}</span>
+                            </div>
+                        <div class="card-right">
+                            <span class="save-date">{{ item.date | date:'dd-MM-yyyy' }}</span>
+                        </div>
+                    </div>
+                </ng-container>
+
+                <ng-container *ngIf="currentTab === 'qa'">
+                    <div class="item-card" *ngFor="let item of myFavoriteQuestions" (click)="linkToQuestionDetail(item.id)">
+                        <div class="card-left">
+                            <span class="post-title">โพสต์ของ {{ item.name }}</span>
+                        </div>
+                        <div class="card-right">
+                            <span class="save-date">{{ item.date | date:'dd-MM-yyyy' }}</span>
+                        </div>
+                    </div>
+                </ng-container>
+
+                <div class="empty-state" *ngIf="(currentTab === 'review' && myFavoriteReviews.length === 0) || (currentTab === 'qa' && questions.length === 0)">
+                    <p>ไม่มีรายการที่บันทึกไว้</p>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+</body>
+</html>

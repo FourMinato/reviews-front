@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>All Reports</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Kanit', sans-serif;
+        }
+
+        body {
+            width: 100%;
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            /* ใช้พื้นหลังสีเทาอ่อน คุมโทนเดียวกับหน้าอื่น */
+            background-color: #F3F4F6; 
+        }
+
+        .page-wrapper {
+            width: 85%;
+            max-width: 1096px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            padding-bottom: 60px;
+        }
+
+        /* =========================================
+           ส่วนที่ 1: Header & Nav
+           ========================================= */
+        header {
+            width: 100%;
+            height: 5rem;
+            display: flex;
+            align-items: center;
+            /* เส้นคั่นสีเทาอ่อนแบบหน้าอื่นๆ */
+            border-bottom: 2px solid #E5E7EB; 
+            margin-bottom: 1.5rem;
+        }
+
+        nav {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* ปุ่มกลับสไตล์ Secondary (สีขาวขอบเทา) */
+        .back-btn {
+            background-color: #ffffff;
+            color: #374151;
+            border: 1px solid #D1D5DB;
+            padding: 8px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            flex-shrink: 0; 
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .back-btn:hover {
+            background-color: #F9FAFB;
+            color: #111827;
+            border-color: #9CA3AF;
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #374151;
+            text-align: right;
+        }
+
+        main {
+            width: 100%;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding-top: 10px;
+        }
+
+        /* =========================================
+           ส่วนที่ 2: Filter Radio Buttons (ปรับเป็นทรงแคปซูล)
+           ========================================= */
+        .check-border {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            padding-bottom: 24px;
+        }
+
+        .radio-wrapper {
+            display: flex;
+            align-items: center;
+        }
+
+        .radio-wrapper input[type="radio"] {
+            display: none;
+        }
+
+        .radio-label {
+            display: inline-block;
+            padding: 0.5rem 1.2rem;
+            border: 1px solid #D1D5DB; /* ขอบบางๆ */
+            border-radius: 50px; /* ทรงแคปซูล */
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            background-color: white;
+            color: #4B5563;
+            transition: all 0.2s ease;
+            user-select: none;
+            white-space: nowrap;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+        }
+
+        .radio-label:hover {
+            background-color: #F9FAFB;
+            border-color: #9CA3AF;
+        }
+
+        /* สถานะตอนถูกเลือก (สีเทาเข้ม) */
+        .radio-wrapper input[type="radio"]:checked+.radio-label {
+            background-color: #374151;
+            color: white;
+            border-color: #374151;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* =========================================
+           ส่วนที่ 3: Reports Card
+           ========================================= */
+        .reports-list {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .reports-card {
+            width: 100%;
+            border: 1px solid #E5E7EB; 
+            border-radius: 16px;
+            background: white;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.05);
+            position: relative;
+        }
+
+        .reports-card:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+            border-color: #D1D5DB;
+        }
+
+        /* กาง Accordion ออกแล้วให้มีขอบสีนิดนึง */
+        .reports-card.active {
+            border-color: #9CA3AF;
+        }
+
+        /* --- Header of Card --- */
+        .card-header {
+            padding: 20px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            background: white;
+            position: relative;
+        }
+
+        .title-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+        }
+
+        /* จุดแดงแจ้งเตือน */
+        .unread-dot {
+            width: 10px;
+            height: 10px;
+            background-color: #EF4444; /* สีแดง */
+            border-radius: 50%;
+            flex-shrink: 0;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+        }
+
+        .report-title {
+            font-size: 1.1rem;
+            color: #1F2937;
+            transition: color 0.2s;
+        }
+
+        .reports-card.unread .report-title {
+            font-weight: 600;
+        }
+
+        .reports-card.read .report-title {
+            font-weight: 400;
+            color: #6B7280;
+        }
+
+        .meta-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .report-date {
+            font-size: 0.9rem;
+            color: #9CA3AF;
+        }
+
+        .status-badge {
+            font-size: 0.8rem;
+            padding: 4px 12px;
+            background-color: #F3F4F6;
+            border-radius: 6px;
+            color: #6B7280;
+            font-weight: 500;
+        }
+
+        .reports-card.unread .status-badge {
+            background-color: #FEF2F2;
+            color: #EF4444;
+        }
+
+        /* ไอคอนลูกศร Toggle */
+        .toggle-icon {
+            color: #9CA3AF;
+            font-size: 1rem;
+            transition: transform 0.3s ease;
+            margin-left: 10px;
+        }
+
+        .reports-card.active .toggle-icon {
+            transform: rotate(180deg); /* หมุนลูกศรขึ้นเวลากางออก */
+        }
+
+        /* --- Body of Card (Accordion) --- */
+        .card-body {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden; /* จำเป็นมากสำหรับ Accordion */
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+            background-color: #F9FAFB; /* พื้นหลังส่วนที่กางออกให้เทาลงนิดนึง */
+        }
+
+        .card-divider {
+            border: 0;
+            border-top: 1px solid #E5E7EB;
+            margin: 0;
+        }
+
+        .card-actions {
+            padding: 20px 24px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        /* ปุ่มไปยังโพสต์ (สีรอง) */
+        .btn-action-outline {
+            background-color: white;
+            color: #374151;
+            border: 1px solid #D1D5DB;
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .btn-action-outline:hover {
+            background-color: #F3F4F6;
+            border-color: #9CA3AF;
+        }
+
+        /* ปุ่มส่งรายงาน (สีแดง) */
+        .btn-action-red {
+            background-color: #EF4444;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2);
+        }
+
+        .btn-action-red:hover {
+            background-color: #DC2626;
+            box-shadow: 0 4px 6px rgba(239, 68, 68, 0.3);
+            transform: translateY(-1px);
+        }
+
+        /* Active State */
+        .reports-card.active .card-body {
+            max-height: 300px;
+            opacity: 1;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .page-wrapper { width: 92%; padding: 0 10px; }
+            header { height: 4.5rem; margin-bottom: 1rem; }
+            .logo { font-size: 1.2rem; }
+            .back-btn { padding: 6px 16px; font-size: 14px; }
+            
+            .check-border { gap: 0.5rem; padding-bottom: 16px; }
+            .radio-label { padding: 0.4rem 1rem; font-size: 0.9rem; }
+            
+            .card-header { padding: 16px; flex-wrap: wrap; gap: 10px; }
+            .title-wrapper { min-width: 100%; }
+            .meta-info { width: 100%; justify-content: space-between; padding-left: 22px; } /* ดันให้ตรงกับ text */
+            
+            .card-actions { justify-content: stretch; padding: 16px; }
+            .btn-action-red, .btn-action-outline { width: 100%; text-align: center; }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-wrapper">
+        <header>
+            <nav>
+                <button class="back-btn" onclick="history.back()">กลับ</button>
+                <div class="logo">All Reports</div>
+            </nav>
+        </header>
+
+        <main>
+            <div class="check-border">
+                <div class="radio-wrapper">
+                    <input type="radio" name="sort" id="all" value="all" checked [(ngModel)]="selected" (change)="selectBy()">
+                    <label for="all" class="radio-label">ทั้งหมด</label>
+                </div>
+                <div class="radio-wrapper">
+                    <input type="radio" name="sort" id="review" value="review" [(ngModel)]="selected" (change)="selectBy()">
+                    <label for="review" class="radio-label">โพสต์รีวิว</label>
+                </div>
+                <div class="radio-wrapper">
+                    <input type="radio" name="sort" id="question" value="question" [(ngModel)]="selected" (change)="selectBy()">
+                    <label for="question" class="radio-label">โพสต์ถามตอบ</label>
+                </div>
+                 <div class="radio-wrapper">
+                    <input type="radio" name="sort" id="comment" value="comment" [(ngModel)]="selected" (change)="selectBy()">
+                    <label for="comment" class="radio-label">คอมเมนต์</label>
+                </div>
+            </div>
+
+            <div class="reports-list">
+                
+                <div class="reports-card" 
+                     *ngFor="let report of testData" 
+                     [class.active]="report.isExpanded"
+                     [class.unread]="!report.isRead"
+                     [class.read]="report.isRead">
+                    
+                    <div class="card-header" (click)="report.isExpanded = !report.isExpanded">
+                        <div class="title-wrapper">
+                            <div class="unread-dot" *ngIf="!report.isRead"></div>
+                            <span class="report-title">
+                                {{ report.title || 'user012 รายงานโพสต์รีวิว' }}
+                            </span>
+                        </div>
+
+                        <div class="meta-info">
+                            <span class="report-date">{{ report.date || '25-01-2025' }}</span>
+                            <span class="status-badge">
+                                {{ report.isRead ? 'อ่านแล้ว' : 'ใหม่' }}
+                            </span>
+                            <i class="fas fa-chevron-down toggle-icon"></i>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+                        <hr class="card-divider">
+                        <div class="card-actions">
+                            <button class="btn-action-outline">ไปยังโพสต์</button>
+                            <button class="btn-action-red" (click)="report.isRead = true">ส่งผลการรายงาน</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+</body>
+</html>

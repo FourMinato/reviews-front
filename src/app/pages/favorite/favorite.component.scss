@@ -1,0 +1,203 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Kanit', sans-serif;
+}
+
+body {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: white;
+    color: #000;
+}
+
+/* --- Layout Container --- */
+.page-wrapper {
+    width: clamp(95%, 90vw, 85%);
+     max-width: 1096px; /* หน้านี้ไม่จำเป็นต้องกว้างมาก จำกัดไว้ที่ 800 กำลังสวย */
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding-bottom: 40px;
+}
+
+/* --- Header --- */
+header {
+    width: 100%;
+    height: 4rem; /* ตาม req */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 2px solid black; /* เพิ่มเส้นคั่น header ให้ดูเป็นสัดส่วน */
+    margin-bottom: 20px;
+}
+
+.back-btn {
+    padding: 0.5rem 1.5rem;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    border-radius: 5px;
+    background-color: black; /* สีปุ่มตามรูปต้นแบบ */
+    color: white;
+    font-weight: 500;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #000;
+}
+
+/* --- Main Content --- */
+main {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.page-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+/* --- Tabs --- */
+.tab-container {
+    display: flex;
+    width: 100%;
+    border-bottom: 2px solid #eee;
+    margin-bottom: 20px;
+}
+
+.tab-item {
+    flex: 1; /* แบ่งครึ่งเท่ากัน */
+    text-align: center;
+    padding: 12px 0;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #888;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s;
+}
+
+.tab-item:hover {
+    color: #333;
+}
+
+/* Active State ของ Tab (ขีดเส้นใต้สีดำ) */
+.tab-item.active {
+    color: #000;
+    font-weight: 600;
+}
+
+.tab-item.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px; /* ทับเส้น border-bottom ของ container */
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: #000;
+}
+
+/* --- Sort Section --- */
+.sort-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.sort-label {
+    font-size: 0.95rem;
+    color: #333;
+}
+
+.sort-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.sort-btn {
+    padding: 6px 16px;
+    border: 1px solid #ccc;
+    background: white;
+    border-radius: 5px; /* ทรงแคปซูล */
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.sort-btn:hover {
+    background-color: #f5f5f5;
+}
+
+.sort-btn.active {
+    background-color: #000;
+    color: white;
+    border-color: #000;
+}
+
+/* --- List Items (Cards) --- */
+.list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.item-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border: 1px solid #ccc; /* กรอบสีเทาตามรูป */
+    border-radius: 10px; /* มุมมน */
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* เงาบางๆ */
+    transition: transform 0.2s;
+    cursor: pointer;
+}
+
+.item-card:hover {
+    transform: translateY(-2px); /* ขยับขึ้นนิดนึงตอน hover */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.card-left {
+    display: flex;
+    flex-direction: column;
+}
+
+.subject-code {
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.post-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.card-right {
+    flex-shrink: 0;
+}
+
+.save-date {
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 40px;
+    color: #888;
+    background: #f9f9f9;
+    border-radius: 10px;
+}

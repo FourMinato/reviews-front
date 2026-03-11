@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&family=Prompt:wght@300;400;500;700&family=Mitr:wght@300;400;500;700&family=Noto+Sans+Thai:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <div class="container-wrapper">
+        <header>
+            <nav>
+                <button class="back-btn" onclick="history.back()">กลับ</button>
+            </nav>
+        </header>
+
+        <main>
+            <div class="subcode-border">
+                <span class="subcode-border-text">ตั้งกระทู้ถามของคุณ</span>
+            </div>
+            <div class="name-border">
+                <span class="name-border-text">ตั้งกระทู้ถาม</span>
+            </div>
+
+            <div class="create-post-btn">
+                <button class="create-post-btn-text" (click)="create()">สร้างโพสต์คำถาม</button>
+            </div>
+
+
+            <div class="card-list-container">
+                <div class="card-border" *ngFor="let question of questionList">
+
+                    <div class="card-header">
+                        <div class="user-profile">
+                            <div class="avatar-circle">
+                                <img [src]="question.profile" alt="profile" class="avatar-image">
+                            </div>
+                            <div class="user-info">
+                                <span class="username">{{ question.name }}</span>
+                                <span class="date">{{ question.date | date:'yyyy-MM-dd' }}</span>
+                            </div>
+                        </div>
+
+                        <div class="rating-box">
+
+                            <div class="report-wrapper">
+                                <button class="report-btn" (click)="toggleReportMenu(question.id, $event)"
+                                    [class.active]="activeReportId === question.id">
+                                    &#8943;
+                                </button>
+
+                                <div class="report-dropdown" *ngIf="activeReportId === question.id"
+                                    (click)="$event.stopPropagation()">
+                                    <div class="report-item" *ngIf="question.uid === userID"
+                                        (click)="editQuestion(question.id)">
+                                        <span>แก้ไขโพสต์ของคุณ</span>
+                                    </div>
+                                    <div class="report-item" *ngIf="question.uid === userID"
+                                        (click)="deleteThisQuestion(question.id)">
+                                        <span>ลบโพสต์ของคุณ</span>
+                                    </div>
+                                    <div class="report-item" *ngIf="question.uid !== userID && isAdmin === false"
+                                        (click)="reportQuestion(question.id)">
+                                        <span>รายงานคำถามนี้</span>
+                                    </div>
+                                     <div class="report-item" *ngIf="isAdmin" (click)="closeThisQuestion(question.id)">
+                                            <span>ปิดการมองเห็นโพสต์นี้</span>
+                                        </div>
+                                        <div class="report-item" *ngIf="isAdmin" (click)="adminDeleteThisQuestion(question.id)">
+                                            <span>ลบโพสต์นี้</span>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+                        <p>{{ question.descriptions }}</p>
+                    </div>
+
+                    <div class="card-footer">
+
+                        <button class="action-btn" (click)="linkToQuestionDetail(question.id)">ดูความคิดเห็น</button>
+                        <button class="action-btn" (click)="saveToFavorites(question.id)" [ngStyle]="{
+                                    'background-color': question.is_saved ? '#50C878' : 'white',
+                                    'color':            question.is_saved ? 'white' : '#333',
+                                    'border-color':     question.is_saved ? '#50C878' : '#aaa'
+                                    }">
+
+                            {{ question.is_saved ? 'บันทึกแล้ว' : 'บันทึกโพสต์' }}
+
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+
+</body>
+
+</html>

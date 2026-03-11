@@ -1,0 +1,31 @@
+/* --- เพิ่ม CSS ส่วนนี้เข้าไปครับ --- */
+
+/* สร้างจุดแดง (Notification Dot) */
+.notification-dot {
+    width: 10px;
+    height: 10px;
+    background-color: #ff4d4d; /* สีแดงสด */
+    border-radius: 50%; /* ทำเป็นวงกลม */
+    display: inline-block;
+}
+
+/* จุดแดงสำหรับปุ่มเมนูหลัก (Overlay มุมขวาบน) */
+.menu-dot {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    border: 1px solid white; /* ตัดขอบขาวเล็กน้อยให้ดูชัดขึ้น */
+}
+
+/* จุดแดงในรายการ Dropdown (จัดให้อยู่ท้ายข้อความ) */
+.list-dot {
+    margin-left: auto; /* ดันไปชิดขวาสุด */
+}
+
+/* ปรับปุ่ม Menu ให้รองรับการวางจุดแบบ Absolute */
+.menu-btn {
+    position: relative; /* สำคัญมาก ต้องมีบรรทัดนี้ */
+    /* ... (style เดิมยังคงอยู่) ... */
+}
+
+/* ปรับลิ้งก์ใน Dropdown ให้จัดเรียงแบบ Flex เพื่อให้จุดแดงอยู่บรรทัดเดียวกันสวยๆ */
