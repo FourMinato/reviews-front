@@ -6,9 +6,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile</title>
-    <style>
-        /* --- Global Reset --- */
-    </style>
+
 </head>
 
 <body>
@@ -106,7 +104,7 @@
                         </div>
                     </div>
                 </div>
-                <input #fileInput type="file" style="display: none" accept="image/*" (change)="onFileSelected($event)">
+                <input #fileInput type="file" class="hidden-file-input" accept="image/*" (change)="onFileSelected($event)">
 
                 <button class="save-btn" (click)="updateUser()">บันทึกการแก้ไข</button>
             </aside>
