@@ -33,6 +33,7 @@ export class DetailComponent {
           if (res.status) {
             this.user = {
               ...res.data,
+              profile: res.data.profile && res.data.profile.startsWith('http') ? res.data.profile : `${this.constants.API}/images/${res.data.profile}`,
               role: res.data.type === 1 ? 'User' : 'Admin'
             };
             console.log(this.user);

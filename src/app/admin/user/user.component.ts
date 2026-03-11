@@ -32,7 +32,7 @@ export class UserComponent {
           if (res.status) {
             this.allUsersList = res.data.map((user: any) => ({
               ...user,
-              profile: `${this.constants.API}/images/${user.profile}`,
+              profile: user.profile ? (user.profile.startsWith('http') ? user.profile : `${this.constants.API}/images/${user.profile}`) : 'https://cdn-icons-png.flaticon.com/512/149/149071.png',
               role: user.type === 1 ? 'User' : 'Admin'
             }));
             this.usersList = [...this.allUsersList];

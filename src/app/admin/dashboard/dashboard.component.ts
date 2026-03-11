@@ -27,4 +27,7 @@ export class DashboardComponent {
   watchDetails() {
     this.router.navigate(['/admin/watch/detail'])
   }
+  back() {
+    this.router.navigate(['/'])
+  }
 }

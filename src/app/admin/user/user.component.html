@@ -40,7 +40,8 @@
             <div class="user-card" *ngFor="let user of usersList">
                 <div class="user-info">
                     <div class="avatar-circle">
-                        <img [src]="user.profile" alt="{{ user.name }}">
+                        <img [src]="user.profile" alt="{{ user.name }}"
+                            onerror="this.src='https://cdn-icons-png.flaticon.com/512/149/149071.png'">
                     </div>
 
                     <div class="text-group">
