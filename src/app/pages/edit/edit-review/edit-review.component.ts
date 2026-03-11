@@ -63,6 +63,16 @@ export class EditReviewComponent {
       });
       return;
     }
+    if (this.reviewText.trim() === '') {
+      Swal.fire({
+        html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">กรุณากรอกข้อความรีวิว</div>',
+        icon: 'error',
+        confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
+        confirmButtonColor: '#000000',
+        color: '#000000'
+      });
+      return;
+    }
     if (this.reviewText.length > 45) {
       Swal.fire({
         html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ขนาดของข้อความเกิน 45 ตัวอักษร</div>',
@@ -101,9 +111,10 @@ export class EditReviewComponent {
             }).then(() => {
               history.back();
             });
-            
-          }});
-      
+
+          }
+        });
+
     }
 
 

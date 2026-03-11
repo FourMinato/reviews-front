@@ -64,7 +64,7 @@ export class ReviewdetailsComponent {
     this.checkAdmin();
     this.getDetailReview();
     this.getComments('review', this.reviewID);
-    
+
   }
   checkLogin() {
     this.isLoggedIn = this.authService.isLoggedIn();
@@ -90,7 +90,7 @@ export class ReviewdetailsComponent {
           if (response.status === true) {
             this.reviews = response.result.map((review: any) => ({
               ...review,
-              profile: review.profile && review.profile.startsWith('http') ? review.profile : `${this.constants.API}/images/${review.profile}`
+              profile: `${this.constants.API}/images/${review.profile}`
             }));
             if (this.reviews[0].uid === this.userID) {
               this.isOwner = true;
@@ -107,6 +107,38 @@ export class ReviewdetailsComponent {
         }
       }
       );
+  }
+
+  adminDeleteThisReview(reviewID: number) {
+    Swal.fire({
+      html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ยืนยันการลบโพสต์นี้?</div>',
+      icon: 'warning',
+      confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
+      confirmButtonColor: '#ff4d4d',
+      color: '#000000',
+      showCancelButton: true,
+      cancelButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ยกเลิก</div>',
+      cancelButtonColor: '#000000',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.http.delete<any>(`${this.constants.API}/delete/admin/delete/review/${reviewID}`)
+          .subscribe({
+            next: (response) => {
+              if (response.status == true) {
+                Swal.fire({
+                  html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ลบโพสต์สำเร็จ</div>',
+                  icon: 'success',
+                  timer: 2000,
+                  showConfirmButton: false
+                }).then(() => {
+                  history.back();
+                });
+              }
+            }
+          });
+      }
+    });
+
   }
   getComments(type: 'review' | 'question', refId: string) {
     this.http.get<any>(`${this.constants.API}/comment/review/${type}/${refId}`)
@@ -589,12 +621,12 @@ export class ReviewdetailsComponent {
 
 
   isLoggedInFalse() {
- Swal.fire({
-        html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">กรุณาเข้าสู่ระบบก่อน</div>',
-        icon: 'error',
-        confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
-        confirmButtonColor: '#000000',
-        color: '#000000'
-      });
+    Swal.fire({
+      html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">กรุณาเข้าสู่ระบบก่อน</div>',
+      icon: 'error',
+      confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
+      confirmButtonColor: '#000000',
+      color: '#000000'
+    });
   }
 }

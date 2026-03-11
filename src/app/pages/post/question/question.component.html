@@ -70,12 +70,13 @@
                                         (click)="reportQuestion(question.id)">
                                         <span>รายงานคำถามนี้</span>
                                     </div>
-                                     <div class="report-item" *ngIf="isAdmin" (click)="closeThisQuestion(question.id)">
-                                            <span>ปิดการมองเห็นโพสต์นี้</span>
-                                        </div>
-                                        <div class="report-item" *ngIf="isAdmin" (click)="adminDeleteThisQuestion(question.id)">
-                                            <span>ลบโพสต์นี้</span>
-                                        </div>
+                                    <div class="report-item" *ngIf="isAdmin" (click)="closeThisQuestion(question.id)">
+                                        <span>ปิดการมองเห็นโพสต์นี้</span>
+                                    </div>
+                                    <div class="report-item" *ngIf="isAdmin"
+                                        (click)="adminDeleteThisQuestion(question.id)">
+                                        <span>ลบโพสต์นี้</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>

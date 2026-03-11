@@ -23,7 +23,7 @@
             flex-direction: column;
             align-items: center;
             /* ใช้พื้นหลังสีเทาอ่อน คุมโทนเดียวกับหน้าอื่น */
-            background-color: #F3F4F6; 
+            background-color: #F3F4F6;
         }
 
         .page-wrapper {
@@ -44,7 +44,7 @@
             display: flex;
             align-items: center;
             /* เส้นคั่นสีเทาอ่อนแบบหน้าอื่นๆ */
-            border-bottom: 2px solid #E5E7EB; 
+            border-bottom: 2px solid #E5E7EB;
             margin-bottom: 1.5rem;
         }
 
@@ -65,7 +65,7 @@
             cursor: pointer;
             font-size: 16px;
             font-weight: 500;
-            flex-shrink: 0; 
+            flex-shrink: 0;
             transition: all 0.2s ease;
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
         }
@@ -117,8 +117,10 @@
         .radio-label {
             display: inline-block;
             padding: 0.5rem 1.2rem;
-            border: 1px solid #D1D5DB; /* ขอบบางๆ */
-            border-radius: 50px; /* ทรงแคปซูล */
+            border: 1px solid #D1D5DB;
+            /* ขอบบางๆ */
+            border-radius: 50px;
+            /* ทรงแคปซูล */
             cursor: pointer;
             font-size: 1rem;
             font-weight: 500;
@@ -127,7 +129,7 @@
             transition: all 0.2s ease;
             user-select: none;
             white-space: nowrap;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
         }
 
         .radio-label:hover {
@@ -140,7 +142,7 @@
             background-color: #374151;
             color: white;
             border-color: #374151;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         /* =========================================
@@ -155,7 +157,7 @@
 
         .reports-card {
             width: 100%;
-            border: 1px solid #E5E7EB; 
+            border: 1px solid #E5E7EB;
             border-radius: 16px;
             background: white;
             overflow: hidden;
@@ -196,7 +198,8 @@
         .unread-dot {
             width: 10px;
             height: 10px;
-            background-color: #EF4444; /* สีแดง */
+            background-color: #EF4444;
+            /* สีแดง */
             border-radius: 50%;
             flex-shrink: 0;
             box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
@@ -251,16 +254,19 @@
         }
 
         .reports-card.active .toggle-icon {
-            transform: rotate(180deg); /* หมุนลูกศรขึ้นเวลากางออก */
+            transform: rotate(180deg);
+            /* หมุนลูกศรขึ้นเวลากางออก */
         }
 
         /* --- Body of Card (Accordion) --- */
         .card-body {
             max-height: 0;
             opacity: 0;
-            overflow: hidden; /* จำเป็นมากสำหรับ Accordion */
+            overflow: hidden;
+            /* จำเป็นมากสำหรับ Accordion */
             transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
-            background-color: #F9FAFB; /* พื้นหลังส่วนที่กางออกให้เทาลงนิดนึง */
+            background-color: #F9FAFB;
+            /* พื้นหลังส่วนที่กางออกให้เทาลงนิดนึง */
         }
 
         .card-divider {
@@ -324,20 +330,63 @@
 
         /* Responsive */
         @media (max-width: 768px) {
-            .page-wrapper { width: 92%; padding: 0 10px; }
-            header { height: 4.5rem; margin-bottom: 1rem; }
-            .logo { font-size: 1.2rem; }
-            .back-btn { padding: 6px 16px; font-size: 14px; }
-            
-            .check-border { gap: 0.5rem; padding-bottom: 16px; }
-            .radio-label { padding: 0.4rem 1rem; font-size: 0.9rem; }
-            
-            .card-header { padding: 16px; flex-wrap: wrap; gap: 10px; }
-            .title-wrapper { min-width: 100%; }
-            .meta-info { width: 100%; justify-content: space-between; padding-left: 22px; } /* ดันให้ตรงกับ text */
-            
-            .card-actions { justify-content: stretch; padding: 16px; }
-            .btn-action-red, .btn-action-outline { width: 100%; text-align: center; }
+            .page-wrapper {
+                width: 92%;
+                padding: 0 10px;
+            }
+
+            header {
+                height: 4.5rem;
+                margin-bottom: 1rem;
+            }
+
+            .logo {
+                font-size: 1.2rem;
+            }
+
+            .back-btn {
+                padding: 6px 16px;
+                font-size: 14px;
+            }
+
+            .check-border {
+                gap: 0.5rem;
+                padding-bottom: 16px;
+            }
+
+            .radio-label {
+                padding: 0.4rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .card-header {
+                padding: 16px;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .title-wrapper {
+                min-width: 100%;
+            }
+
+            .meta-info {
+                width: 100%;
+                justify-content: space-between;
+                padding-left: 22px;
+            }
+
+            /* ดันให้ตรงกับ text */
+
+            .card-actions {
+                justify-content: stretch;
+                padding: 16px;
+            }
+
+            .btn-action-red,
+            .btn-action-outline {
+                width: 100%;
+                text-align: center;
+            }
         }
     </style>
 </head>
@@ -353,60 +402,112 @@
 
         <main>
             <div class="check-border">
+
                 <div class="radio-wrapper">
-                    <input type="radio" name="sort" id="all" value="all" checked [(ngModel)]="selected" (change)="selectBy()">
-                    <label for="all" class="radio-label">ทั้งหมด</label>
-                </div>
-                <div class="radio-wrapper">
-                    <input type="radio" name="sort" id="review" value="review" [(ngModel)]="selected" (change)="selectBy()">
+                    <input type="radio" name="sort" id="review" value="review" checked [(ngModel)]="selected"
+                        (change)="selectBy()">
                     <label for="review" class="radio-label">โพสต์รีวิว</label>
                 </div>
                 <div class="radio-wrapper">
-                    <input type="radio" name="sort" id="question" value="question" [(ngModel)]="selected" (change)="selectBy()">
+                    <input type="radio" name="sort" id="question" value="question" [(ngModel)]="selected"
+                        (change)="selectBy()">
                     <label for="question" class="radio-label">โพสต์ถามตอบ</label>
                 </div>
-                 <div class="radio-wrapper">
-                    <input type="radio" name="sort" id="comment" value="comment" [(ngModel)]="selected" (change)="selectBy()">
+                <div class="radio-wrapper">
+                    <input type="radio" name="sort" id="comment" value="comment" [(ngModel)]="selected"
+                        (change)="selectBy()">
                     <label for="comment" class="radio-label">คอมเมนต์</label>
                 </div>
             </div>
 
             <div class="reports-list">
-                
-                <div class="reports-card" 
-                     *ngFor="let report of testData" 
-                     [class.active]="report.isExpanded"
-                     [class.unread]="!report.isRead"
-                     [class.read]="report.isRead">
-                    
-                    <div class="card-header" (click)="report.isExpanded = !report.isExpanded">
-                        <div class="title-wrapper">
-                            <div class="unread-dot" *ngIf="!report.isRead"></div>
-                            <span class="report-title">
-                                {{ report.title || 'user012 รายงานโพสต์รีวิว' }}
-                            </span>
+
+                <ng-container *ngIf="selected === 'review'">
+                    <div class="reports-card" *ngFor="let report of reportsReview" [class.active]="report.isExpanded"
+                        [class.unread]="!report.isRead" [class.read]="report.isRead">
+
+                        <div class="card-header" (click)="report.isExpanded = !report.isExpanded">
+                            <div class="title-wrapper">
+
+                                <span class="report-title">
+                                    <strong>{{ report.reporter_name }}</strong> ได้รายงานโพสต์รีวิว
+                                </span>
+                            </div>
+                            <div class="meta-info">
+                                <span class="report-date">{{ report.date | date:'yyyy-MM-dd' }}</span>
+                                <i class="fas fa-chevron-down toggle-icon"></i>
+                            </div>
                         </div>
 
-                        <div class="meta-info">
-                            <span class="report-date">{{ report.date || '25-01-2025' }}</span>
-                            <span class="status-badge">
-                                {{ report.isRead ? 'อ่านแล้ว' : 'ใหม่' }}
-                            </span>
-                            <i class="fas fa-chevron-down toggle-icon"></i>
-                        </div>
-                    </div>
+                        <div class="card-body">
+                            <hr class="card-divider">
+                            <div class="card-actions">
+                                <button class="btn-action-outline"
+                                    (click)="linkToReviewDetails(report.pid)">ดูโพสต์รีวิว</button>
 
-                    <div class="card-body">
-                        <hr class="card-divider">
-                        <div class="card-actions">
-                            <button class="btn-action-outline">ไปยังโพสต์</button>
-                            <button class="btn-action-red" (click)="report.isRead = true">ส่งผลการรายงาน</button>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </ng-container>
+
+                <ng-container *ngIf="selected === 'question'">
+                    <div class="reports-card" *ngFor="let report of reportsQuestion" [class.active]="report.isExpanded"
+                        [class.unread]="!report.isRead" [class.read]="report.isRead">
+
+                        <div class="card-header" (click)="report.isExpanded = !report.isExpanded">
+                            <div class="title-wrapper">
+
+                                <span class="report-title">
+                                    <strong>{{ report.reporter_name }}</strong> ได้รายงานโพสต์ถามตอบ
+                                </span>
+                            </div>
+                            <div class="meta-info">
+                                <span class="report-date">{{ report.date | date:'yyyy-MM-dd' }}</span>
+                                <i class="fas fa-chevron-down toggle-icon"></i>
+                            </div>
+                        </div>
+
+                        <div class="card-body">
+                            <hr class="card-divider">
+                            <div class="card-actions">
+                                <button class="btn-action-outline"
+                                    (click)="linkToQuestionDetails(report.pid)">ไปยังคำถาม</button>
+
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="selected === 'comment'">
+                    <div class="reports-card" *ngFor="let report of reportsComment" [class.active]="report.isExpanded"
+                        [class.unread]="!report.isRead" [class.read]="report.isRead">
+
+                        <div class="card-header" (click)="report.isExpanded = !report.isExpanded">
+                            <div class="title-wrapper">
+
+                                <span class="report-title">
+                                    <strong>{{ report.reporter_name }}</strong> ได้รายงานคอมเมนต์
+                                </span>
+                            </div>
+                            <div class="meta-info">
+                                <span class="report-date">{{ report.date | date:'yyyy-MM-dd' }}</span>
+                                <i class="fas fa-chevron-down toggle-icon"></i>
+                            </div>
+                        </div>
+
+                        <div class="card-body">
+                            <hr class="card-divider">
+                            <div class="card-actions">
+                                <button class="btn-action-outline"
+                                    (click)="linkToPost(report.type, report.ref_id)">ดูคอมเมนต์</button>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+
 
             </div>
         </main>
     </div>
 </body>
+
 </html>

@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&family=Sarabun:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>รายการที่บันทึกไว้</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Kanit', sans-serif;
+        }
+
+        body {
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #000;
+        }
+
+        .page-wrapper {
+            width: clamp(95%, 90vw, 85%);
+            max-width: 800px;
+            /* จำกัดความกว้างให้ Card ดูสวย ไม่ยืดเกินไป */
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            padding-bottom: 40px;
+        }
+
+        /* --- Header --- */
+        header {
+            width: 100%;
+            height: 4rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 2px solid black;
+            margin-bottom: 20px;
+        }
+
+        .back-btn {
+            padding: 0.5rem 1.5rem;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            border-radius: 5px;
+            background-color: black;
+            color: white;
+            font-weight: 500;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #000;
+        }
+
+        /* --- Main Content --- */
+        main {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .page-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        /* --- Tabs --- */
+        .tab-container {
+            display: flex;
+            width: 100%;
+            border-bottom: 2px solid #eee;
+            margin-bottom: 20px;
+        }
+
+        .tab-item {
+            flex: 1;
+            text-align: center;
+            padding: 12px 0;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #888;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .tab-item:hover {
+            color: #333;
+        }
+
+        .tab-item.active {
+            color: #000;
+            font-weight: 600;
+        }
+
+        .tab-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #000;
+        }
+
+        .list-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* =========================================
+           ดีไซน์ Card ใหม่ (ตามรูปที่ส่งมา)
+           ========================================= */
+        .post-card {
+            border: 1px solid #E5E7EB;
+            border-radius: 12px;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            transition: box-shadow 0.2s ease;
+        }
+
+        .post-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        /* ส่วนหัว Card (รูป, ชื่อ, วันที่, ดาว) */
+        .pc-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .pc-user-info {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .pc-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            background-color: #f3f4f6;
+            border: 1px solid #e5e7eb;
+        }
+
+        .pc-user-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .pc-username {
+            font-weight: 600;
+            font-size: 1.05rem;
+            color: #111827;
+        }
+
+        .pc-date {
+            font-size: 0.85rem;
+            color: #6B7280;
+        }
+
+        .pc-header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .pc-stars {
+            color: #FBBF24;
+            /* สีเหลืองทอง */
+            font-size: 1rem;
+            display: flex;
+            gap: 2px;
+        }
+
+        .pc-options-btn {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: #374151;
+            cursor: pointer;
+        }
+
+        /* ส่วนเนื้อหาโพสต์ (กล่องสีเทา) */
+        .pc-body {
+            background-color: #F3F4F6;
+            /* สีเทาอ่อน */
+            padding: 20px;
+            border-radius: 8px;
+            font-size: 1rem;
+            color: #1F2937;
+            margin-bottom: 16px;
+            min-height: 80px;
+            /* บังคับความสูงขั้นต่ำให้ดูสวยงาม */
+        }
+
+        /* ส่วนปุ่ม 3 ปุ่มด้านล่าง */
+        .pc-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .pc-btn {
+            flex: 1;
+            /* แบ่งพื้นที่เท่าๆ กัน 3 ส่วน */
+            padding: 10px;
+            border: 1px solid #111827;
+            /* ขอบสีดำ */
+            background-color: white;
+            color: #111827;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .pc-btn:hover {
+            background-color: #F9FAFB;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #888;
+            background: #f9f9f9;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="page-wrapper">
+        <header>
+            <button class="back-btn" onclick="history.back()">กลับ</button>
+            <div class="logo">RevMSU</div>
+        </header>
+
+        <main>
+            <h2 class="page-title">โพสต์ทั้งหมดที่ถูกปิดการมองเห็น</h2>
+
+            <div class="tab-container">
+                <div class="tab-item" [class.active]="currentTab === 'review'" (click)="setTab('review')">
+                    โพสต์รีวิวรายวิชา
+                </div>
+                <div class="tab-item" [class.active]="currentTab === 'qa'" (click)="setTab('qa')">
+                    โพสต์ถามตอบ
+                </div>
+            </div>
+
+            <div class="list-container">
+
+                <ng-container *ngIf="currentTab === 'review'">
+
+                    <div class="post-card" *ngFor="let item of reviewsList">
+                        <div class="pc-header">
+                            <div class="pc-user-info">
+                                <img [src]="item.profile" alt="profile" class="pc-avatar">
+                                <div class="pc-user-text">
+                                    <span class="pc-username">{{ item.name }}</span>
+                                    <span class="pc-date">{{ item.date | date:'yyyy-MM-dd' }}</span>
+                                </div>
+                            </div>
+                            <div class="pc-header-right">
+
+                                <div class="pc-options-wrapper">
+                                    <button class="pc-options-btn" (click)="toggleMenu(item.id, $event)">
+                                        <i class="fas fa-ellipsis-h"></i>
+                                    </button>
+
+                                    <div class="dropdown-menu" *ngIf="activeMenuId === item.id">
+
+                                        <button class="dropdown-item" (click)="openReview(item.pid)">
+                                            <i class="fas fa-eye"></i> เปิดการมองเห็นโพสต์
+                                        </button>
+                                        <button class="dropdown-item text-red" (click)="deleteThisReview(item.pid)">
+                                            <i class="fas fa-trash-alt"></i> ลบโพสต์
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pc-body">
+                            {{ item.descriptions }}
+                        </div>
+
+
+                    </div>
+
+                </ng-container>
+
+                <ng-container *ngIf="currentTab === 'qa'">
+                    <div class="post-card" *ngFor="let item of questionsList">
+                        <div class="pc-header">
+                            <div class="pc-user-info">
+                                <img [src]="item.profile" alt="profile" class="pc-avatar">
+                                <div class="pc-user-text">
+                                    <span class="pc-username">{{ item.name }}</span>
+                                    <span class="pc-date">{{ item.date | date:'yyyy-MM-dd' }}</span>
+                                </div>
+                            </div>
+                            <div class="pc-header-right">
+                                <div class="pc-options-wrapper">
+                                    <button class="pc-options-btn" (click)="toggleMenu(item.id, $event)">
+                                        <i class="fas fa-ellipsis-h"></i>
+                                    </button>
+
+                                    <div class="dropdown-menu" *ngIf="activeMenuId === item.id">
+
+                                        <button class="dropdown-item" (click)="openQuestion(item.id)">
+                                            <i class="fas fa-eye"></i> เปิดการมองเห็นโพสต์
+                                        </button>
+                                        <button class="dropdown-item text-red" (click)="deleteThisQuestion(item.id)">
+                                            <i class="fas fa-trash-alt"></i> ลบโพสต์
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pc-body">
+                            {{ item.descriptions }}
+                        </div>
+
+                    </div>
+                </ng-container>
+
+                <div class="empty-state" *ngIf="questions.length === 0">
+                    <p>ไม่มีรายการที่บันทึกไว้</p>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+</body>
+
+</html>

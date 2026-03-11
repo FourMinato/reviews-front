@@ -10,18 +10,21 @@ import { Router } from '@angular/router';
 })
 export class DashboardComponent {
 
-    constructor(private router: Router, private http: HttpClient) { }
+  constructor(private router: Router, private http: HttpClient) { }
 
-  createNew(){
+  createNew() {
     this.router.navigate(['/admin/create'])
   }
-    detailSubjects(){
+  detailSubjects() {
     this.router.navigate(['/admin/details'])
   }
-    userPage(){
+  userPage() {
     this.router.navigate(['/admin/users'])
   }
-    reportsPage(){
+  reportsPage() {
     this.router.navigate(['/admin/reports'])
+  }
+  watchDetails() {
+    this.router.navigate(['/admin/watch/detail'])
   }
 }

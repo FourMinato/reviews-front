@@ -39,8 +39,8 @@ export class QuestionAllPostsComponent {
     const user = this.authService.getUser();
     if (user.type === 0) {
       this.isAdmin = true;
-    
-      
+
+
     }
   }
   getData() {
@@ -50,7 +50,7 @@ export class QuestionAllPostsComponent {
           // แปลง path รูปภาพให้เป็น URL เต็ม
           this.questionList = res.result.map((question: any) => ({
             ...question,
-            profile: question.profile && question.profile.startsWith('http') ? question.profile : `${this.constants.API}/images/${question.profile}`,
+            profile: `${this.constants.API}/images/${question.profile}`,
             is_saved: (question.is_saved === 1 || question.is_saved === true)
           }));
           console.log(this.questionList);
@@ -60,7 +60,7 @@ export class QuestionAllPostsComponent {
 
       );
   }
-saveToFavorites(questionID: number) {
+  saveToFavorites(questionID: number) {
     if (this.isLoggedIn === false) {
       Swal.fire({
         html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">กรุณาเข้าสู่ระบบก่อน</div>',
@@ -76,7 +76,7 @@ saveToFavorites(questionID: number) {
       const previousState = question.is_saved;
       question.is_saved = !question.is_saved;
       const data = { uid: this.userID, questionID: questionID };
-      
+
       this.http.post<any>(`${this.constants.API}/favorite/question`, data)
         .subscribe({
           next: (response) => {
@@ -106,10 +106,10 @@ saveToFavorites(questionID: number) {
         });
     }
   }
-  linkToQuestionDetail(questionID:any){
-          this.router.navigate(['post/question/details'], {
-        state: { questionID: questionID }
-      });
+  linkToQuestionDetail(questionID: any) {
+    this.router.navigate(['post/question/details'], {
+      state: { questionID: questionID }
+    });
   }
   toggleSave(btn: any) {
     // คำสั่ง classList.toggle คือการสลับ class
@@ -123,65 +123,66 @@ saveToFavorites(questionID: number) {
       btn.innerText = "บันทึกโพสต์";
     }
   }
-reportQuestion(questionID: number) {
-  if (this.isLoggedIn === false) {
-        Swal.fire({
-          html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">กรุณาเข้าสู่ระบบก่อน</div>',
-          icon: 'error',
-          confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
-          confirmButtonColor: '#000000',
-          color: '#000000'
-        });
-        return;
-      } else {
-        Swal.fire({
-          html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ยืนยันการรายงานโพสต์นี้?</div>',
-          icon: 'warning',
-          confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
-          confirmButtonColor: '#ff4d4d',
-          color: '#000000',
-          showCancelButton: true,
-          cancelButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ยกเลิก</div>',
-          cancelButtonColor: '#000000',
-        }).then((result) => {
-          if (result.isConfirmed) {
-            const data = { uid: this.userID, questionID: questionID };
-            this.http.post<any>(`${this.constants.API}/report/question`, data)
-              .subscribe({
-                next: (response) => {
-                  if (response.status == true) {
-                    Swal.fire({
-                      html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">รายงานโพสต์สำเร็จ</div>',
-                      icon: 'success',
-                      timer: 1500,
-                      showConfirmButton: false
-                    });
-                  } else {
-                    Swal.fire({
-                      html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">' + response.message + '</div>',
-                      icon: 'error',
-                      confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
-                      confirmButtonColor: '#000000',
-                      color: '#000000'
-                    });
-                  }
-                },
-                error: (error) => {
+  reportQuestion(questionID: number) {
+    if (this.isLoggedIn === false) {
+      Swal.fire({
+        html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">กรุณาเข้าสู่ระบบก่อน</div>',
+        icon: 'error',
+        confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
+        confirmButtonColor: '#000000',
+        color: '#000000'
+      });
+      return;
+    } else {
+      Swal.fire({
+        html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ยืนยันการรายงานโพสต์นี้?</div>',
+        icon: 'warning',
+        confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
+        confirmButtonColor: '#ff4d4d',
+        color: '#000000',
+        showCancelButton: true,
+        cancelButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ยกเลิก</div>',
+        cancelButtonColor: '#000000',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const data = { uid: this.userID, questionID: questionID };
+          this.http.post<any>(`${this.constants.API}/report/question`, data)
+            .subscribe({
+              next: (response) => {
+                if (response.status == true) {
                   Swal.fire({
-                    html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">' + (error.error?.message || 'กรุณาลองใหม่อีกครั้ง') + '</div>',
+                    html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">รายงานโพสต์สำเร็จ</div>',
+                    icon: 'success',
+                    timer: 1500,
+                    showConfirmButton: false
+                  });
+                } else {
+                  Swal.fire({
+                    html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">' + response.message + '</div>',
                     icon: 'error',
                     confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
                     confirmButtonColor: '#000000',
                     color: '#000000'
                   });
                 }
-              });
-          }
-        });
-      }
-}
- adminDeleteThisQuestion(questionID: number) {
-     Swal.fire({
+              },
+              error: (error) => {
+                Swal.fire({
+                  html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">' + (error.error?.message || 'กรุณาลองใหม่อีกครั้ง') + '</div>',
+                  icon: 'error',
+                  confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
+                  confirmButtonColor: '#000000',
+                  color: '#000000'
+                });
+              }
+            });
+        }
+      });
+    }
+  }
+
+  adminDeleteThisQuestion(questionID: number) {
+    Swal.fire({
       html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ยืนยันการลบโพสต์นี้?</div>',
       icon: 'warning',
       confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
@@ -211,48 +212,48 @@ reportQuestion(questionID: number) {
     });
 
   }
-  
-    closeThisQuestion(questionID: number) {
-      Swal.fire({
-        html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ยืนยันการปิดการมองเห็นโพสต์นี้?</div>',
-        icon: 'warning',
-        confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
-        confirmButtonColor: '#ff4d4d',
-        color: '#000000',
-        showCancelButton: true,
-        cancelButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ยกเลิก</div>',
-        cancelButtonColor: '#000000',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          const data = { questionID: questionID };
-          this.http.put<any>(`${this.constants.API}/close/question/visibility`, data)
-            .subscribe({
-              next: (response) => {
-                if (response.status == true) {
-                  Swal.fire({
-                    html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ปิดการมองเห็นโพสต์สำเร็จ</div>',
-                    icon: 'success',
-                    timer: 2000,
-                    showConfirmButton: false
-                  }).then(() => {
-                    window.location.reload();
-                  });
-                }
-                else {
-                  Swal.fire({
-                    html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">' + response.message + '</div>',
-                    icon: 'error',
-                    confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
-                    confirmButtonColor: '#000000',
-                    color: '#000000'
-                  });
-                }
+
+  closeThisQuestion(questionID: number) {
+    Swal.fire({
+      html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ยืนยันการปิดการมองเห็นโพสต์นี้?</div>',
+      icon: 'warning',
+      confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
+      confirmButtonColor: '#ff4d4d',
+      color: '#000000',
+      showCancelButton: true,
+      cancelButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ยกเลิก</div>',
+      cancelButtonColor: '#000000',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const data = { questionID: questionID };
+        this.http.put<any>(`${this.constants.API}/close/question/visibility`, data)
+          .subscribe({
+            next: (response) => {
+              if (response.status == true) {
+                Swal.fire({
+                  html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ปิดการมองเห็นโพสต์สำเร็จ</div>',
+                  icon: 'success',
+                  timer: 2000,
+                  showConfirmButton: false
+                }).then(() => {
+                  window.location.reload();
+                });
               }
-            });
-        }
-        });
-  
-    }
+              else {
+                Swal.fire({
+                  html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">' + response.message + '</div>',
+                  icon: 'error',
+                  confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
+                  confirmButtonColor: '#000000',
+                  color: '#000000'
+                });
+              }
+            }
+          });
+      }
+    });
+
+  }
 
   create() {
     if (this.isLoggedIn === false) {
@@ -306,7 +307,7 @@ reportQuestion(questionID: number) {
     console.log('Selected:', option);
   }
   editQuestion(questionID: number) {
-        this.router.navigate(['/edit/question'], {
+    this.router.navigate(['/edit/question'], {
       state: { questionID: questionID }
     });
   }
@@ -314,66 +315,37 @@ reportQuestion(questionID: number) {
 
 
   deleteThisQuestion(questionID: number) {
-      Swal.fire({
-        html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ยืนยันการลบโพสต์นี้?</div>',
-        icon: 'warning',
-        confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
-        confirmButtonColor: '#ff4d4d',
-        color: '#000000',
-        showCancelButton: true,
-        cancelButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ยกเลิก</div>',
-        cancelButtonColor: '#000000',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          this.http.delete<any>(`${this.constants.API}/delete/question/${questionID}`)
-            .subscribe({
-              next: (response) => {
-                if (response.status == true) {
-                  Swal.fire({
-                    html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ลบโพสต์สำเร็จ</div>',
-                    icon: 'success',
-                    timer: 2000,
-                    showConfirmButton: false
-                  }).then(() => {
-                    window.location.reload();
-                  });
-                }
+    Swal.fire({
+      html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ยืนยันการลบโพสต์นี้?</div>',
+      icon: 'warning',
+      confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
+      confirmButtonColor: '#ff4d4d',
+      color: '#000000',
+      showCancelButton: true,
+      cancelButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ยกเลิก</div>',
+      cancelButtonColor: '#000000',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.http.delete<any>(`${this.constants.API}/delete/question/${questionID}`)
+          .subscribe({
+            next: (response) => {
+              if (response.status == true) {
+                Swal.fire({
+                  html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ลบโพสต์สำเร็จ</div>',
+                  icon: 'success',
+                  timer: 2000,
+                  showConfirmButton: false
+                }).then(() => {
+                  window.location.reload();
+                });
               }
-            });
-        }
-      });
-  
-    }
+            }
+          });
+      }
+    });
 
-  questions = [
-    {
-      id: 1,
-      username: 'Night',
-      date: '02-02-2024',
-      rating: 5,
-      content: 'แนะนำอาจารย์ที่ดีมากๆครับ คอร์สนี้ดีมากๆครับ',
-      likes: 1,
-      comments: 0
-    },
-    {
-      id: 2,
-      username: 'N***t',
-      date: '01-02-2024',
-      rating: 3,
-      content: 'CDDDD',
-      likes: 0,
-      comments: 0
-    },
-    {
-      id: 3,
-      username: 'Nt000222222222222222',
-      date: '03-01-2024',
-      rating: 3,
-      content: 'ABDHD',
-      likes: 11,
-      comments: 3
-    }
-  ];
+  }
+
 
   getStars(rating: number): number[] {
     return Array(5).fill(0).map((_, i) => i + 1);

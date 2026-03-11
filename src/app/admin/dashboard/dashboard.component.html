@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&family=Prompt:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&family=Prompt:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -17,7 +20,7 @@
 
         body {
             /* ปรับพื้นหลังให้เป็นสีเทาอ่อนมาก เพื่อให้ Card สีขาวลอยเด่นขึ้นมา */
-            background-color: #F3F4F6; 
+            background-color: #F3F4F6;
         }
 
         .dashboard-header {
@@ -63,26 +66,61 @@
         }
 
         /* สีสันของแต่ละหมวดหมู่ (อิงตามหลัก UX/UI Semantic Colors) */
-        
+
         /* 1. สีเขียว (Create) */
-        .color-success .icon-box { background-color: #D1FAE5; color: #10B981; }
-        .color-success:hover .icon-box { background-color: #10B981; color: #ffffff; }
+        .color-success .icon-box {
+            background-color: #D1FAE5;
+            color: #10B981;
+        }
+
+        .color-success:hover .icon-box {
+            background-color: #10B981;
+            color: #ffffff;
+        }
 
         /* 2. สีน้ำเงิน (Edit) */
-        .color-primary .icon-box { background-color: #DBEAFE; color: #3B82F6; }
-        .color-primary:hover .icon-box { background-color: #3B82F6; color: #ffffff; }
+        .color-primary .icon-box {
+            background-color: #DBEAFE;
+            color: #3B82F6;
+        }
+
+        .color-primary:hover .icon-box {
+            background-color: #3B82F6;
+            color: #ffffff;
+        }
 
         /* 3. สีม่วง (Reports) */
-        .color-info .icon-box { background-color: #EDE9FE; color: #8B5CF6; }
-        .color-info:hover .icon-box { background-color: #8B5CF6; color: #ffffff; }
+        .color-info .icon-box {
+            background-color: #EDE9FE;
+            color: #8B5CF6;
+        }
+
+        .color-info:hover .icon-box {
+            background-color: #8B5CF6;
+            color: #ffffff;
+        }
 
         /* 4. สีส้ม (Users) */
-        .color-warning .icon-box { background-color: #FEF3C7; color: #F59E0B; }
-        .color-warning:hover .icon-box { background-color: #F59E0B; color: #ffffff; }
+        .color-warning .icon-box {
+            background-color: #FEF3C7;
+            color: #F59E0B;
+        }
+
+        .color-warning:hover .icon-box {
+            background-color: #F59E0B;
+            color: #ffffff;
+        }
 
         /* 5. สีแดง (Alert/Review) */
-        .color-danger .icon-box { background-color: #FEE2E2; color: #EF4444; }
-        .color-danger:hover .icon-box { background-color: #EF4444; color: #ffffff; }
+        .color-danger .icon-box {
+            background-color: #FEE2E2;
+            color: #EF4444;
+        }
+
+        .color-danger:hover .icon-box {
+            background-color: #EF4444;
+            color: #ffffff;
+        }
 
         .card-title {
             font-size: 1.1rem;
@@ -95,70 +133,74 @@
         }
     </style>
 </head>
+
 <body>
 
-<div class="container-fluid">
-    <div class="row">
-        <main class="col-md-12 px-md-5 py-2">
-            <div class="d-flex justify-content-between align-items-center pt-3 pb-2 mb-3 dashboard-header">
-                <h1 class="h3 fw-bold">Admin Dashboard</h1>
-            </div>
-
-            <div class="row row-cols-1 row-cols-md-3 row-cols-lg-5 g-4">
-                
-                <div class="col">
-                    <div class="card h-100 card-custom p-3 color-success" (click)="createNew()">
-                        <div class="card-body text-center">
-                            <div class="icon-box"><i class="fas fa-plus-circle"></i></div>
-                            <h5 class="card-title fw-600">Create Subject</h5>
-                            <p class="card-text">เพิ่มข้อมูลรายวิชา</p>
-                        </div>
-                    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <main class="col-md-12 px-md-5 py-2">
+                <div class="d-flex justify-content-between align-items-center pt-3 pb-2 mb-3 dashboard-header">
+                    <h1 class="h3 fw-bold">Admin Dashboard</h1>
                 </div>
 
-                <div class="col">
-                    <div class="card h-100 card-custom p-3 color-primary" (click)="detailSubjects()">
-                        <div class="card-body text-center">
-                            <div class="icon-box"><i class="fas fa-edit"></i></div>
-                            <h5 class="card-title fw-600">Edit Subjects</h5>
-                            <p class="card-text">แก้ไข/ลบข้อมูลรายวิชา</p>
+                <div class="row row-cols-1 row-cols-md-3 row-cols-lg-5 g-4">
+
+                    <div class="col">
+                        <div class="card h-100 card-custom p-3 color-success" (click)="createNew()">
+                            <div class="card-body text-center">
+                                <div class="icon-box"><i class="fas fa-plus-circle"></i></div>
+                                <h5 class="card-title fw-600">Create Subject</h5>
+                                <p class="card-text">เพิ่มข้อมูลรายวิชา</p>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                 <div class="col">
-                    <div class="card h-100 card-custom p-3 color-info" (click)="reportsPage()">
-                        <div class="card-body text-center">
-                            <div class="icon-box"><i class="fas fa-chart-pie"></i></div> <h5 class="card-title fw-600">All Reports</h5>
-                            <p class="card-text">ดูรายงานทั้งหมด</p>
+                    <div class="col">
+                        <div class="card h-100 card-custom p-3 color-primary" (click)="detailSubjects()">
+                            <div class="card-body text-center">
+                                <div class="icon-box"><i class="fas fa-edit"></i></div>
+                                <h5 class="card-title fw-600">Edit Subjects</h5>
+                                <p class="card-text">แก้ไข/ลบข้อมูลรายวิชา</p>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="col">
-                    <div class="card h-100 card-custom p-3 color-warning" (click)="userPage()">
-                        <div class="card-body text-center">
-                            <div class="icon-box"><i class="fas fa-users"></i></div>
-                            <h5 class="card-title fw-600">All Users</h5>
-                            <p class="card-text">จัดการสมาชิกและสิทธิ์</p>
+                    <div class="col">
+                        <div class="card h-100 card-custom p-3 color-info" (click)="reportsPage()">
+                            <div class="card-body text-center">
+                                <div class="icon-box"><i class="fas fa-chart-pie"></i></div>
+                                <h5 class="card-title fw-600">All Reports</h5>
+                                <p class="card-text">ดูรายงานทั้งหมด</p>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                 <div class="col">
-                    <div class="card h-100 card-custom p-3 color-danger">
-                        <div class="card-body text-center">
-                          <div class="icon-box"><i class="fas fa-eye-slash"></i></div> <h5 class="card-title fw-600">Review / Post</h5>
-                            <p class="card-text">ดูโพสต์ที่ถูกปิดมองเห็น</p>
+                    <div class="col">
+                        <div class="card h-100 card-custom p-3 color-warning" (click)="userPage()">
+                            <div class="card-body text-center">
+                                <div class="icon-box"><i class="fas fa-users"></i></div>
+                                <h5 class="card-title fw-600">All Users</h5>
+                                <p class="card-text">จัดการสมาชิกและสิทธิ์</p>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-            </div>
-        </main>
+                    <div class="col">
+                        <div class="card h-100 card-custom p-3 color-danger" (click)="watchDetails()">
+                            <div class="card-body text-center">
+                                <div class="icon-box"><i class="fas fa-eye-slash"></i></div>
+                                <h5 class="card-title fw-600">Review / Post</h5>
+                                <p class="card-text">ดูโพสต์ที่ถูกปิดมองเห็น</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </main>
+        </div>
     </div>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

@@ -21,7 +21,7 @@ export class EditQuestionComponent {
 
   question: any[] = [];
   originalText: string = '';
-  
+
   constructor(private http: HttpClient, private constants: Constants, private router: Router, private authService: AuthService) { }
 
   ngOnInit() {
@@ -30,7 +30,7 @@ export class EditQuestionComponent {
     console.log("questionID id is " + this.questionID);
     this.getDetailQuestion();
   }
-    getDetailQuestion() {
+  getDetailQuestion() {
     this.http.get<any>(`${this.constants.API}/review/data/question/${this.questionID}`)
       .subscribe(res => {
         if (res.status === true) {
@@ -38,17 +38,21 @@ export class EditQuestionComponent {
           this.questionText = this.question[0].descriptions;
           this.originalText = this.question[0].descriptions;
           console.log(this.question);
-          
+
         }
       });
   }
-  editQuestion(){
+  editQuestion() {
     if (this.questionText === this.originalText) {
       this.showError('ไม่มีการเปลี่ยนแปลงข้อมูล');
       return;
     }
     if (this.questionText.trim() === '') {
       this.showError('กรุณากรอกคำถาม');
+      return;
+    }
+    if (this.questionText.length > 45) {
+      this.showError('ขนาดของคำถามเกิน 45 ตัวอักษร');
       return;
     }
     const textCheck = checkProfanity(this.questionText);
@@ -60,40 +64,40 @@ export class EditQuestionComponent {
       questionID: this.questionID,
       descriptions: this.questionText
     };
-    
+
     this.http.put<any>(`${this.constants.API}/update/question`, newData)
       .subscribe(res => {
         if (res.status === true) {
-        this.showSuccess(res.message ||'แก้ไขคำถามสำเร็จ').then(() => {
-              history.back();
-            });
-        }else{
+          this.showSuccess(res.message || 'แก้ไขคำถามสำเร็จ').then(() => {
+            history.back();
+          });
+        } else {
           this.showError(res.message || 'แก้ไขคำถามไม่สำเร็จโปรดลองอีกครั้ง');
           return;
         }
-      
+
       });
 
 
   }
-    private showError(message: string) {
-      Swal.fire({
-        html: `<div style="font-size: 1.5rem; font-family: 'Kanit','Prompt','Mitr','Noto Sans Thai',sans-serif;">${message}</div>`,
-        icon: 'error',
-        confirmButtonText: `<div style="font-size:1.2rem; font-family: 'Kanit','Prompt','Mitr','Noto Sans Thai',sans-serif;">ตกลง</div>`,
-        confirmButtonColor: '#000000',
-        color: '#000000'
-      });
+  private showError(message: string) {
+    Swal.fire({
+      html: `<div style="font-size: 1.5rem; font-family: 'Kanit','Prompt','Mitr','Noto Sans Thai',sans-serif;">${message}</div>`,
+      icon: 'error',
+      confirmButtonText: `<div style="font-size:1.2rem; font-family: 'Kanit','Prompt','Mitr','Noto Sans Thai',sans-serif;">ตกลง</div>`,
+      confirmButtonColor: '#000000',
+      color: '#000000'
+    });
 
-    }
-  
-    private showSuccess(message: string) {
-      return Swal.fire({
-        html: `<div style="font-size: 1.5rem; font-family: 'Kanit','Prompt','Mitr','Noto Sans Thai',sans-serif;">${message}</div>`,
-        icon: 'success',
-        confirmButtonText: `<div style="font-size:1.2rem; font-family: 'Kanit','Prompt','Mitr','Noto Sans Thai',sans-serif;">ตกลง</div>`,
-        confirmButtonColor: '#28D16F',
-        color: '#000000'
-      });
-    }
+  }
+
+  private showSuccess(message: string) {
+    return Swal.fire({
+      html: `<div style="font-size: 1.5rem; font-family: 'Kanit','Prompt','Mitr','Noto Sans Thai',sans-serif;">${message}</div>`,
+      icon: 'success',
+      confirmButtonText: `<div style="font-size:1.2rem; font-family: 'Kanit','Prompt','Mitr','Noto Sans Thai',sans-serif;">ตกลง</div>`,
+      confirmButtonColor: '#28D16F',
+      color: '#000000'
+    });
+  }
 }

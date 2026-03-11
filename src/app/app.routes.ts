@@ -24,6 +24,7 @@ import { EditReviewComponent } from './pages/edit/edit-review/edit-review.compon
 import { FavoriteComponent } from './pages/favorite/favorite.component';
 import { MessageComponent } from './pages/message/message.component';
 import { EditQuestionComponent } from './pages/edit/edit-question/edit-question.component';
+import { WatchDetailsComponent } from './admin/watch-details/watch-details.component';
 
 export const routes: Routes = [
     { path: '', component: MainComponent },
@@ -40,6 +41,7 @@ export const routes: Routes = [
     { path: 'admin/reports', component: ReportsComponent },
     { path: 'admin/users', component: UserComponent },
     { path: 'admin/user/detail', component: DetailComponent },
+    { path: 'admin/watch/detail', component: WatchDetailsComponent },
 
     { path: 'create/review', component: ReviewComponent },
     { path: 'create/question', component: QuestionComponent },
@@ -52,10 +54,10 @@ export const routes: Routes = [
 
     { path: 'post/review', component: ReviewAllPostsComponent },
     { path: 'post/question', component: QuestionAllPostsComponent },
-    
+
     { path: 'edit/review', component: EditReviewComponent },
     { path: 'edit/question', component: EditQuestionComponent },
 
-     { path: 'favorite', component: FavoriteComponent },
-     { path: 'message', component: MessageComponent },
+    { path: 'favorite', component: FavoriteComponent },
+    { path: 'message', component: MessageComponent },
 ];

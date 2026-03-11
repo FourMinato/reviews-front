@@ -115,6 +115,8 @@ export class ReviewComponent {
         anonymous_type: anonymosusValue,
         showpost: 1
       }
+      console.log(senderData);
+
 
       this.http.post<ApiResponse<any[]>>(`${this.constants.API}/create/review`, senderData)
         .subscribe(res => {
