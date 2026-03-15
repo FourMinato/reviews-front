@@ -44,11 +44,13 @@ export class SearchComponent {
   }
 
   searchByKeyword(keyword: string) {
-    this.http.get<any>(`${this.constants.API}/category/all/subject-to-edit`).subscribe({
+    this.http.post<any>(`${this.constants.API}/category/subject/select`, {
+      cateids: ['1', '2', '3', '4', '5'],
+    }).subscribe({
       next: (res) => {
-        if (res.status && res.data) {
+        if (res.status && res.result) {
           const lowerKeyword = keyword.toLowerCase();
-          const filtered = res.data.filter((item: any) => 
+          const filtered = res.result.filter((item: any) => 
             (item.subcode && item.subcode.toLowerCase().includes(lowerKeyword)) ||
             (item.name && item.name.toLowerCase().includes(lowerKeyword))
           );
