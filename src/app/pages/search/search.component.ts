@@ -25,22 +25,29 @@ export class SearchComponent {
   getSubject(subcode: string) {
     if (!subcode) return;
 
-    // 1. Try search by subcode first
-    this.http.get(`${this.constants.API}/subject/subject/search/${subcode}`).subscribe({
-      next: (res: any) => {
-        if (res.status === true && res.result && res.result.length > 0) {
-          this.subject = res.result;
-          this.notFound = false;
-        } else {
-          // 2. If no result, try keyword search (client-side filter as fallback)
+    const isNumeric = /^\d+$/.test(subcode);
+    
+    // 1. Try search by subcode first ONLY if it's exactly 7 digits
+    if (subcode.length === 7 && isNumeric) {
+      this.http.get(`${this.constants.API}/subject/subject/search/${subcode}`).subscribe({
+        next: (res: any) => {
+          if (res.status === true && res.result && res.result.length > 0) {
+            this.subject = res.result;
+            this.notFound = false;
+          } else {
+            // If API returns success but no results, try keyword search
+            this.searchByKeyword(subcode);
+          }
+        },
+        error: (error) => {
+          // Fallback to keyword search on error
           this.searchByKeyword(subcode);
         }
-      },
-      error: (error) => {
-        // If 404, also try keyword search
-        this.searchByKeyword(subcode);
-      }
-    });
+      });
+    } else {
+      // 2. If it's a name or keyword, go straight to client-side filter
+      this.searchByKeyword(subcode);
+    }
   }
 
   searchByKeyword(keyword: string) {
