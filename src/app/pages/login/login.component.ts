@@ -1,4 +1,4 @@
-﻿import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component } from '@angular/core';
 import Swal from 'sweetalert2';
 import { AuthService } from '../../service/user';
@@ -39,11 +39,19 @@ export class LoginComponent {
   constructor(private http: HttpClient,
     private authService: AuthService, private router: Router, private constants: Constants) { }
 
-ngAfterViewInit() {
-  grecaptcha.ready(() => {
-    this.loadRecaptcha();
-  });
-}
+  ngAfterViewInit() {
+    this.waitForGrecaptcha();
+  }
+
+  private waitForGrecaptcha(attempts = 0) {
+    if (typeof grecaptcha !== 'undefined' && grecaptcha.ready) {
+      grecaptcha.ready(() => {
+        this.loadRecaptcha();
+      });
+    } else if (attempts < 10) {
+      setTimeout(() => this.waitForGrecaptcha(attempts + 1), 500);
+    }
+  }
   ngOnInit() {
 
   }
@@ -134,18 +142,30 @@ ngAfterViewInit() {
 
 
   loadRecaptcha() {
-    setTimeout(() => {
-      if (document.getElementById('recaptcha-container')) {
-        document.getElementById('recaptcha-container')!.innerHTML = "";
-
+    const container = document.getElementById('recaptcha-container');
+    if (container && typeof grecaptcha !== 'undefined') {
+      try {
+        // Clear previous instances safely if needed, but grecaptcha.render handles this 
+        // better if we don't manually mess with innerHTML unless necessary.
+        // If we must clear: container.innerHTML = '';
+        
         grecaptcha.render('recaptcha-container', {
           'sitekey': environment.reCaptchaSitekey,
           'callback': (token: any) => {
             this.captchaToken = token;
+          },
+          'expired-callback': () => {
+            this.captchaToken = '';
+          },
+          'error-callback': () => {
+            console.error('reCAPTCHA error occurred');
           }
         });
+      } catch (e) {
+        // If already rendered, we might need to reset instead
+        console.warn('reCAPTCHA render failed or already rendered:', e);
       }
-    }, 500);
+    }
   }
   back() {
     history.back();

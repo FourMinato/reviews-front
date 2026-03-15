@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 import { AuthService } from '../../service/user';
 import { Router } from '@angular/router';
 import { Constants } from '../../config/constant';
-import { environment } from '../../../environments/environment.prod';
+import { environment } from '../../../environments/environment';
 import { FormsModule } from '@angular/forms';
 import { checkProfanity } from '../../../words/wordValidator';
 
@@ -91,7 +91,17 @@ export class RegisterComponent {
     });
 }
   ngAfterViewInit() {
-    this.loadRecaptcha();
+    this.waitForGrecaptcha();
+  }
+
+  private waitForGrecaptcha(attempts = 0) {
+    if (typeof grecaptcha !== 'undefined' && grecaptcha.ready) {
+      grecaptcha.ready(() => {
+        this.loadRecaptcha();
+      });
+    } else if (attempts < 10) {
+      setTimeout(() => this.waitForGrecaptcha(attempts + 1), 500);
+    }
   }
   googleRegister() {
 
@@ -143,18 +153,25 @@ export class RegisterComponent {
   client.requestAccessToken();
 }
   loadRecaptcha() {
-    setTimeout(() => {
-      if (document.getElementById('recaptcha-container')) {
-        document.getElementById('recaptcha-container')!.innerHTML = "";
-
+    const container = document.getElementById('recaptcha-container');
+    if (container && typeof grecaptcha !== 'undefined') {
+      try {
         grecaptcha.render('recaptcha-container', {
           'sitekey': environment.reCaptchaSitekey,
           'callback': (token: any) => {
             this.captchaToken = token;
+          },
+          'expired-callback': () => {
+            this.captchaToken = '';
+          },
+          'error-callback': () => {
+             console.error('reCAPTCHA error occurred');
           }
         });
+      } catch (e) {
+        console.warn('reCAPTCHA render failed or already rendered:', e);
       }
-    }, 500);
+    }
   }
     back(){
      history.back();
