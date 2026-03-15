@@ -18,11 +18,19 @@ export class UserComponent {
   allUsersList: any[] = [];
   usersList: any[] = [];
   userName: string = '';
+  isAdmin: boolean = false;
 
   constructor(private router: Router, private http: HttpClient, private authService: AuthService, private constants: Constants) { }
 
   ngOnInit() {
     this.getAllUsers();
+    this.checkAdmin();
+  }
+  checkAdmin() {
+    const type = this.authService.getUser().type;
+    if (type == 0) {
+      this.isAdmin = true;
+    }
   }
 
   getAllUsers() {
@@ -37,7 +45,8 @@ export class UserComponent {
             }));
             this.usersList = [...this.allUsersList];
           }
-        }
+        },
+      error: () => {}
       });
   }
   editUser(userID: number) {
@@ -47,15 +56,18 @@ export class UserComponent {
   }
   searchUsers(keyword: string) {
     if (!keyword.trim()) {
-      this.usersList = [...this.allUsersList]; // reset ถ้าช่องว่าง
+      this.usersList = [...this.allUsersList];
       return;
     }
-
     this.usersList = this.allUsersList.filter(user =>
       user.name.toLowerCase().includes(keyword.toLowerCase())
     );
   }
   deleteUser(userID: string) {
+    if (this.isAdmin == false) {
+      this.showError('ขออภัยมีแค่ผู้ดูแลระบบเท่านั้นที่สามารถลบผู้ใช้งานได้');
+      return;
+    }
     Swal.fire({
       html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ยืนยันการลบผู้ใช้นี้?</div>',
       icon: 'warning',
@@ -81,8 +93,6 @@ export class UserComponent {
           });
       }
     });
-
-
   }
 
   back() {

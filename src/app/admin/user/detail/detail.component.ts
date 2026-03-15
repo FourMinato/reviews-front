@@ -16,16 +16,20 @@ import Swal from 'sweetalert2';
 export class DetailComponent {
   isEditing = false;
   user: any = {};
+  isAdmin: boolean = false;
   constructor(private router: Router, private http: HttpClient, private authService: AuthService, private constants: Constants) { }
 
   ngOnInit() {
     const ID = history.state.userID || '';
     this.getUser(ID);
+    this.checkAdmin();
   }
-
-
-
-
+    checkAdmin() {
+    const type = this.authService.getUser().type;
+    if (type == 0) {
+      this.isAdmin = true;
+    }
+  }
   getUser(userID: string) {
     this.http.get<any>(`${this.constants.API}/admin/get-user/${userID}`)
       .subscribe({
@@ -36,21 +40,10 @@ export class DetailComponent {
               profile: res.data.profile && res.data.profile.startsWith('http') ? res.data.profile : `${this.constants.API}/images/${res.data.profile}`,
               role: res.data.type === 1 ? 'User' : 'Admin'
             };
-            console.log(this.user);
-
           }
         }
       });
   }
-
-  // ข้อมูลจำลอง 
-  // user = {
-  //   uid: 1,
-  //   name: 'Somchai Jaidee',
-  //   email: 'somchai@example.com',
-  //   role: 'Admin',
-  //   image: 'https://i.pravatar.cc/300?img=11'
-  // };
 
   tempUser: any = {};
 
@@ -64,28 +57,28 @@ export class DetailComponent {
   }
 
   saveEdit() {
-
+    if(this.isAdmin == false){
+      this.showError('ขออภัยมีแค่ผู้ดูแลระบบเท่านั้นที่สามารถแก้ไขได้');
+      return;
+    }
     if (this.user.role === this.tempUser.role) {
       this.showError('ไม่มีการเปลี่ยนแปลงข้อมูล');
       return;
     }
     this.http.put<any>(`${this.constants.API}/admin/update-role/${this.user.uid}`, {
-      role: this.tempUser.role  // ส่งค่าจาก select
+      role: this.tempUser.role 
     }).subscribe({
       next: (res) => {
         if (res.status) {
-          this.user.role = this.tempUser.role; // อัปเดต UI ด้วย
+          this.user.role = this.tempUser.role;
           this.showSuccess(res.message || 'อัปเดตข้อมูลสำเร็จ')
-
         } else {
           this.showError(res.message || 'อัปเดตข้อมูลไม่สำเร็จโปรดลองอีกครั้ง');
           return;
         }
       }
     });
-
-
-    this.isEditing = false; // ปิดโหมดแก้ไข
+    this.isEditing = false; 
   }
 
 

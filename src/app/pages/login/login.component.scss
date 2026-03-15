@@ -1,73 +1,467 @@
-/* ============= Modal Styles ============= */
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
+  * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Kanit', 'Prompt', 'Mitr', 'Noto Sans Thai', sans-serif;
+  }
 
-.modal-card {
-    background-color: white;
-    width: 90%;
-    max-width: 24rem;
-    padding: 2.5rem 2rem;
-    border-radius: 15px;
-    border: 2px solid black;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-    text-align: center;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-}
+  body {
+      width: 85%;
+      height: 100dvh;
+      max-width: 1096px;
+      margin: 0 auto;
+      font-size: 1rem;
 
-.close-btn {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    background: none;
-    border: none;
-    font-size: 1.8rem;
-    cursor: pointer;
-    color: #666;
-    transition: color 0.3s ease;
-}
+      display: flex;
+      flex-direction: column;
+  }
 
-.close-btn:hover {
-    color: black;
-}
+  header {
+      width: 100%;
+      height: 4rem;
 
-.modal-title {
-    font-size: 1.5rem;
-    color: black;
-}
+  }
 
-.modal-desc {
-    font-size: 0.95rem;
-    color: #666;
-    margin-bottom: 0.5rem;
-}
+  footer {
+      width: 100%;
+      height: 4rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: black;
+  }
 
-.modal-input {
-    width: 100%;
-    margin-bottom: 0.5rem;
-}
+  main {
+      flex-grow: 1;
+      border-top: 2px solid black;
+      border-bottom: 2px solid black;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem 0;
+  }
 
-.back-link {
-    font-size: 0.9rem;
-    color: blue;
-    cursor: pointer;
-    text-decoration: underline;
-    margin-top: 0.5rem;
-}
+  nav {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+  }
 
-.back-link:hover {
-    color: #0056b3;
-}
+  .content {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+  }
+
+  .back-btn {
+      padding: 0.5rem 1.5rem;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+      border-radius: 5px;
+      background-color: #50C878;
+      color: white;
+      transition: background-color 0.3s ease;
+  }
+
+  .back-btn:hover {
+      background-color: #48C9B0;
+  }
+
+  .card {
+      width: 28rem;
+      height: auto;
+      min-height: 32rem;
+      padding: 2.5rem;
+      border: 2px solid black;
+      border-radius: 15px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      gap: 0.6rem;
+      background-color: #ffffff;
+  }
+
+  .title {
+      margin-bottom: 0.5rem;
+  }
+
+  .email-border,
+  .password-border {
+      width: 100%;
+  }
+
+  input {
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      width: 100%;
+      height: 3.5rem;
+      padding: 0 1rem;
+      font-size: 1.1rem;
+      transition: border-color 0.3s ease;
+  }
+
+  input:focus {
+      outline: none;
+      border-color: black;
+  }
+
+  .reset-password {
+      font-size: 0.9rem;
+      color: blue;
+      cursor: pointer;
+      text-decoration: underline;
+      align-self: flex-end;
+      margin-top: -0.5rem;
+  }
+
+  .reset-password:hover {
+      color: #0056b3;
+  }
+
+  a {
+      color: blue;
+      text-decoration: none;
+  }
+
+  a:hover {
+      text-decoration: underline;
+  }
+
+  .login-btn,
+  .login-with-google {
+      width: 85%;
+      padding: 0.9rem 0;
+      border: none;
+      cursor: pointer;
+      font-size: 1.1rem;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: all 0.3s ease;
+  }
+
+  .login-btn {
+      background-color: #FFCE54;
+      color: white;
+  }
+
+  .login-btn:hover {
+      background-color: #333;
+  }
+
+  .login-btn:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+  }
+
+  .login-with-google {
+      background-color: #50C878;
+      border: 1px solid black;
+      color: white;
+  }
+
+  .login-with-google:hover {
+      background-color: #333;
+      color: white;
+  }
+
+  .login-with-google img {
+      width: 1.5rem;
+      height: 1.5rem;
+      object-fit: contain;
+  }
+
+  .divider {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      gap: 1rem;
+      color: #666;
+  }
+
+  .divider::before,
+  .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background-color: #ccc;
+  }
+
+  .recaptcha-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      transform: scale(0.85);
+      transform-origin: center;
+      margin: -0.5rem 0;
+      
+  }
+
+  #recaptcha-container {
+      transform: scale(0.85);
+      transform-origin: center;
+  }
+
+  .create-new {
+      text-align: center;
+      color: #666;
+  }
+
+  
+
+  
+  @media (max-width: 768px) {
+      body {
+          width: 90%;
+      }
+
+      header {
+          height: 4rem;
+      }
+
+      footer {
+          height: 3rem;
+      }
+
+      nav h1 {
+          font-size: 1.3rem;
+      }
+
+      .back-btn {
+          padding: 0.4rem 1.5rem;
+          font-size: 1rem;
+      }
+
+      .card {
+          width: 100%;
+          max-width: 26rem;
+          min-height: auto;
+          padding: 2rem;
+          gap: 0.8rem;
+      }
+
+      .title h2 {
+          font-size: 1.5rem;
+      }
+
+      input {
+          height: 3rem;
+          font-size: 1rem;
+      }
+
+      .login-btn,
+      .login-with-google {
+          width: 85%;
+          padding: 0.8rem 0;
+          font-size: 1rem;
+      }
+
+      .recaptcha-container {
+          transform: scale(0.85);
+      }
+  }
+
+  
+  @media (max-width: 430px) {
+      body {
+          width: 92%;
+      }
+
+      header {
+          height: 4rem;
+      }
+
+      footer {
+          display: none;
+      }
+
+      nav h1 {
+          font-size: 1.2rem;
+      }
+
+      .back-btn {
+          padding: 0.4rem 1.2rem;
+          font-size: 0.95rem;
+      }
+
+      .card {
+          width: 100%;
+          padding: 1.5rem;
+          gap: 0.7rem;
+          border-radius: 12px;
+      }
+
+      .title h2 {
+          font-size: 1.3rem;
+      }
+
+      input {
+          height: 2.8rem;
+          font-size: 0.95rem;
+          padding: 0 0.8rem;
+          border-radius: 8px;
+      }
+
+      .reset-password {
+          font-size: 0.85rem;
+      }
+
+      .login-btn,
+      .login-with-google {
+          width: 85%;
+          padding: 0.75rem 0;
+          font-size: 0.95rem;
+      }
+
+      .login-with-google img {
+          width: 1.3rem;
+          height: 1.3rem;
+      }
+
+      .divider {
+          font-size: 0.9rem;
+      }
+
+      .recaptcha-container {
+          transform: scale(0.7);
+          margin: -0.7rem 0;
+      }
+
+      .create-new {
+          font-size: 0.9rem;
+      }
+
+      .footer-content span {
+          font-size: 0.85rem;
+      }
+  }
+
+  
+  @media (max-width: 375px) {
+      body {
+          width: 95%;
+      }
+
+      .card {
+          padding: 1.2rem;
+          gap: 0.6rem;
+      }
+
+      .title h2 {
+          font-size: 1.2rem;
+      }
+
+      input {
+          height: 2.6rem;
+          font-size: 0.9rem;
+      }
+
+      .login-btn,
+      .login-with-google {
+          padding: 0.7rem 0;
+          font-size: 0.9rem;
+      }
+
+      .recaptcha-container {
+          transform: scale(0.65);
+          margin: -0.9rem 0;
+      }
+
+      .create-new {
+          font-size: 0.85rem;
+      }
+  }
+
+  
+  @media (max-width: 430px) and (min-height: 800px) {
+      main {
+          padding: 2rem 0;
+      }
+
+      .card {
+          gap: 0.9rem;
+      }
+  }
+
+  
+  .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+  }
+
+  .modal-card {
+      background-color: white;
+      width: 90%;
+      max-width: 24rem;
+      padding: 2.5rem 2rem;
+      border-radius: 15px;
+      border: 2px solid black;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  }
+
+  .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      background: none;
+      border: none;
+      font-size: 1.8rem;
+      cursor: pointer;
+      color: #666;
+      transition: color 0.3s ease;
+  }
+
+  .close-btn:hover {
+      color: black;
+  }
+
+  .modal-title {
+      font-size: 1.5rem;
+      color: black;
+  }
+
+  .modal-desc {
+      font-size: 0.95rem;
+      color: #666;
+      margin-bottom: 0.5rem;
+  }
+
+  .modal-input {
+      width: 100%;
+      margin-bottom: 0.5rem;
+  }
+
+  .back-link {
+      font-size: 0.9rem;
+      color: blue;
+      cursor: pointer;
+      text-decoration: underline;
+      margin-top: 0.5rem;
+  }
+
+  .back-link:hover {
+      color: #0056b3;
+  }

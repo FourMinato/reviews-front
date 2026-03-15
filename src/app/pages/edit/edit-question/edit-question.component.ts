@@ -27,7 +27,7 @@ export class EditQuestionComponent {
   ngOnInit() {
     const ID = history.state.questionID || '';
     this.questionID = ID;
-    console.log("questionID id is " + this.questionID);
+
     this.getDetailQuestion();
   }
   getDetailQuestion() {

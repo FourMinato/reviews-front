@@ -15,24 +15,24 @@ body {
     color: #000;
 }
 
-/* --- Layout Container --- */
+
 .page-wrapper {
     width: clamp(95%, 90vw, 85%);
-     max-width: 1096px; /* หน้านี้ไม่จำเป็นต้องกว้างมาก จำกัดไว้ที่ 800 กำลังสวย */
+     max-width: 1096px; 
     display: flex;
     flex-direction: column;
     flex: 1;
     padding-bottom: 40px;
 }
 
-/* --- Header --- */
+
 header {
     width: 100%;
-    height: 4rem; /* ตาม req */
+    height: 4rem; 
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-bottom: 2px solid black; /* เพิ่มเส้นคั่น header ให้ดูเป็นสัดส่วน */
+    border-bottom: 2px solid black; 
     margin-bottom: 20px;
 }
 
@@ -42,7 +42,7 @@ header {
     cursor: pointer;
     font-size: 1rem;
     border-radius: 5px;
-    background-color: black; /* สีปุ่มตามรูปต้นแบบ */
+    background-color: black; 
     color: white;
     font-weight: 500;
 }
@@ -53,7 +53,7 @@ header {
     color: #000;
 }
 
-/* --- Main Content --- */
+
 main {
     width: 100%;
 
@@ -67,7 +67,7 @@ main {
     margin-bottom: 20px;
 }
 
-/* --- Tabs --- */
+
 .tab-container {
     display: flex;
     width: 100%;
@@ -76,7 +76,7 @@ main {
 }
 
 .tab-item {
-    flex: 1; /* แบ่งครึ่งเท่ากัน */
+    flex: 1; 
     text-align: center;
     padding: 12px 0;
     font-size: 1.1rem;
@@ -91,7 +91,7 @@ main {
     color: #333;
 }
 
-/* Active State ของ Tab (ขีดเส้นใต้สีดำ) */
+
 .tab-item.active {
     color: #000;
     font-weight: 600;
@@ -100,14 +100,14 @@ main {
 .tab-item.active::after {
     content: '';
     position: absolute;
-    bottom: -2px; /* ทับเส้น border-bottom ของ container */
+    bottom: -2px; 
     left: 0;
     width: 100%;
     height: 3px;
     background-color: #000;
 }
 
-/* --- Sort Section --- */
+
 .sort-section {
     display: flex;
     flex-direction: column;
@@ -129,7 +129,7 @@ main {
     padding: 6px 16px;
     border: 1px solid #ccc;
     background: white;
-    border-radius: 5px; /* ทรงแคปซูล */
+    border-radius: 5px; 
     font-size: 0.9rem;
     cursor: pointer;
     transition: all 0.2s;
@@ -145,7 +145,7 @@ main {
     border-color: #000;
 }
 
-/* --- List Items (Cards) --- */
+
 .list-container {
     display: flex;
     flex-direction: column;
@@ -157,16 +157,16 @@ main {
     justify-content: space-between;
     align-items: center;
     padding: 15px 20px;
-    border: 1px solid #ccc; /* กรอบสีเทาตามรูป */
-    border-radius: 10px; /* มุมมน */
+    border: 1px solid #ccc; 
+    border-radius: 10px; 
     background-color: white;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* เงาบางๆ */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05); 
     transition: transform 0.2s;
     cursor: pointer;
 }
 
 .item-card:hover {
-    transform: translateY(-2px); /* ขยับขึ้นนิดนึงตอน hover */
+    transform: translateY(-2px); 
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 

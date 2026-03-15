@@ -17,11 +17,19 @@ export class WatchDetailsComponent {
     reviewsList: any[] = [];
     questionsList: any[] = [];
     activeMenuId: number | null = null;
+    isAdmin: boolean = false;
     constructor(private router: Router, private http: HttpClient, private authService: AuthService, private constants: Constants) { }
 
     ngOnInit() {
+        this.checkAdmin();
         this.getQuestions();
         this.getReviews();
+    }
+    checkAdmin() {
+        const type = this.authService.getUser().type;
+        if (type == 0) {
+            this.isAdmin = true;
+        }
     }
     getQuestions() {
         this.http.get<any>(`${this.constants.API}/admin/get-questions`)
@@ -29,10 +37,9 @@ export class WatchDetailsComponent {
                 next: (res) => {
                     if (res.status) {
                         this.questionsList = res.data;
-                        console.log(this.questionsList);
-
                     }
-                }
+                },
+                error: () => { }
             });
     }
     getReviews() {
@@ -41,14 +48,17 @@ export class WatchDetailsComponent {
                 next: (res) => {
                     if (res.status) {
                         this.reviewsList = res.data;
-                        console.log(this.reviewsList);
-
                     }
-                }
+                },
+                error: () => { }
             });
     }
 
     openQuestion(id: number) {
+        if (this.isAdmin == false) {
+            this.showError('ขออภัยมีแค่ผู้ดูแลระบบเท่านั้นที่สามารถทำได้');
+            return;
+        }
         Swal.fire({
             html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ยืนยันการเปิดการมองเห็นโพสต์นี้?</div>',
             icon: 'warning',
@@ -85,6 +95,10 @@ export class WatchDetailsComponent {
     }
 
     deleteThisQuestion(questionID: number) {
+        if (this.isAdmin == false) {
+            this.showError('ขออภัยมีแค่ผู้ดูแลระบบเท่านั้นที่สามารถทำได้');
+            return;
+        }
         Swal.fire({
             html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ยืนยันการลบโพสต์นี้?</div>',
             icon: 'warning',
@@ -116,6 +130,10 @@ export class WatchDetailsComponent {
 
     }
     openReview(id: number) {
+        if (this.isAdmin == false) {
+            this.showError('ขออภัยมีแค่ผู้ดูแลระบบเท่านั้นที่สามารถทำได้');
+            return;
+        }
         Swal.fire({
             html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ยืนยันการเปิดการมองเห็นโพสต์นี้?</div>',
             icon: 'warning',
@@ -152,6 +170,10 @@ export class WatchDetailsComponent {
     }
 
     deleteThisReview(reviewID: number) {
+        if (this.isAdmin == false) {
+            this.showError('ขออภัยมีแค่ผู้ดูแลระบบเท่านั้นที่สามารถทำได้');
+            return;
+        }
         Swal.fire({
             html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ยืนยันการลบโพสต์นี้?</div>',
             icon: 'warning',
@@ -185,77 +207,16 @@ export class WatchDetailsComponent {
     setTab(tab: 'review' | 'qa') {
         this.currentTab = tab;
     }
-    questions = [
-        {
-            id: 1,
-            type: 'review', // ระบุว่าเป็นรีวิว หรือ ถามตอบ
-            authorName: 'testing1',
-            profileImage: 'https://i.pravatar.cc/150?img=11', // ใช้รูปโปรไฟล์จำลอง
-            savedDate: '2026-03-11T10:00:00Z',
-            rating: 5, // จำนวนดาว
-            content: 'อาจารย์สอนดีมากครับ เนื้อหาเข้าใจง่าย มีตัวอย่างประกอบเยอะ แนะนำให้ลงเรียนเลยครับ เก็บ A ไม่ยากถ้าตั้งใจส่งงานครบ',
-            likes: 12,
-            comments: 3
-        },
-        {
-            id: 2,
-            type: 'qa',
-            authorName: 'Student_Inquirer',
-            profileImage: 'https://i.pravatar.cc/150?img=12',
-            savedDate: '2026-03-10T14:30:00Z',
-            rating: null, // ถามตอบไม่มีดาว
-            content: 'มีใครพอมีแนวข้อสอบกลางภาควิชา Database ไหมครับ? อยากรู้ว่าอาจารย์จะออกเน้นวาด ER Diagram หรือเขียน SQL มากกว่ากันครับ?',
-            likes: 5,
-            comments: 8
-        },
-        {
-            id: 3,
-            type: 'review',
-            authorName: 'เรียนไปวันๆ',
-            profileImage: 'https://i.pravatar.cc/150?img=13',
-            savedDate: '2026-03-09T09:15:00Z',
-            rating: 4,
-            content: 'วิชานี้งานกลุ่มค่อนข้างเยอะครับ ต้องหาเพื่อนที่ช่วยกันทำงานดีๆ เนื้อหามีประโยชน์มากเอาไปใช้ตอนฝึกงานได้จริง หัก 1 ดาวเพราะสั่งงานกระชั้นชิดไปนิด',
-            likes: 24,
-            comments: 5
-        },
-        {
-            id: 4,
-            type: 'qa',
-            authorName: 'เด็กหลังห้อง',
-            profileImage: 'https://i.pravatar.cc/150?img=14',
-            savedDate: '2026-03-08T16:45:00Z',
-            rating: null,
-            content: 'วิชานี้เช็คชื่อทุกคาบไหมครับ พอดีผมมีธุระต้องลากลับบ้านบ่อย ขาดได้กี่ครั้งครับ?',
-            likes: 2,
-            comments: 1
-        }
-    ];
-    // ฟังก์ชันสลับการเปิด/ปิดเมนู
+
     toggleMenu(id: number, event: Event) {
-        event.stopPropagation(); // ป้องกันไม่ให้คลิกทะลุไปโดนส่วนอื่น
+        event.stopPropagation();
         if (this.activeMenuId === id) {
-            this.activeMenuId = null; // ถ้ากดซ้ำที่เดิม ให้ปิดเมนู
+            this.activeMenuId = null;
         } else {
-            this.activeMenuId = id; // เปิดเมนูของโพสต์ที่กด
+            this.activeMenuId = id;
         }
     }
 
-    // ฟังก์ชันตัวอย่างเมื่อกดเลือกเมนูต่างๆ
-    goToPost(id: number) {
-        console.log('ไปยังโพสต์ ID:', id);
-        this.activeMenuId = null; // ปิดเมนูหลังกด
-    }
-
-    deletePost(id: number) {
-        console.log('ลบโพสต์ ID:', id);
-        this.activeMenuId = null;
-    }
-
-    toggleVisibility(id: number) {
-        console.log('เปิด/ปิดการมองเห็นโพสต์ ID:', id);
-        this.activeMenuId = null;
-    }
     private showError(message: string) {
         Swal.fire({
             html: `<div style="font-size: 1.5rem; font-family: 'Kanit','Prompt','Mitr','Noto Sans Thai',sans-serif;">${message}</div>`,

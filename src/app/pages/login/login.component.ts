@@ -195,9 +195,6 @@ ngAfterViewInit() {
           }
         },
       });
-    // TODO: ยิง API ไป backend เพื่อขอ OTP
-    console.log('Sending OTP to:', this.resetEmail);
-    // สมมติว่ายิงสำเร็จ ให้เปลี่ยนไป Step 2
 
   }
 

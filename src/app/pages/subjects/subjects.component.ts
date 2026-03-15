@@ -30,8 +30,6 @@ export class SubjectsComponent {
         ? params['categories'].split(',')
         : [];
       this.categories = categories
-      console.log(this.categories);
-      
     });
     this.sortSubjects();
   }
@@ -57,9 +55,7 @@ export class SubjectsComponent {
       cateids: this.categories,
     }).subscribe(res => {
       if (res.status === true) {
-        this.subjects = res.result;
-        console.log(this.subjects);
-        
+        this.subjects = res.result; 
       }
     });
   }

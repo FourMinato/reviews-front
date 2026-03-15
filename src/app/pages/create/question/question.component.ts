@@ -47,70 +47,62 @@ export class QuestionComponent {
 
   }
   createQuestion() {
-    console.log("this is desc : " + this.questionText);
     if (this.questionText === '') {
-      Swal.fire({
-        html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">กรุณากรอกคำถาม</div>',
-        icon: 'error',
-        confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
-        confirmButtonColor: '#000000',
-        color: '#000000'
-      });
+      this.showError('กรุณากรอกคำถาม');
       return;
     }
     if (this.questionText.length > 45) {
-      Swal.fire({
-        html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ขนาดของข้อความเกิน 45 ตัวอักษร</div>',
-        icon: 'error',
-        confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
-        confirmButtonColor: '#000000',
-        color: '#000000'
-      });
+      this.showError('ขนาดของข้อความเกิน 45 ตัวอักษร');
       return;
     }
     const textCheck = checkProfanity(this.questionText);
-        if (textCheck.isBad) {
+    if (textCheck.isBad) {
+      this.showError('ข้อความของคุณมีคำที่ไม่เหมาะสม');
+      return;
+    }
+    const senderData = {
+      uid: this.userID,
+      descriptions: this.questionText,
+    }
+
+    this.http.post<ApiResponse<any[]>>(`${this.constants.API}/create/question`, senderData)
+      .subscribe(res => {
+        if (res.status === true) {
           Swal.fire({
-            html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ข้อความของคุณมีคำที่ไม่เหมาะสม</div>',
-            icon: 'error',
+            html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">โพสต์ตั้งคำถามสำเร็จ</div>',
+            icon: 'success',
             confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
-            confirmButtonColor: '#000000',
+            confirmButtonColor: '#28D16F',
             color: '#000000'
+          }).then(result => {
+            if (result.isConfirmed) {
+              history.back();
+            }
           });
-          return;
         } else {
-
-      const senderData = {
-        uid: this.userID,
-        descriptions: this.questionText,
-      }
-
-      this.http.post<ApiResponse<any[]>>(`${this.constants.API}/create/question`, senderData)
-        .subscribe(res => {
-          if (res.status === true) {
-            Swal.fire({
-              html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">โพสต์ตั้งคำถามสำเร็จ</div>',
-              icon: 'success',
-              confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
-              confirmButtonColor: '#28D16F',
-              color: '#000000'
-            }).then(result => {
-              if (result.isConfirmed) {
-                history.back();
-              }
-            });
-          } else {
-            Swal.fire({
-              html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">' + res.message + '</div>',
-              icon: 'error',
-              confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
-              confirmButtonColor: '#000000',
-              color: '#000000'
-            });
-
-          }
-
-        });
+          this.showError(res.message || 'เกิดข้อผิดพลาดโปรดลองอีกครั้ง');
+          return;
         }
+      });
+
+  }
+  private showError(message: string) {
+    Swal.fire({
+      html: `<div style="font-size: 1.5rem; font-family: 'Kanit','Prompt','Mitr','Noto Sans Thai',sans-serif;">${message}</div>`,
+      icon: 'error',
+      confirmButtonText: `<div style="font-size:1.2rem; font-family: 'Kanit','Prompt','Mitr','Noto Sans Thai',sans-serif;">ตกลง</div>`,
+      confirmButtonColor: '#000000',
+      color: '#000000'
+    });
+  }
+
+  private showSuccess(message: string) {
+    return Swal.fire({
+      html: `<div style="font-size: 1.5rem; font-family: 'Kanit','Prompt','Mitr','Noto Sans Thai',sans-serif;">${message}</div>`,
+      icon: 'success',
+      confirmButtonText: `<div style="font-size:1.2rem; font-family: 'Kanit','Prompt','Mitr','Noto Sans Thai',sans-serif;">ตกลง</div>`,
+      confirmButtonColor: '#28D16F',
+      color: '#000000'
+    });
   }
 }

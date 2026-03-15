@@ -39,9 +39,7 @@ currentTab: string = 'reviews';
     constructor(private http: HttpClient, private constants: Constants, private router: Router, private authService: AuthService) { }
  
   ngOnInit() {
-    // ในอนาคตจะดึง userID จากระบบ Authentication มาใส่ตรงนี้
-    this.checkUser(); // ตัวอย่าง userID จำลอง
-    console.log(this.userID);
+    this.checkUser();
     this.getMyProfile();
     this.getMyReviews();
     this.getMyQuestions();
@@ -71,8 +69,6 @@ getMyReviews() {
       .subscribe(res => {
         if (res.status === true) {
             this.myReviews = res.data;
-            console.log(this.myReviews);
-            
         }
    
       });
@@ -109,7 +105,7 @@ updateUser() {
             this.sendUpdateUser(this.userID); // รูปอัปโหลดสำเร็จ ค่อย update ข้อมูลอื่น
           }
         },
-        error: (err) => console.error("Upload ไม่สำเร็จ", err)
+        error: (err) => {}
       });
   } else {
     this.sendUpdateUser(this.userID);
@@ -202,19 +198,11 @@ onFileSelected(event: any) {
     reader.readAsDataURL(file);
   }
 }
-// ฟังก์ชันย้อนกลับ
+
 back() {
   history.back();
 }
 
-// // ฟังก์ชันบันทึกข้อมูล
-// saveProfile() {
-//   // ในขั้นตอนนี้คุณจะเรียก API เพื่อส่งข้อมูล this.userData ไปบันทึก
-//   console.log('กำลังบันทึกข้อมูล:', this.userData);
-  
-//   // แสดง Alert แจ้งเตือน (หรือใช้ Toast/SweetAlert แทนได้)
-//   alert(`บันทึกข้อมูลเรียบร้อย!\nชื่อ: ${this.userData.name}\nอีเมล: ${this.userData.email}`);
-// }
   private showError(message: string) {
     Swal.fire({
       html: `<div style="font-size: 1.5rem; font-family: 'Kanit','Prompt','Mitr','Noto Sans Thai',sans-serif;">${message}</div>`,

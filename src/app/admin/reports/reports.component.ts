@@ -22,8 +22,6 @@ export class ReportsComponent {
 
   ngOnInit() {
     this.getReportsReview();
-    this.getReportsQuestion();
-    this.getReportsComment();
   }
 
   getReportsReview() {
@@ -32,10 +30,9 @@ export class ReportsComponent {
         next: (res) => {
           if (res.status) {
             this.reportsReview = res.data;
-            console.log(this.reportsReview);
-
           }
-        }
+        },
+      error: () => {}
       });
   }
   getReportsQuestion() {
@@ -44,10 +41,9 @@ export class ReportsComponent {
         next: (res) => {
           if (res.status) {
             this.reportsQuestion = res.data;
-            console.log(this.reportsQuestion);
-
           }
-        }
+        },
+      error: () => {}
       });
   }
   getReportsComment() {
@@ -56,10 +52,9 @@ export class ReportsComponent {
         next: (res) => {
           if (res.status) {
             this.reportsComment = res.data;
-            console.log(this.reportsComment);
-
           }
-        }
+        },
+      error: () => {}
       });
   }
   linkToReviewDetails(reviewID: string) {
@@ -80,13 +75,7 @@ export class ReportsComponent {
     history.back();
   }
   selectBy() {
-    console.log('ค่าที่เลือก:', this.selected);
-
-    // เช็คว่าเลือกอะไร
     switch (this.selected) {
-      case 'all':
-        this.allReports();
-        break;
       case 'review':
         this.reviewReports();
         break;
@@ -96,24 +85,15 @@ export class ReportsComponent {
       case 'comment':
         this.commentReports();
         break;
-      case 'profile':
-        this.profileReports();
-        break;
     }
   }
-  allReports() {
-    console.log("allReports");
-  }
   reviewReports() {
-    console.log("reviewReports");
+    this.getReportsReview();
   }
   questionReports() {
-    console.log("questionReports");
+    this.getReportsQuestion();
   }
   commentReports() {
-    console.log("commentReports");
-  }
-  profileReports() {
-    console.log("profileReports");
+    this.getReportsComment();
   }
 }

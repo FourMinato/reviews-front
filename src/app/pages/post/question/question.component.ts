@@ -20,8 +20,8 @@ export class QuestionAllPostsComponent {
   questionList: any[] = [];
   isOwner: boolean = false;
   isDropdownOpen: boolean = false;
-  selectedSortOption: string = 'โพสต์ล่าสุด'; // ค่าเริ่มต้น
-  activeReportId: number | null = null; // เก็บ ID ของการ์ดที่กำลังเปิดเมนู (ถ้าไม่มีให้เป็น null)
+  selectedSortOption: string = 'โพสต์ล่าสุด';
+  activeReportId: number | null = null;
   constructor(private http: HttpClient, private router: Router, private authService: AuthService, private constants: Constants) { }
 
 
@@ -30,7 +30,6 @@ export class QuestionAllPostsComponent {
 
     const user = this.authService.getUser();
     this.userID = user.uid;
-    console.log(this.userID);
 
     this.getData();
     this.checkAdmin();
@@ -39,22 +38,17 @@ export class QuestionAllPostsComponent {
     const user = this.authService.getUser();
     if (user.type === 0) {
       this.isAdmin = true;
-
-
     }
   }
   getData() {
     this.http.get<any>(`${this.constants.API}/review/question/date/` + this.userID)
       .subscribe(res => {
         if (res.status === true) {
-          // แปลง path รูปภาพให้เป็น URL เต็ม
           this.questionList = res.result.map((question: any) => ({
             ...question,
-            profile: `${this.constants.API}/images/${question.profile}`,
+                       profile: question.profile && question.profile.startsWith('http') ? question.profile : `${this.constants.API}/images/${question.profile}`,
             is_saved: (question.is_saved === 1 || question.is_saved === true)
           }));
-          console.log(this.questionList);
-
         }
       }
 
@@ -62,13 +56,7 @@ export class QuestionAllPostsComponent {
   }
   saveToFavorites(questionID: number) {
     if (this.isLoggedIn === false) {
-      Swal.fire({
-        html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">กรุณาเข้าสู่ระบบก่อน</div>',
-        icon: 'error',
-        confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
-        confirmButtonColor: '#000000',
-        color: '#000000'
-      });
+      this.showError('กรุณาเข้าสู่ระบบก่อน');
       return;
     } else {
       const question = this.questionList.find(q => q.id === questionID);
@@ -95,13 +83,7 @@ export class QuestionAllPostsComponent {
           },
           error: (error) => {
             question.is_saved = previousState;
-            Swal.fire({
-              html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง</div>',
-              icon: 'error',
-              confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
-              confirmButtonColor: '#000000',
-              color: '#000000'
-            });
+             this.showError('เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง');
           }
         });
     }
@@ -112,11 +94,8 @@ export class QuestionAllPostsComponent {
     });
   }
   toggleSave(btn: any) {
-    // คำสั่ง classList.toggle คือการสลับ class
-    // ถ้ามี .saved อยู่จะเอาออก, ถ้าไม่มีจะใส่เพิ่มเข้าไป
-    btn.classList.toggle("saved");
 
-    // (ลูกเล่นเพิ่มเติม) เปลี่ยนข้อความตามสถานะ
+    btn.classList.toggle("saved");
     if (btn.classList.contains("saved")) {
       btn.innerText = "บันทึกแล้ว";
     } else {
@@ -125,13 +104,7 @@ export class QuestionAllPostsComponent {
   }
   reportQuestion(questionID: number) {
     if (this.isLoggedIn === false) {
-      Swal.fire({
-        html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">กรุณาเข้าสู่ระบบก่อน</div>',
-        icon: 'error',
-        confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
-        confirmButtonColor: '#000000',
-        color: '#000000'
-      });
+       this.showError('กรุณาเข้าสู่ระบบก่อน');
       return;
     } else {
       Swal.fire({
@@ -157,23 +130,11 @@ export class QuestionAllPostsComponent {
                     showConfirmButton: false
                   });
                 } else {
-                  Swal.fire({
-                    html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">' + response.message + '</div>',
-                    icon: 'error',
-                    confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
-                    confirmButtonColor: '#000000',
-                    color: '#000000'
-                  });
+                   this.showError( response.message || 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง');               
                 }
               },
               error: (error) => {
-                Swal.fire({
-                  html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">' + (error.error?.message || 'กรุณาลองใหม่อีกครั้ง') + '</div>',
-                  icon: 'error',
-                  confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
-                  confirmButtonColor: '#000000',
-                  color: '#000000'
-                });
+                 this.showError(error.error?.message || 'กรุณาลองใหม่อีกครั้ง');    
               }
             });
         }
@@ -205,6 +166,8 @@ export class QuestionAllPostsComponent {
                 }).then(() => {
                   window.location.reload();
                 });
+              }else{
+                 this.showError( response.message || 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง'); 
               }
             }
           });
@@ -240,13 +203,7 @@ export class QuestionAllPostsComponent {
                 });
               }
               else {
-                Swal.fire({
-                  html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">' + response.message + '</div>',
-                  icon: 'error',
-                  confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
-                  confirmButtonColor: '#000000',
-                  color: '#000000'
-                });
+                   this.showError( response.message || 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง'); 
               }
             }
           });
@@ -257,13 +214,7 @@ export class QuestionAllPostsComponent {
 
   create() {
     if (this.isLoggedIn === false) {
-      Swal.fire({
-        html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">กรุณาเข้าสู่ระบบก่อน</div>',
-        icon: 'error',
-        confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
-        confirmButtonColor: '#000000',
-        color: '#000000'
-      });
+         this.showError('กรุณาเข้าสู่ระบบก่อน'); 
       return;
     }
     else {
@@ -272,24 +223,21 @@ export class QuestionAllPostsComponent {
 
   }
 
-  // ฟังก์ชันเปิด/ปิด เมนูตาม ID ของโพสต์
   toggleReportMenu(id: number, event: Event) {
-    event.stopPropagation(); // ป้องกันไม่ให้ Event ทะลุไปปิดเมนูทันที
+    event.stopPropagation(); 
     if (this.activeReportId === id) {
-      this.activeReportId = null; // ถ้าเปิดอยู่แล้ว ให้ปิด
+      this.activeReportId = null
     } else {
-      this.activeReportId = id; // เปิดเมนูของ ID นี้
+      this.activeReportId = id;
     }
   }
 
-  // ฟังก์ชันเมื่อกดเลือกหัวข้อ
+
   selectReportReason(id: number, reason: string) {
-    console.log(`Report Post ID: ${id}, Reason: ${reason}`);
     alert(`รายงานโพสต์เรียบร้อย: ${reason}`);
-    this.activeReportId = null; // ปิดเมนูหลังเลือกเสร็จ
+    this.activeReportId = null; 
   }
 
-  // (Optional) คลิกที่ว่างๆ แล้วให้เมนูปิด
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: any) {
     event.stopPropagation();
@@ -302,9 +250,7 @@ export class QuestionAllPostsComponent {
 
   selectOption(option: string) {
     this.selectedSortOption = option;
-    this.isDropdownOpen = false; // ปิด dropdown หลังเลือก
-    // TODO: เรียกฟังก์ชัน sort ข้อมูลจริงที่นี่
-    console.log('Selected:', option);
+    this.isDropdownOpen = false; 
   }
   editQuestion(questionID: number) {
     this.router.navigate(['/edit/question'], {
@@ -338,6 +284,8 @@ export class QuestionAllPostsComponent {
                 }).then(() => {
                   window.location.reload();
                 });
+              }else{
+                  this.showError( response.message || 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง'); 
               }
             }
           });
@@ -353,5 +301,24 @@ export class QuestionAllPostsComponent {
   back() {
     history.back();
   }
-
+      private showError(message: string) {
+        Swal.fire({
+          html: `<div style="font-size: 1.5rem; font-family: 'Kanit','Prompt','Mitr','Noto Sans Thai',sans-serif;">${message}</div>`,
+          icon: 'error',
+          confirmButtonText: `<div style="font-size:1.2rem; font-family: 'Kanit','Prompt','Mitr','Noto Sans Thai',sans-serif;">ตกลง</div>`,
+          confirmButtonColor: '#000000',
+          color: '#000000'
+        });
+    
+      }
+    
+      private showSuccess(message: string) {
+        return Swal.fire({
+          html: `<div style="font-size: 1.5rem; font-family: 'Kanit','Prompt','Mitr','Noto Sans Thai',sans-serif;">${message}</div>`,
+          icon: 'success',
+          confirmButtonText: `<div style="font-size:1.2rem; font-family: 'Kanit','Prompt','Mitr','Noto Sans Thai',sans-serif;">ตกลง</div>`,
+          confirmButtonColor: '#28D16F',
+          color: '#000000'
+        });
+      }
 }

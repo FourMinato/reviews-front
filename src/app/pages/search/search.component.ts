@@ -23,7 +23,7 @@ export class SearchComponent {
     this.getSubject(subcode)
   }
   getSubject(subcode: string) {
-    this.http.get(`${this.constants.API}/routes/subject/search/${subcode}`).subscribe({
+    this.http.get(`${this.constants.API}/subject/subject/search/${subcode}`).subscribe({
       next: (res: any) => {
         if (res.status === true) {
           this.subject = res.result;

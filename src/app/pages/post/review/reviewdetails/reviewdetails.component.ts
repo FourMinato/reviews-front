@@ -57,7 +57,6 @@ export class ReviewdetailsComponent {
   ngOnInit() {
     const ID = history.state.reviewID || '';
     this.reviewID = ID;
-    console.log("reviewID id is " + this.reviewID);
 
     this.checkLogin();
     this.checkUser();
@@ -72,15 +71,11 @@ export class ReviewdetailsComponent {
   checkUser() {
     const uid = this.authService.getUser().uid;
     this.userID = uid;
-    console.log(this.userID);
-
   }
   checkAdmin() {
     const type = this.authService.getUser().type;
     if (type == 0) {
       this.isAdmin = true;
-      console.log("admin type = " + this.isAdmin);
-
     }
   }
   getDetailReview() {
@@ -90,7 +85,7 @@ export class ReviewdetailsComponent {
           if (response.status === true) {
             this.reviews = response.result.map((review: any) => ({
               ...review,
-              profile: `${this.constants.API}/images/${review.profile}`
+              profile: review.profile && review.profile.startsWith('http') ? review.profile : `${this.constants.API}/images/${review.profile}`
             }));
             if (this.reviews[0].uid === this.userID) {
               this.isOwner = true;
@@ -133,6 +128,8 @@ export class ReviewdetailsComponent {
                 }).then(() => {
                   history.back();
                 });
+              } else {
+                this.showError(response.message || 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง');
               }
             }
           });
@@ -145,11 +142,7 @@ export class ReviewdetailsComponent {
       .subscribe({
         next: (response) => {
           if (response.status === true) {
-
-            // เรียกใช้ฟังก์ชัน mapRecursive ที่เราสร้างขึ้น
             this.comments = response.data.map((comment: any) => this.mapCommentData(comment));
-
-            console.log('Comments:', this.comments);
           }
         },
         error: (error) => {
@@ -173,15 +166,12 @@ export class ReviewdetailsComponent {
     });
     return;
   }
-  // --- สร้างฟังก์ชันนี้เพิ่มครับ ---
-  // ฟังก์ชันนี้จะจัดการเติม URL ให้รูป และวนลูปเข้าไปจัดการ replies ย่อยๆ ด้วย
+
   mapCommentData(node: any): any {
-    // 1. จัดการรูปภาพของ Node ปัจจุบัน
     if (node.avatarUrl && !node.avatarUrl.startsWith('http')) {
       node.avatarUrl = `${this.constants.API}/images/${node.avatarUrl}`;
     }
 
-    // 2. ถ้ามี replies ให้เรียกฟังก์ชันนี้ซ้ำ (Recursive) กับลูกๆ ทุกตัว
     if (node.replies && node.replies.length > 0) {
       node.replies = node.replies.map((reply: any) => this.mapCommentData(reply));
     }
@@ -191,45 +181,21 @@ export class ReviewdetailsComponent {
 
   createComment() {
     if (!this.isLoggedIn) {
-      Swal.fire({
-        html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">กรุณาเข้าสู่ระบบก่อน</div>',
-        icon: 'error',
-        confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
-        confirmButtonColor: '#000000',
-        color: '#000000'
-      });
+      this.showError('กรุณาเข้าสู่ระบบก่อน');
       return;
     }
     if (this.commentText.trim() === '') {
-      Swal.fire({
-        html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">กรุณากรอกข้อความคอมเมนต์</div>',
-        icon: 'error',
-        confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
-        confirmButtonColor: '#000000',
-        color: '#000000'
-      });
+      this.showError('กรุณากรอกข้อความคอมเมนต์');
       return;
     }
     if (this.commentText.length > 45) {
-      Swal.fire({
-        html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ข้อความมีขนาดยาวเกิน 45 ตัวอักษร</div>',
-        icon: 'error',
-        confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
-        confirmButtonColor: '#000000',
-        color: '#000000'
-      });
+      this.showError('ข้อความมีขนาดยาวเกิน 45 ตัวอักษร');
       return;
     }
 
     const textCheck = checkProfanity(this.commentText);
     if (textCheck.isBad) {
-      Swal.fire({
-        html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ข้อความของคุณมีคำที่ไม่เหมาะสม</div>',
-        icon: 'error',
-        confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
-        confirmButtonColor: '#000000',
-        color: '#000000'
-      });
+      this.showError('ข้อความของคุณมีคำที่ไม่เหมาะสม');
       return;
     } else {
       const payload = {
@@ -251,24 +217,11 @@ export class ReviewdetailsComponent {
               this.getComments('review', this.reviewID);
               this.commentText = '';
             } else {
-              Swal.fire({
-                html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ส่งคอมเมนต์ไม่สำเร็จ</div>',
-                icon: 'error',
-                confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
-                confirmButtonColor: '#000000',
-                color: '#000000'
-              });
+              this.showError(response.message || 'เกิดข้อผิดพลาด');
             }
           },
           error: (error) => {
-            console.error('Error creating comment:', error);
-            Swal.fire({
-              html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">เกิดข้อผิดพลาดในการส่งคอมเมนต์</div>',
-              icon: 'error',
-              confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
-              confirmButtonColor: '#000000',
-              color: '#000000'
-            });
+            this.showError('เกิดข้อผิดพลาด');
           }
         });
     }
@@ -281,35 +234,17 @@ export class ReviewdetailsComponent {
       return;
     }
     if (this.repliesText.trim() === '') {
-      Swal.fire({
-        html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">กรุณากรอกข้อความคอมเมนต์</div>',
-        icon: 'error',
-        confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
-        confirmButtonColor: '#000000',
-        color: '#000000'
-      });
+      this.showError('กรุณากรอกข้อความคอมเมนต์');
       return;
     }
     if (this.repliesText.length > 45) {
-      Swal.fire({
-        html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ข้อความมีขนาดยาวเกิน 45 ตัวอักษร</div>',
-        icon: 'error',
-        confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
-        confirmButtonColor: '#000000',
-        color: '#000000'
-      });
+      this.showError('ข้อความมีขนาดยาวเกิน 45 ตัวอักษร');
       return;
     }
 
     const textCheck = checkProfanity(this.repliesText);
     if (textCheck.isBad) {
-      Swal.fire({
-        html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ข้อความของคุณมีคำที่ไม่เหมาะสม</div>',
-        icon: 'error',
-        confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
-        confirmButtonColor: '#000000',
-        color: '#000000'
-      });
+      this.showError('ข้อความของคุณมีคำที่ไม่เหมาะสม');
       return;
     } else {
       const payload = {
@@ -329,27 +264,14 @@ export class ReviewdetailsComponent {
                 timer: 1500,
                 showConfirmButton: false
               });
-
               this.getComments('review', this.reviewID);
             } else {
-              Swal.fire({
-                html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ส่งการตอบกลับไม่สำเร็จ</div>',
-                icon: 'error',
-                confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
-                confirmButtonColor: '#000000',
-                color: '#000000'
-              });
+              this.showError(response.message || 'เกิดข้อผิดพลาด');
+
             }
           },
           error: (error) => {
-            console.error('Error creating comment:', error);
-            Swal.fire({
-              html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">เกิดข้อผิดพลาดในการส่งการตอบกลับ</div>',
-              icon: 'error',
-              confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
-              confirmButtonColor: '#000000',
-              color: '#000000'
-            });
+            this.showError('เกิดข้อผิดพลาด');
           }
         });
     }
@@ -362,13 +284,7 @@ export class ReviewdetailsComponent {
   }
   reportReview(reviewID: number) {
     if (this.isLoggedIn === false) {
-      Swal.fire({
-        html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">กรุณาเข้าสู่ระบบก่อน</div>',
-        icon: 'error',
-        confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
-        confirmButtonColor: '#000000',
-        color: '#000000'
-      });
+      this.showError('กรุณาเข้าสู่ระบบก่อน');
       return;
     } else {
       Swal.fire({
@@ -383,7 +299,6 @@ export class ReviewdetailsComponent {
       }).then((result) => {
         if (result.isConfirmed) {
           const data = { uid: this.userID, reviewID: reviewID };
-          console.log(data);
 
           this.http.post<any>(`${this.constants.API}/report/review`, data)
             .subscribe({
@@ -396,23 +311,11 @@ export class ReviewdetailsComponent {
                     showConfirmButton: false
                   });
                 } else {
-                  Swal.fire({
-                    html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">' + response.message + '</div>',
-                    icon: 'error',
-                    confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
-                    confirmButtonColor: '#000000',
-                    color: '#000000'
-                  });
+                  this.showError(response.message || 'เกิดข้อผิดพลาด');
                 }
               },
               error: (error) => {
-                Swal.fire({
-                  html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">' + (error.error?.message || 'กรุณาลองใหม่อีกครั้ง') + '</div>',
-                  icon: 'error',
-                  confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
-                  confirmButtonColor: '#000000',
-                  color: '#000000'
-                });
+                this.showError(error.error?.message || 'กรุณาลองใหม่อีกครั้ง');
               }
             });
         }
@@ -424,16 +327,11 @@ export class ReviewdetailsComponent {
   toggleReplies(comment: Comment) {
     comment.showReplies = !comment.showReplies;
   }
-
-  // 2. ฟังก์ชันเปิด Popup (เรียกเมื่อกดปุ่มตอบกลับ)
   openPopup(commentOrReplyID: string) {
     this.replyToID = commentOrReplyID;
-    console.log('Opening popup for ID:', this.replyToID);
-
     this.showPopup = true;
   }
   sendReply() {
-    console.log(this.repliesText);
     this.createReplies(this.replyToID);
     this.repliesText = '';
     this.showPopup = false;
@@ -441,11 +339,11 @@ export class ReviewdetailsComponent {
   openPopupForReply(targetCommentOrReply: any) {
     this.currentReplyTarget = targetCommentOrReply;
     this.showPopup = true;
-    // อาจจะ log ดูว่าตอบใคร: console.log('Replying to ID:', targetCommentOrReply.id);
+
   }
-  // 3. ฟังก์ชันปิด Popup (เรียกเมื่อกดปุ่มยกเลิก หรือกดพื้นหลัง)
+
   closePopup() {
-    this.showPopup = false;      // สั่งปิด Popup
+    this.showPopup = false;
   }
   linkToProfile(userID: string) {
     this.router.navigate(['profile/others'], {
@@ -456,45 +354,29 @@ export class ReviewdetailsComponent {
 
 
   toggleMenu(reply: any, event: Event) {
-    event.stopPropagation(); // ป้องกันไม่ให้ไปกระทบ event คลิกอื่นๆ
+    event.stopPropagation();
 
-    // ถ้ากดตัวเดิมให้ปิด (Toggle)
     if (reply.showMenu) {
       reply.showMenu = false;
     } else {
-      // (Optional) ปิดเมนูของคนอื่นก่อนเปิดอันใหม่ (ต้องเขียน loop วนปิด)
-      // this.closeAllMenus(); 
-
       reply.showMenu = true;
     }
   }
 
-  // ฟังก์ชันเปิด/ปิด เมนู
+
   toggleReplyMenu(reply: any, event: Event) {
-    event.stopPropagation(); // ป้องกันไม่ให้ไปกระทบ event คลิกอื่นๆ
-
-    // ถ้ากดตัวเดิมให้ปิด (Toggle)
+    event.stopPropagation();
     if (reply.showMenu) {
       reply.showMenu = false;
     } else {
-      // (Optional) ปิดเมนูของคนอื่นก่อนเปิดอันใหม่ (ต้องเขียน loop วนปิด)
-      // this.closeAllMenus(); 
-
       reply.showMenu = true;
     }
   }
 
-  // ฟังก์ชันกดปุ่มรายงาน
   reportComment(commentID: any, event: Event) {
     event.stopPropagation();
     if (this.isLoggedIn === false) {
-      Swal.fire({
-        html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">กรุณาเข้าสู่ระบบก่อน</div>',
-        icon: 'error',
-        confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
-        confirmButtonColor: '#000000',
-        color: '#000000'
-      });
+      this.showError('กรุณาเข้าสู่ระบบก่อน');
       return;
     } else {
       Swal.fire({
@@ -520,23 +402,11 @@ export class ReviewdetailsComponent {
                     showConfirmButton: false
                   });
                 } else {
-                  Swal.fire({
-                    html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">' + response.message + '</div>',
-                    icon: 'error',
-                    confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
-                    confirmButtonColor: '#000000',
-                    color: '#000000'
-                  });
+                  this.showError(response.message || 'เกิดข้อผิดพลาด');
                 }
               },
               error: (error) => {
-                Swal.fire({
-                  html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">' + (error.error?.message || 'กรุณาลองใหม่อีกครั้ง') + '</div>',
-                  icon: 'error',
-                  confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
-                  confirmButtonColor: '#000000',
-                  color: '#000000'
-                });
+                this.showError(error.error?.message || 'กรุณาลองใหม่อีกครั้ง');
               }
             });
         }
@@ -549,13 +419,7 @@ export class ReviewdetailsComponent {
   deleteComment(commentID: any) {
 
     if (this.isLoggedIn === false) {
-      Swal.fire({
-        html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">กรุณาเข้าสู่ระบบก่อน</div>',
-        icon: 'error',
-        confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
-        confirmButtonColor: '#000000',
-        color: '#000000'
-      });
+      this.showError('กรุณาเข้าสู่ระบบก่อน');
       return;
     } else {
       Swal.fire({
@@ -582,23 +446,12 @@ export class ReviewdetailsComponent {
                     window.location.reload();
                   });;
                 } else {
-                  Swal.fire({
-                    html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">' + response.message + '</div>',
-                    icon: 'error',
-                    confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
-                    confirmButtonColor: '#000000',
-                    color: '#000000'
-                  });
+                  this.showError(response.message || 'เกิดข้อผิดพลาด');
+
                 }
               },
               error: (error) => {
-                Swal.fire({
-                  html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">' + (error.error?.message || 'กรุณาลองใหม่อีกครั้ง') + '</div>',
-                  icon: 'error',
-                  confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
-                  confirmButtonColor: '#000000',
-                  color: '#000000'
-                });
+                this.showError(error.error?.message || 'กรุณาลองใหม่อีกครั้ง');
               }
             });
         }
@@ -606,26 +459,36 @@ export class ReviewdetailsComponent {
     }
   }
 
-  // (แนะนำ) เพิ่ม HostListener เพื่อให้คลิกที่ว่างแล้วเมนูปิดเอง
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
-    // วนลูปปิดเมนูทั้งหมด (คุณอาจต้องเก็บ list comments ไว้ในตัวแปรเพื่อวน loop ปิด showMenu = false)
-    // หรือใช้วิธีง่ายๆ คือ set currentMenuId = null
   }
-  // 4. ฟังก์ชันส่งข้อความ
-
-  // ใน .ts file
-  currentReplyTarget: any = null; // เก็บว่ากำลังจะตอบใคร
-
-  // แก้ไขฟังก์ชันเปิด Popup
-
-
+  currentReplyTarget: any = null;
   isLoggedInFalse() {
     Swal.fire({
       html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">กรุณาเข้าสู่ระบบก่อน</div>',
       icon: 'error',
       confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
       confirmButtonColor: '#000000',
+      color: '#000000'
+    });
+  }
+  private showError(message: string) {
+    Swal.fire({
+      html: `<div style="font-size: 1.5rem; font-family: 'Kanit','Prompt','Mitr','Noto Sans Thai',sans-serif;">${message}</div>`,
+      icon: 'error',
+      confirmButtonText: `<div style="font-size:1.2rem; font-family: 'Kanit','Prompt','Mitr','Noto Sans Thai',sans-serif;">ตกลง</div>`,
+      confirmButtonColor: '#000000',
+      color: '#000000'
+    });
+
+  }
+
+  private showSuccess(message: string) {
+    return Swal.fire({
+      html: `<div style="font-size: 1.5rem; font-family: 'Kanit','Prompt','Mitr','Noto Sans Thai',sans-serif;">${message}</div>`,
+      icon: 'success',
+      confirmButtonText: `<div style="font-size:1.2rem; font-family: 'Kanit','Prompt','Mitr','Noto Sans Thai',sans-serif;">ตกลง</div>`,
+      confirmButtonColor: '#28D16F',
       color: '#000000'
     });
   }

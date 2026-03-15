@@ -1,74 +1,220 @@
-/* ... (CSS เดิมของคุณทั้งหมด ใส่ไว้ตรงนี้) ... */
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Kanit', sans-serif; }
-body { width: 100%; min-height: 100vh; background-color: #f8f9fa; display: flex; justify-content: center; }
-.container { width: 85%; max-width: 1096px; }
-.header { display: flex; justify-content: space-between; align-items: center; height: 4rem; }
-.back-btn { background-color: black; color: white; border: none; padding: 10px 24px; border-radius: 8px; cursor: pointer; font-size: 16px; flex-shrink: 0; transition: transform 0.2s; }
-.back-btn:hover { transform: translateX(-5px); }
-.title { font-size: 24px; font-weight: bold; }
-.divider { border: 0; border-top: 2px solid #000; margin-bottom: 40px; }
-.profile-wrapper { display: flex; justify-content: center; }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Kanit", sans-serif;
+}
+body {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  display: flex;
+  justify-content: center;
+}
+.container {
+  width: 85%;
+  max-width: 1096px;
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 4rem;
+}
+.back-btn {
+  background-color: black;
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+.back-btn:hover {
+  transform: translateX(-5px);
+}
+.title {
+  font-size: 24px;
+  font-weight: bold;
+}
+.divider {
+  border: 0;
+  border-top: 2px solid #000;
+  margin-bottom: 40px;
+}
+.profile-wrapper {
+  display: flex;
+  justify-content: center;
+}
 
 .profile-card {
-    width: 100%; max-width: 600px; background: white; border-radius: 20px;
-    padding: 50px 40px; display: flex; flex-direction: column; align-items: center;
-    text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: 1px solid #e0e0e0;
-    position: relative;
+  width: 100%;
+  max-width: 600px;
+  background: white;
+  border-radius: 20px;
+  padding: 50px 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e0e0e0;
+  position: relative;
 }
 
-.profile-image-container { width: 150px; height: 150px; margin-bottom: 25px; position: relative; }
-.profile-image { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 4px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.15); }
-.status-badge { position: absolute; bottom: 5px; right: 5px; width: 20px; height: 20px; border-radius: 50%; border: 3px solid white; }
-.status-active { background-color: #28a745; }
-.status-inactive { background-color: #dc3545; }
+.profile-image-container {
+  width: 150px;
+  height: 150px;
+  margin-bottom: 25px;
+  position: relative;
+}
+.profile-image {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid white;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+}
+.status-badge {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 3px solid white;
+}
+.status-active {
+  background-color: #28a745;
+}
+.status-inactive {
+  background-color: #dc3545;
+}
 
-.user-name { font-size: clamp(24px, 4vw, 32px); font-weight: 600; margin-bottom: 5px; color: #222; }
-.user-role { background-color: #f0f0f0; color: #555; padding: 5px 15px; border-radius: 20px; font-size: 14px; font-weight: 500; margin-bottom: 15px; display: inline-block; }
-.user-email { font-size: 18px; color: #666; margin-bottom: 40px; display: flex; align-items: center; gap: 10px; }
+.user-name {
+  font-size: clamp(24px, 4vw, 32px);
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: #222;
+}
+.user-role {
+  background-color: #f0f0f0;
+  color: #555;
+  padding: 5px 15px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 15px;
+  display: inline-block;
+}
+.user-email {
+  font-size: 18px;
+  color: #666;
+  margin-bottom: 40px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 
-.action-buttons { display: flex; gap: 15px; width: 100%; margin-top: 20px; } /* เพิ่ม margin-top นิดหน่อย */
-.btn { flex: 1; padding: 12px; border-radius: 10px; font-size: 16px; cursor: pointer; border: none; font-weight: 500; transition: all 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px; }
-.btn-edit { background-color: black; color: white; }
-.btn-edit:hover { background-color: #333; }
+.action-buttons {
+  display: flex;
+  gap: 15px;
+  width: 100%;
+  margin-top: 20px;
+}
+.btn {
+  flex: 1;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+  font-weight: 500;
+  transition: all 0.2s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+.btn-edit {
+  background-color: black;
+  color: white;
+}
+.btn-edit:hover {
+  background-color: #333;
+}
 
-/* --- CSS ที่เพิ่มใหม่สำหรับโหมดแก้ไข --- */
 .edit-input {
-    width: 100%;
-    padding: 10px 15px;
-    font-size: 18px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    margin-bottom: 15px;
-    text-align: center; /* ให้ Input จัดกลางเหมือน Text เดิม */
-    outline: none;
-    background-color: #fafafa;
+  width: 100%;
+  padding: 10px 15px;
+  font-size: 18px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  text-align: center;
+  outline: none;
+  background-color: #fafafa;
 }
-.edit-input:focus { border-color: black; background-color: white; }
+.edit-input:focus {
+  border-color: black;
+  background-color: white;
+}
 
-.btn-save { background-color: black; color: white; } /* ปุ่มบันทึกสีเขียว */
-.btn-save:hover { background-color: black; }
+.btn-save {
+  background-color: black;
+  color: white;
+}
+.btn-save:hover {
+  background-color: black;
+}
 
-.btn-cancel { background-color: #fff; color: #666; border: 1px solid #ddd; } /* ปุ่มยกเลิกสีเทา */
-.btn-cancel:hover { background-color: #f0f0f0; }
+.btn-cancel {
+  background-color: #fff;
+  color: #666;
+  border: 1px solid #ddd;
+}
+.btn-cancel:hover {
+  background-color: #f0f0f0;
+}
 
-.btn-delete { background-color: #ff4d4d; color: white; border: 1px solid #ddd; } /* ปุ่มลบสีแดง */
-.btn-delete:hover { background-color: #ff1a1a; }
+.btn-delete {
+  background-color: #ff4d4d;
+  color: white;
+  border: 1px solid #ddd;
+}
+.btn-delete:hover {
+  background-color: #ff1a1a;
+}
 
-/* ไอคอนกล้องถ่ายรูปตอนแก้ไขรูป */
 .img-edit-overlay {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.4); border-radius: 50%;
-    display: flex; justify-content: center; align-items: center;
-    color: white; font-size: 24px; cursor: pointer;
-    opacity: 0; transition: opacity 0.2s;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s;
 }
-.profile-image-container:hover .img-edit-overlay { opacity: 1; }
+.profile-image-container:hover .img-edit-overlay {
+  opacity: 1;
+}
 
 .spacer-70 {
-    width: 70px;
+  width: 70px;
 }
 
 .role-select {
-    width: auto;
-    padding: 5px 20px;
+  width: auto;
+  padding: 5px 20px;
 }

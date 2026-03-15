@@ -78,7 +78,6 @@ export class ReviewAllPostsComponent {
     this.http.get<any>(`${this.constants.API}/review/review/date/${this.subjectID}/${this.userID}`)
       .subscribe(res => {
         if (res.status === true) {
-          // แปลง path รูปภาพให้เป็น URL เต็ม
           this.reviews = res.result.map((review: any) => ({
             ...review,
             profile: review.profile && review.profile.startsWith('http') ? review.profile : `${this.constants.API}/images/${review.profile}`,
@@ -107,13 +106,7 @@ export class ReviewAllPostsComponent {
   }
   reportReview(reviewID: number) {
     if (this.isLoggedIn === false) {
-      Swal.fire({
-        html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">กรุณาเข้าสู่ระบบก่อน</div>',
-        icon: 'error',
-        confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
-        confirmButtonColor: '#000000',
-        color: '#000000'
-      });
+      this.showError('กรุณาเข้าสู่ระบบก่อน');
       return;
     } else {
       Swal.fire({
@@ -139,23 +132,11 @@ export class ReviewAllPostsComponent {
                     showConfirmButton: false
                   });
                 } else {
-                  Swal.fire({
-                    html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">' + response.message + '</div>',
-                    icon: 'error',
-                    confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
-                    confirmButtonColor: '#000000',
-                    color: '#000000'
-                  });
+                  this.showError(response.message || 'เกิดข้อผิดพลาด');
                 }
               },
               error: (error) => {
-                Swal.fire({
-                  html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">' + (error.error?.message || 'กรุณาลองใหม่อีกครั้ง') + '</div>',
-                  icon: 'error',
-                  confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
-                  confirmButtonColor: '#000000',
-                  color: '#000000'
-                });
+                this.showError(error.error?.message || 'กรุณาลองใหม่อีกครั้ง');
               }
             });
         }
@@ -189,18 +170,13 @@ export class ReviewAllPostsComponent {
                 });
               }
               else {
-                Swal.fire({
-                  html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">' + response.message + '</div>',
-                  icon: 'error',
-                  confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
-                  confirmButtonColor: '#000000',
-                  color: '#000000'
-                });
+                this.showError(response.message || 'เกิดข้อผิดพลาด');
+                return;
               }
             }
           });
       }
-      });
+    });
 
   }
   deleteThisReview(reviewID: number) {
@@ -227,6 +203,9 @@ export class ReviewAllPostsComponent {
                 }).then(() => {
                   window.location.reload();
                 });
+              } else {
+                this.showError(response.message || 'เกิดข้อผิดพลาด');
+                return;
               }
             }
           });
@@ -236,13 +215,7 @@ export class ReviewAllPostsComponent {
   }
   saveReviewToFavorites(reviewID: number) {
     if (this.isLoggedIn === false) {
-      Swal.fire({
-        html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">กรุณาเข้าสู่ระบบก่อน</div>',
-        icon: 'error',
-        confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
-        confirmButtonColor: '#000000',
-        color: '#000000'
-      });
+      this.showError('กรุณาเข้าสู่ระบบก่อน');
       return;
     } else {
       const review = this.reviews.find((r: any) => r.pid === reviewID);
@@ -272,26 +245,15 @@ export class ReviewAllPostsComponent {
           },
           error: (error) => {
             review.is_saved = previousState;
-            Swal.fire({
-              html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง</div>',
-              icon: 'error',
-              confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
-              confirmButtonColor: '#000000',
-              color: '#000000'
-            });
+            this.showError('เกิดข้อผิดพลาด');
+            return;
           }
         });
     }
   }
   toggleLike(reviewID: number) {
     if (this.isLoggedIn === false) {
-      Swal.fire({
-        html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">กรุณาเข้าสู่ระบบก่อน</div>',
-        icon: 'error',
-        confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
-        confirmButtonColor: '#000000',
-        color: '#000000'
-      });
+      this.showError('กรุณาเข้าสู่ระบบก่อน');
       return;
     }
     const review = this.reviews.find((r: any) => r.pid === reviewID);
@@ -317,13 +279,8 @@ export class ReviewAllPostsComponent {
         error: (error) => {
           review.is_liked = previousLikedState;
           review.like_count = previousLikeCount;
-          Swal.fire({
-            html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง</div>',
-            icon: 'error',
-            confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
-            confirmButtonColor: '#000000',
-            color: '#000000'
-          });
+          this.showError('เกิดข้อผิดพลาด');
+          return;
         }
       });
   }
@@ -331,13 +288,7 @@ export class ReviewAllPostsComponent {
   createReview() {
     const subjectID = this.subjectID;
     if (this.isLoggedIn === false) {
-      Swal.fire({
-        html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">กรุณาเข้าสู่ระบบก่อน</div>',
-        icon: 'error',
-        confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
-        confirmButtonColor: '#000000',
-        color: '#000000'
-      });
+      this.showError('กรุณาเข้าสู่ระบบก่อน');
       return;
     }
     else {
@@ -348,7 +299,7 @@ export class ReviewAllPostsComponent {
 
   }
   adminDeleteThisReview(reviewID: number) {
-     Swal.fire({
+    Swal.fire({
       html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ยืนยันการลบโพสต์นี้?</div>',
       icon: 'warning',
       confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
@@ -371,6 +322,9 @@ export class ReviewAllPostsComponent {
                 }).then(() => {
                   window.location.reload();
                 });
+              } else {
+                this.showError(response.message || 'เกิดข้อผิดพลาด');
+                return;
               }
             }
           });
@@ -393,27 +347,20 @@ export class ReviewAllPostsComponent {
     }
   }
 
-  // ฟังก์ชันเมื่อกดเลือกหัวข้อ
   selectReportReason(id: number, reason: string) {
     alert(`รายงานโพสต์เรียบร้อย: ${reason}`);
-    this.activeReportId = null; // ปิดเมนูหลังเลือกเสร็จ
+    this.activeReportId = null;
   }
 
-  // (Optional) คลิกที่ว่างๆ แล้วให้เมนูปิด
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: any) {
     event.stopPropagation();
     this.activeReportId = null;
   }
 
-  // toggleDropdown() {
-  //   this.isDropdownOpen = !this.isDropdownOpen;
-  // }
-
   selectOption(option: string) {
     this.selectedSortOption = option;
-    this.isDropdownOpen = false; // ปิด dropdown หลังเลือก
-    // TODO: เรียกฟังก์ชัน sort ข้อมูลจริงที่นี่
+    this.isDropdownOpen = false;
   }
 
 
@@ -422,5 +369,25 @@ export class ReviewAllPostsComponent {
   }
   back() {
     history.back();
+  }
+  private showError(message: string) {
+    Swal.fire({
+      html: `<div style="font-size: 1.5rem; font-family: 'Kanit','Prompt','Mitr','Noto Sans Thai',sans-serif;">${message}</div>`,
+      icon: 'error',
+      confirmButtonText: `<div style="font-size:1.2rem; font-family: 'Kanit','Prompt','Mitr','Noto Sans Thai',sans-serif;">ตกลง</div>`,
+      confirmButtonColor: '#000000',
+      color: '#000000'
+    });
+
+  }
+
+  private showSuccess(message: string) {
+    return Swal.fire({
+      html: `<div style="font-size: 1.5rem; font-family: 'Kanit','Prompt','Mitr','Noto Sans Thai',sans-serif;">${message}</div>`,
+      icon: 'success',
+      confirmButtonText: `<div style="font-size:1.2rem; font-family: 'Kanit','Prompt','Mitr','Noto Sans Thai',sans-serif;">ตกลง</div>`,
+      confirmButtonColor: '#28D16F',
+      color: '#000000'
+    });
   }
 }

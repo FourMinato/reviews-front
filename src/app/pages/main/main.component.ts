@@ -23,18 +23,14 @@ export class MainComponent {
   ngOnInit() {
     this.isLoggedIn = this.authService.isLoggedIn();
     const uid = this.authService.getUser().uid;
-    console.log(uid);
-    
+
     this.checkAdmin();
     this.getDotNotifications(uid);
-      console.log(this.isAdmin);
   }
   checkAdmin() {
     const user = this.authService.getUser();
     if (user.type === 0) {
       this.isAdmin = true;
-    
-      
     }
   }
   getDotNotifications(userID: string) {
@@ -47,76 +43,7 @@ export class MainComponent {
         },
       });
   }
-  logout() {
-    Swal.fire({
-      html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ยืนยันการออกจากระบบ?</div>',
-      icon: 'warning',
-      confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
-      confirmButtonColor: '#ff4d4d',
-      color: '#000000',
-      showCancelButton: true,
-      cancelButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ยกเลิก</div>',
-      cancelButtonColor: '#000000',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.authService.logout();
-        window.location.reload();
-      }
-    });
-  }
-  @ViewChildren('dataSelect') checkboxes!: QueryList<ElementRef>;
-  select() {
-
-    const selectedCate: string[] = [];
-    this.checkboxes.forEach((checkbox: ElementRef) => {
-      if (checkbox.nativeElement.checked) {
-        selectedCate.push(checkbox.nativeElement.value);
-      }
-    });
-    if (selectedCate.length === 0) {
-      Swal.fire({
-        html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">เลือกหมวดหมู่อย่างน้อย 1 หมวดหมู่</div>',
-        icon: 'error',
-        confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
-        confirmButtonColor: '#000000',
-        color: '#000000'
-      });
-      return;
-    }
-    this.router.navigate(['/subjects'], {
-      queryParams: {
-        categories: selectedCate.join(',')
-      }
-    });
-  }
-  search(subcode: string) {
-    const isNumeric = /^\d+$/.test(subcode);
-    if (subcode.length !== 7) {
-      Swal.fire({
-        html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">รหัสวิชาต้องมี 7 หลัก</div>',
-        icon: 'error',
-        confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
-        confirmButtonColor: '#000000',
-        color: '#000000'
-      });
-      return;
-    } else if (!isNumeric) {
-      Swal.fire({
-        html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">รหัสวิชาประกอบด้วยตัวเลขเท่านั้น</div>',
-        icon: 'error',
-        confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
-        confirmButtonColor: '#000000',
-        color: '#000000'
-      });
-      return;
-    } else {
-      this.router.navigate(['/search'], {
-        state: { subcode: subcode }
-      });
-    }
-  }
-
-  login() {
+    login() {
     this.router.navigate(['/login']);
   }
   contact() {
@@ -137,9 +64,81 @@ export class MainComponent {
   message() {
     this.router.navigate(['/message']);
   }
+
+  @ViewChildren('dataSelect') checkboxes!: QueryList<ElementRef>;
+  select() {
+
+    const selectedCate: string[] = [];
+    this.checkboxes.forEach((checkbox: ElementRef) => {
+      if (checkbox.nativeElement.checked) {
+        selectedCate.push(checkbox.nativeElement.value);
+      }
+    });
+    if (selectedCate.length === 0) {
+      this.showError('เลือกหมวดหมู่อย่างน้อย 1 หมวดหมู่');
+      return;
+    }
+    this.router.navigate(['/subjects'], {
+      queryParams: {
+        categories: selectedCate.join(',')
+      }
+    });
+  }
+  search(subcode: string) {
+    const isNumeric = /^\d+$/.test(subcode);
+    if (subcode.length !== 7) {
+       this.showError('รหัสวิชาต้องมี 7 หลัก');
+      return;
+    } else if (!isNumeric) {
+       this.showError('รหัสวิชาประกอบด้วยตัวเลขเท่านั้น');
+      return;
+    } else {
+      this.router.navigate(['/search'], {
+        state: { subcode: subcode }
+      });
+    }
+  }
+
   isMenuOpen: boolean = false;
 
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;
   }
+    logout() {
+    Swal.fire({
+      html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ยืนยันการออกจากระบบ?</div>',
+      icon: 'warning',
+      confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
+      confirmButtonColor: '#ff4d4d',
+      color: '#000000',
+      showCancelButton: true,
+      cancelButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ยกเลิก</div>',
+      cancelButtonColor: '#000000',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.authService.logout();
+        window.location.reload();
+      }
+    });
+  }
+    private showError(message: string) {
+      Swal.fire({
+        html: `<div style="font-size: 1.5rem; font-family: 'Kanit','Prompt','Mitr','Noto Sans Thai',sans-serif;">${message}</div>`,
+        icon: 'error',
+        confirmButtonText: `<div style="font-size:1.2rem; font-family: 'Kanit','Prompt','Mitr','Noto Sans Thai',sans-serif;">ตกลง</div>`,
+        confirmButtonColor: '#000000',
+        color: '#000000'
+      });
+  
+    }
+  
+    private showSuccess(message: string) {
+      return Swal.fire({
+        html: `<div style="font-size: 1.5rem; font-family: 'Kanit','Prompt','Mitr','Noto Sans Thai',sans-serif;">${message}</div>`,
+        icon: 'success',
+        confirmButtonText: `<div style="font-size:1.2rem; font-family: 'Kanit','Prompt','Mitr','Noto Sans Thai',sans-serif;">ตกลง</div>`,
+        confirmButtonColor: '#28D16F',
+        color: '#000000'
+      });
+    }
 }
