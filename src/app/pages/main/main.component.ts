@@ -85,16 +85,12 @@ export class MainComponent {
     });
   }
   search(subcode: string) {
-    const isNumeric = /^\d+$/.test(subcode);
-    if (subcode.length !== 7) {
-       this.showError('รหัสวิชาต้องมี 7 หลัก');
-      return;
-    } else if (!isNumeric) {
-       this.showError('รหัสวิชาประกอบด้วยตัวเลขเท่านั้น');
+    if (!subcode || subcode.trim() === '') {
+       this.showError('กรุณากรอกรหัสวิชาหรือชื่อวิชา');
       return;
     } else {
       this.router.navigate(['/search'], {
-        state: { subcode: subcode }
+        state: { subcode: subcode.trim() }
       });
     }
   }
