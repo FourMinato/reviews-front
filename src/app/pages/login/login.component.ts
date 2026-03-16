@@ -36,6 +36,7 @@ export class LoginComponent {
   confirmPassword: string = '';
 
   resetToken: string = '';
+  isOtpLoading: boolean = false;
   constructor(private http: HttpClient,
     private authService: AuthService, private router: Router, private constants: Constants) { }
 
@@ -194,6 +195,7 @@ export class LoginComponent {
       this.showError('กรุณากรอกอีเมลของคุณ');
       return;
     }
+    this.isOtpLoading = true;
     this.http.get<any>(`${this.constants.API}/user/checkemail`, {
       params: { email: this.resetEmail }
     })
@@ -205,15 +207,28 @@ export class LoginComponent {
               email: this.resetEmail
             }).subscribe({
               next: () => {
+                this.isOtpLoading = false;
                 this.forgotPasswordStep = 2; // ไปหน้ากรอก OTP
               },
-              error: () => this.showError('ไม่สามารถส่ง OTP ได้')
+              error: (err) => {
+                this.isOtpLoading = false;
+                if (err.status === 429) {
+                  this.showError('ส่ง OTP ถี่เกินไป กรุณารอสักครู่แล้วลองใหม่');
+                } else {
+                  this.showError(err.error?.message || 'ไม่สามารถส่ง OTP ได้');
+                }
+              }
             });
           } else {
+            this.isOtpLoading = false;
             this.showError('อีเมล์นี้ไม่มีในระบบ');
             return;
           }
         },
+        error: (err) => {
+          this.isOtpLoading = false;
+          this.showError(err.error?.message || 'เกิดข้อผิดพลาดในการตรวจสอบอีเมล');
+        }
       });
 
   }

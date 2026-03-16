@@ -72,7 +72,9 @@
             <h3 class="modal-title">ลืมรหัสผ่าน</h3>
             <p class="modal-desc">กรุณากรอกอีเมลของคุณเพื่อรับรหัส OTP</p>
             <input type="email" placeholder="อีเมล" [(ngModel)]="resetEmail" class="modal-input">
-            <button class="login-btn " (click)="requestOtp()">ส่งรหัส OTP</button>
+            <button class="login-btn " (click)="requestOtp()" [disabled]="isOtpLoading">
+                {{ isOtpLoading ? 'กำลังส่ง...' : 'ส่งรหัส OTP' }}
+            </button>
         </ng-container>
 
         <ng-container *ngIf="forgotPasswordStep === 2">
