@@ -15,9 +15,11 @@ import Swal from 'sweetalert2';
 })
 export class MessageComponent {
   messages: any[] = [];
+  uid:any;
   constructor(private router: Router, private http: HttpClient, private constants: Constants, private authService: AuthService,) { }
   ngOnInit() {
     const uid = this.authService.getUser().uid;
+    this.uid = uid;
     this.getMessage(uid);
   }
   getMessage(userID: string) {
@@ -59,7 +61,7 @@ export class MessageComponent {
     }
   }
   deleteMessage(messageID: string) {
-    this.http.delete<any>(`${this.constants.API}/message/notifications/${messageID}`)
+    this.http.delete<any>(`${this.constants.API}/message/notifications/${messageID}/${this.uid}`)
       .subscribe({
         next: (response) => {
           if (response.status == true) {
@@ -72,7 +74,21 @@ export class MessageComponent {
               window.location.reload();
             });
           }
+        },
+        error: (error) => {
+          this.showError(error.error?.message || 'เกิดข้อผิดพลาด');
+          return;
         }
       });
+  }
+  private showError(message: string) {
+    Swal.fire({
+      html: `<div style="font-size: 1.5rem; font-family: 'Kanit','Prompt','Mitr','Noto Sans Thai',sans-serif;">${message}</div>`,
+      icon: 'error',
+      confirmButtonText: `<div style="font-size:1.2rem; font-family: 'Kanit','Prompt','Mitr','Noto Sans Thai',sans-serif;">ตกลง</div>`,
+      confirmButtonColor: '#000000',
+      color: '#000000'
+    });
+
   }
 }

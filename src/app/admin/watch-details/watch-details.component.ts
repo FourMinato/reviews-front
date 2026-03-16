@@ -36,7 +36,11 @@ export class WatchDetailsComponent {
             .subscribe({
                 next: (res) => {
                     if (res.status) {
-                        this.questionsList = res.data;
+                        this.questionsList = res.data.map((question: any) => ({
+                            ...question,
+                            profile: question.profile ? (question.profile.startsWith('http') ? question.profile : `${this.constants.API}/images/${question.profile}`) : 'https://cdn-icons-png.flaticon.com/512/149/149071.png'
+                        }));
+                    
                     }
                 },
                 error: () => { }
@@ -47,7 +51,10 @@ export class WatchDetailsComponent {
             .subscribe({
                 next: (res) => {
                     if (res.status) {
-                        this.reviewsList = res.data;
+                        this.reviewsList = res.data.map((review: any) => ({
+                            ...review,
+                            profile: review.profile ? (review.profile.startsWith('http') ? review.profile : `${this.constants.API}/images/${review.profile}`) : 'https://cdn-icons-png.flaticon.com/512/149/149071.png'
+                        }));                
                     }
                 },
                 error: () => { }

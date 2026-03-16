@@ -53,6 +53,7 @@ export class ReviewdetailsComponent {
   isAnonymous: boolean = false;
   replyToID: string = '';
   isAdmin: boolean = false;
+  isHidden:boolean = false;
   constructor(private router: Router, private http: HttpClient, private constants: Constants, private authService: AuthService) { }
   ngOnInit() {
     const ID = history.state.reviewID || '';
@@ -78,31 +79,47 @@ export class ReviewdetailsComponent {
       this.isAdmin = true;
     }
   }
-  getDetailReview() {
-    this.http.get<any>(`${this.constants.API}/detail/review/${this.reviewID}`)
-      .subscribe({
-        next: (response) => {
-          if (response.status === true) {
-            this.reviews = response.result.map((review: any) => ({
-              ...review,
-              profile: review.profile && review.profile.startsWith('http') ? review.profile : `${this.constants.API}/images/${review.profile}`
-            }));
-            if (this.reviews[0].uid === this.userID) {
-              this.isOwner = true;
-            }
-            if (this.reviews[0].is_anonymous === true) {
-              this.isAnonymous = true;
-            }
-          }
-        },
-        error: (error) => {
-          if (error.status === 404) {
+getDetailReview() {
+  this.http.get<any>(`${this.constants.API}/detail/review/${this.reviewID}`)
+    .subscribe({
+      next: (response) => {
+        if (response.status === true) {
+          this.reviews = response.result.map((review: any) => ({
+            ...review,
+            profile: review.profile && review.profile.startsWith('http') ? review.profile : `${this.constants.API}/images/${review.profile}`
+          }));
+          if (this.reviews[0].uid === this.userID) this.isOwner = true;
+          if (this.reviews[0].is_anonymous === true) this.isAnonymous = true;
+        }
+      },
+      error: (error) => {
+        if (error.status === 404) {
+          if (error.error?.reason === 'hidden' && this.isAdmin === true) {
+            this.getDetailReviewAdmin();
+          } else {
             this.showDeletedPostMessage();
           }
         }
       }
-      );
-  }
+    });
+}
+
+getDetailReviewAdmin() {
+  this.http.get<any>(`${this.constants.API}/detail/admin/review/${this.reviewID}`)
+    .subscribe({
+      next: (response) => {
+        if (response.status === true) {
+          this.reviews = response.result.map((review: any) => ({
+            ...review,
+            profile: review.profile && review.profile.startsWith('http') ? review.profile : `${this.constants.API}/images/${review.profile}`
+          }));
+          if (this.reviews[0].uid === this.userID) this.isOwner = true;
+          if (this.reviews[0].is_anonymous === true) this.isAnonymous = true;
+          if (response.is_hidden) this.isHidden = true;
+        }
+      }
+    });
+}
 
   adminDeleteThisReview(reviewID: number) {
     Swal.fire({
@@ -154,7 +171,7 @@ export class ReviewdetailsComponent {
   }
   showDeletedPostMessage() {
     Swal.fire({
-      html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">โพสต์ดังกล่าวถูกลบไปแล้ว</div>',
+      html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">โพสต์ดังกล่าวถูกลบหรือปิดการมองเห็นไปแล้ว</div>',
       icon: 'error',
       confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
       confirmButtonColor: '#000000',
@@ -221,7 +238,8 @@ export class ReviewdetailsComponent {
             }
           },
           error: (error) => {
-            this.showError('เกิดข้อผิดพลาด');
+            this.showError(error.error?.message || 'เกิดข้อผิดพลาด');
+            return;
           }
         });
     }
@@ -271,7 +289,8 @@ export class ReviewdetailsComponent {
             }
           },
           error: (error) => {
-            this.showError('เกิดข้อผิดพลาด');
+            this.showError(error.error?.message || 'เกิดข้อผิดพลาด');
+            return;
           }
         });
     }
@@ -406,7 +425,7 @@ export class ReviewdetailsComponent {
                 }
               },
               error: (error) => {
-                this.showError(error.error?.message || 'กรุณาลองใหม่อีกครั้ง');
+                this.showError(error.error?.message || 'เกิดข้อผิดพลาด');
               }
             });
         }

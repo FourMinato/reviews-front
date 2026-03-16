@@ -23,60 +23,21 @@ export class SearchComponent {
     this.getSubject(subcode)
   }
   getSubject(subcode: string) {
-    if (!subcode) return;
-
-    const isNumeric = /^\d+$/.test(subcode);
-    
-    // 1. Try search by subcode first ONLY if it's exactly 7 digits
-    if (subcode.length === 7 && isNumeric) {
-      this.http.get(`${this.constants.API}/subject/subject/search/${subcode}`).subscribe({
-        next: (res: any) => {
-          if (res.status === true && res.result && res.result.length > 0) {
-            this.subject = res.result;
-            this.notFound = false;
-          } else {
-            // If API returns success but no results, try keyword search
-            this.searchByKeyword(subcode);
-          }
-        },
-        error: (error) => {
-          // Fallback to keyword search on error
-          this.searchByKeyword(subcode);
-        }
-      });
-    } else {
-      // 2. If it's a name or keyword, go straight to client-side filter
-      this.searchByKeyword(subcode);
-    }
-  }
-
-  searchByKeyword(keyword: string) {
-    this.http.post<any>(`${this.constants.API}/category/subject/select`, {
-      cateids: ['1', '2', '3', '4', '5'],
-    }).subscribe({
-      next: (res) => {
-        if (res.status && res.result) {
-          const lowerKeyword = keyword.toLowerCase();
-          const filtered = res.result.filter((item: any) => 
-            (item.subcode && item.subcode.toLowerCase().includes(lowerKeyword)) ||
-            (item.name && item.name.toLowerCase().includes(lowerKeyword))
-          );
-
-          if (filtered.length > 0) {
-            this.subject = filtered;
-            this.notFound = false;
-          } else {
-            this.subject = [];
-            this.notFound = true;
-          }
+    this.http.get(`${this.constants.API}/subject/subject/search/${subcode}`).subscribe({
+      next: (res: any) => {
+        if (res.status === true) {
+          this.subject = res.result;
+          this.notFound = false;
         } else {
           this.subject = [];
           this.notFound = true;
         }
       },
-      error: () => {
-        this.subject = [];
-        this.notFound = true;
+      error: (error) => {
+        if (error.status === 404) {
+          this.subject = [];
+          this.notFound = true;
+        }
       }
     });
   }

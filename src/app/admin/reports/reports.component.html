@@ -7,6 +7,67 @@
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <title>All Reports</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Kanit", sans-serif; }
+        body { width: 100%; min-height: 100vh; margin: 0; display: flex; flex-direction: column; align-items: center; background-color: #fcfcfc; }
+        .page-wrapper { width: 85%; max-width: 1096px; display: flex; flex-direction: column; flex: 1; padding-bottom: 60px; }
+        header { width: 100%; height: 5rem; display: flex; align-items: center; border-bottom: 2px solid #e5e7eb; margin-bottom: 1.5rem; }
+        nav { width: 100%; display: flex; align-items: center; justify-content: space-between; }
+        .back-btn { background-color: #ffffff; color: #374151; border: 1px solid #d1d5db; padding: 8px 24px; border-radius: 10px; cursor: pointer; font-size: 16px; font-weight: 500; flex-shrink: 0; transition: all 0.2s ease; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); }
+        .back-btn:hover { background-color: #f9fafb; color: #111827; border-color: #9ca3af; }
+        .logo { font-size: 1.4rem; font-weight: 600; color: #374151; text-align: right; }
+        main { width: 100%; flex: 1; display: flex; flex-direction: column; align-items: flex-start; padding-top: 10px; }
+        
+        .check-border { width: 100%; display: flex; align-items: center; justify-content: flex-start; flex-wrap: wrap; gap: 0.8rem; padding-bottom: 24px; }
+        .radio-wrapper { display: flex; align-items: center; }
+        .radio-wrapper input[type="radio"] { display: none; }
+        .radio-label { display: inline-block; padding: 0.5rem 1.2rem; border: 1px solid #d1d5db; border-radius: 50px; cursor: pointer; font-size: 1rem; font-weight: 500; background-color: white; color: #4b5563; transition: all 0.2s ease; user-select: none; white-space: nowrap; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02); }
+        .radio-label:hover { background-color: #f9fafb; border-color: #9ca3af; }
+        .radio-wrapper input[type="radio"]:checked + .radio-label { background-color: #374151; color: white; border-color: #374151; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+        
+        .reports-list { width: 100%; display: flex; flex-direction: column; gap: 16px; }
+        .reports-card { width: 100%; border: 1px solid #e5e7eb; border-radius: 16px; background: white; overflow: hidden; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.05); position: relative; }
+        .reports-card:hover { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05); border-color: #d1d5db; }
+        .reports-card.active { border-color: #9ca3af; }
+        
+        .card-header { padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; background: white; position: relative; }
+        .title-wrapper { display: flex; align-items: center; gap: 16px; flex: 1; }
+        
+        /* CSS ใหม่สำหรับ Profile และ Text Layout */
+        .user-avatar { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid #f3f4f6; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); flex-shrink: 0; }
+        .text-wrapper { display: flex; flex-direction: column; gap: 2px; }
+        .report-subtitle { font-size: 0.85rem; color: #6b7280; display: flex; align-items: center; gap: 6px; }
+        .report-details-box { padding: 16px 24px; background-color: #f9fafb; color: #4b5563; font-size: 0.95rem; line-height: 1.5; }
+
+        .report-title { font-size: 1.05rem; color: #1f2937; transition: color 0.2s; }
+        .reports-card.unread .report-title { font-weight: 600; }
+        .reports-card.read .report-title { font-weight: 400; color: #6b7280; }
+        
+        .meta-info { display: flex; align-items: center; gap: 15px; }
+        .report-date { font-size: 0.9rem; color: #9ca3af; }
+        .toggle-icon { color: #9ca3af; font-size: 1rem; transition: transform 0.3s ease; margin-left: 10px; }
+        .reports-card.active .toggle-icon { transform: rotate(180deg); }
+        
+        .card-body { max-height: 0; opacity: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease; background-color: #f9fafb; }
+        .card-divider { border: 0; border-top: 1px solid #e5e7eb; margin: 0; }
+        .card-actions { padding: 20px 24px; display: flex; justify-content: flex-end; align-items: center; flex-wrap: wrap; gap: 12px; }
+        .btn-action-outline { background-color: white; color: #374151; border: 1px solid #d1d5db; padding: 8px 20px; border-radius: 8px; font-size: 0.95rem; cursor: pointer; font-weight: 500; transition: all 0.2s ease; }
+        .btn-action-outline:hover { background-color: #f3f4f6; border-color: #9ca3af; }
+        
+        .reports-card.active .card-body { max-height: 500px; opacity: 1; }
+        .empty-state { width: 100%; padding: 3rem 1rem; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: white; border: 2px dashed #e5e7eb; border-radius: 16px; color: #6b7280; text-align: center; margin-top: 10px; }
+        .empty-state i { font-size: 3rem; color: #d1d5db; margin-bottom: 1rem; }
+        .empty-state p { font-size: 1.1rem; font-weight: 500; }
+
+        @media (max-width: 768px) {
+            .page-wrapper { width: 92%; padding: 0 10px; }
+            .card-header { padding: 16px; flex-wrap: wrap; gap: 10px; }
+            .title-wrapper { min-width: 100%; }
+            .meta-info { width: 100%; justify-content: space-between; padding-left: 60px; }
+            .card-actions { justify-content: stretch; padding: 16px; }
+            .btn-action-outline { width: 100%; text-align: center; }
+        }
+    </style>
 </head>
 
 <body>
@@ -20,49 +81,49 @@
 
         <main>
             <div class="check-border">
-
                 <div class="radio-wrapper">
-                    <input type="radio" name="sort" id="review" value="review" checked [(ngModel)]="selected"
-                        (change)="selectBy()">
+                    <input type="radio" name="sort" id="review" value="review" [(ngModel)]="selected" (change)="selectBy()">
                     <label for="review" class="radio-label">โพสต์รีวิว</label>
                 </div>
                 <div class="radio-wrapper">
-                    <input type="radio" name="sort" id="question" value="question" [(ngModel)]="selected"
-                        (change)="selectBy()">
+                    <input type="radio" name="sort" id="question" value="question" [(ngModel)]="selected" (change)="selectBy()">
                     <label for="question" class="radio-label">โพสต์ถามตอบ</label>
                 </div>
                 <div class="radio-wrapper">
-                    <input type="radio" name="sort" id="comment" value="comment" [(ngModel)]="selected"
-                        (change)="selectBy()">
+                    <input type="radio" name="sort" id="comment" value="comment" [(ngModel)]="selected" (change)="selectBy()">
                     <label for="comment" class="radio-label">คอมเมนต์</label>
                 </div>
             </div>
 
             <div class="reports-list">
-
+                
                 <ng-container *ngIf="selected === 'review'">
-                    <div class="reports-card" *ngFor="let report of reportsReview" [class.active]="report.isExpanded"
-                        [class.unread]="!report.isRead" [class.read]="report.isRead">
-
+                    <div class="reports-card" *ngFor="let report of reportsReviews" [class.active]="report.isExpanded" >
                         <div class="card-header" (click)="report.isExpanded = !report.isExpanded">
                             <div class="title-wrapper">
-
-                                <span class="report-title">
-                                    <strong>{{ report.reporter_name }}</strong> ได้รายงานโพสต์รีวิว
-                                </span>
+                                <img class="user-avatar" [src]="report.reporter_profile
+ || 'https://ui-avatars.com/api/?name=' + report.reporter_name + '&background=random&color=fff'" alt="Profile">
+                                <div class="text-wrapper">
+                                    <span class="report-title">
+                                        <strong>{{ report.reporter_name }}</strong> ได้รายงานโพสต์รีวิวของ <strong>{{ report.reported_name }}</strong>
+                                    </span>
+                                    
+                                </div>
                             </div>
                             <div class="meta-info">
                                 <span class="report-date">{{ report.date | date:'yyyy-MM-dd' }}</span>
                                 <i class="fas fa-chevron-down toggle-icon"></i>
                             </div>
                         </div>
-
                         <div class="card-body">
+                            <div class="report-details-box">
+                                <p><strong>ข้อความรีวิว: </strong></p>
+                                <p style="margin-top: 8px;">{{ report.review_descriptions
+ || 'ไม่มีรายละเอียดเพิ่มเติมจากผู้รายงาน' }}</p>
+                            </div>
                             <hr class="card-divider">
                             <div class="card-actions">
-                                <button class="btn-action-outline"
-                                    (click)="linkToReviewDetails(report.pid)">ดูโพสต์รีวิว</button>
-
+                                <button class="btn-action-outline" (click)="linkToReviewDetails(report.pid)">ดูโพสต์รีวิว</button>
                             </div>
                         </div>
                     </div>
@@ -73,28 +134,31 @@
                 </ng-container>
 
                 <ng-container *ngIf="selected === 'question'">
-                    <div class="reports-card" *ngFor="let report of reportsQuestion" [class.active]="report.isExpanded"
-                        [class.unread]="!report.isRead" [class.read]="report.isRead">
-
+                    <div class="reports-card" *ngFor="let report of reportsQuestions" [class.active]="report.isExpanded" >
                         <div class="card-header" (click)="report.isExpanded = !report.isExpanded">
                             <div class="title-wrapper">
-
-                                <span class="report-title">
-                                    <strong>{{ report.reporter_name }}</strong> ได้รายงานโพสต์ถามตอบ
-                                </span>
+                                <img class="user-avatar" [src]="report.reporter_profile || 'https://ui-avatars.com/api/?name=' + report.reporter_name + '&background=random&color=fff'" alt="Profile">
+                                <div class="text-wrapper">
+                                    <span class="report-title">
+                                        <strong>{{ report.reporter_name }}</strong> ได้รายงานโพสต์ถามตอบของ <strong>{{ report.reported_name }}</strong>
+                                    </span>
+                                   
+                                </div>
                             </div>
                             <div class="meta-info">
                                 <span class="report-date">{{ report.date | date:'yyyy-MM-dd' }}</span>
                                 <i class="fas fa-chevron-down toggle-icon"></i>
                             </div>
                         </div>
-
                         <div class="card-body">
+                            <div class="report-details-box">
+                                <p><strong>ข้อความคำถาม:</strong></p>
+                                <p style="margin-top: 8px;">{{ report.question_descriptions
+ || 'ไม่มีรายละเอียดเพิ่มเติมจากผู้รายงาน' }}</p>
+                            </div>
                             <hr class="card-divider">
                             <div class="card-actions">
-                                <button class="btn-action-outline"
-                                    (click)="linkToQuestionDetails(report.pid)">ไปยังคำถาม</button>
-
+                                <button class="btn-action-outline" (click)="linkToQuestionDetails(report.pid)">ไปยังคำถาม</button>
                             </div>
                         </div>
                     </div>
@@ -103,28 +167,32 @@
                         <p>ไม่มีการรายงานโพสต์ถามตอบในขณะนี้</p>
                     </div>
                 </ng-container>
-                <ng-container *ngIf="selected === 'comment'">
-                    <div class="reports-card" *ngFor="let report of reportsComment" [class.active]="report.isExpanded"
-                        [class.unread]="!report.isRead" [class.read]="report.isRead">
 
+                <ng-container *ngIf="selected === 'comment'">
+                    <div class="reports-card" *ngFor="let report of reportsComments" [class.active]="report.isExpanded" >
                         <div class="card-header" (click)="report.isExpanded = !report.isExpanded">
                             <div class="title-wrapper">
-
-                                <span class="report-title">
-                                    <strong>{{ report.reporter_name }}</strong> ได้รายงานคอมเมนต์
-                                </span>
+                                <img class="user-avatar" [src]="report.reporter_profile || 'https://ui-avatars.com/api/?name=' + report.reporter_name + '&background=random&color=fff'" alt="Profile">
+                                <div class="text-wrapper">
+                                    <span class="report-title">
+                                        <strong>{{ report.reporter_name }}</strong> ได้รายงานคอมเมนต์ของ <strong>{{ report.reported_name }}</strong>
+                                    </span>
+                                  
+                                </div>
                             </div>
                             <div class="meta-info">
                                 <span class="report-date">{{ report.date | date:'yyyy-MM-dd' }}</span>
                                 <i class="fas fa-chevron-down toggle-icon"></i>
                             </div>
                         </div>
-
                         <div class="card-body">
+                            <div class="report-details-box">
+                                <p><strong>ข้อความคอมเมนต์:</strong></p>
+                                <p style="margin-top: 8px;">{{ report.comment_descriptions || 'ไม่มีรายละเอียดเพิ่มเติมจากผู้รายงาน' }}</p>
+                            </div>
                             <hr class="card-divider">
                             <div class="card-actions">
-                                <button class="btn-action-outline"
-                                    (click)="linkToPost(report.type, report.ref_id)">ดูคอมเมนต์</button>
+                                <button class="btn-action-outline" (click)="linkToPost(report.type, report.ref_id)">ดูคอมเมนต์</button>
                             </div>
                         </div>
                     </div>
@@ -133,7 +201,6 @@
                         <p>ไม่มีการรายงานคอมเมนต์ในขณะนี้</p>
                     </div>
                 </ng-container>
-
 
             </div>
         </main>

@@ -21,7 +21,7 @@ export class EditQuestionComponent {
 
   question: any[] = [];
   originalText: string = '';
-
+userID:any;
   constructor(private http: HttpClient, private constants: Constants, private router: Router, private authService: AuthService) { }
 
   ngOnInit() {
@@ -29,6 +29,11 @@ export class EditQuestionComponent {
     this.questionID = ID;
 
     this.getDetailQuestion();
+    this.checkUser();
+  }
+    checkUser() {
+    const uid = this.authService.getUser().uid;
+    this.userID = uid;
   }
   getDetailQuestion() {
     this.http.get<any>(`${this.constants.API}/review/data/question/${this.questionID}`)
@@ -61,22 +66,27 @@ export class EditQuestionComponent {
       return;
     }
     const newData = {
+      uid: this.userID,
       questionID: this.questionID,
       descriptions: this.questionText
     };
-
-    this.http.put<any>(`${this.constants.API}/update/question`, newData)
-      .subscribe(res => {
-        if (res.status === true) {
-          this.showSuccess(res.message || 'แก้ไขคำถามสำเร็จ').then(() => {
-            history.back();
-          });
-        } else {
-          this.showError(res.message || 'แก้ไขคำถามไม่สำเร็จโปรดลองอีกครั้ง');
-          return;
-        }
-
-      });
+    console.log(newData);
+    
+this.http.put<any>(`${this.constants.API}/update/question`, newData)
+  .subscribe({
+    next: (res) => {
+      if (res.status === true) {
+        this.showSuccess(res.message || 'แก้ไขคำถามสำเร็จ').then(() => {
+          history.back();
+        });
+      } else {
+        this.showError(res.message || 'แก้ไขคำถามไม่สำเร็จโปรดลองอีกครั้ง');
+      }
+    },
+    error: (err) => {
+      this.showError(err.error?.message || 'เกิดข้อผิดพลาดโปรดลองอีกครั้ง');
+    }
+  });
 
 
   }

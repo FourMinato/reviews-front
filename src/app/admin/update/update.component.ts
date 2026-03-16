@@ -145,7 +145,11 @@ export class UpdateComponent {
                   history.back();
                 });
               }
-            }
+            },
+    // ต้องเพิ่ม error handler
+    error: (err) => {
+      this.showError(err.error?.message || 'มีรีวิวอยู่ในรายวิชาขณะนี้');
+    }
           });
       }
     });

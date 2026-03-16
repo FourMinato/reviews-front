@@ -38,38 +38,35 @@ export class DetailsComponent {
       this.getAllSubjects();
       return;
     }
-    
-    // 1. Try search by subcode first (if it looks like a subcode)
     const isNumeric = /^\d+$/.test(subcode);
-    if (subcode.length === 7 && isNumeric) {
-      this.http.get<any>(`${this.constants.API}/category/all/subject-to-edit/${subcode}`)
-        .subscribe({
-          next: (res) => {
-            if (res.status && res.data && res.data.length > 0) {
-              this.subjectsList = res.data;
-            } else {
-              this.searchByKeyword(subcode);
-            }
-          },
-          error: () => this.searchByKeyword(subcode)
-        });
-    } else {
-      this.searchByKeyword(subcode);
+    if (subcode.length !== 7) {
+      Swal.fire({
+        html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">รหัสวิชาต้องมี 7 หลัก</div>',
+        icon: 'error',
+        confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
+        confirmButtonColor: '#000000',
+        color: '#000000'
+      });
+      return;
     }
-  }
-
-  searchByKeyword(keyword: string) {
-    this.http.get<any>(`${this.constants.API}/category/all/subject-to-edit`).subscribe({
-      next: (res) => {
-        if (res.status && res.data) {
-          const lowerKeyword = keyword.toLowerCase();
-          this.subjectsList = res.data.filter((item: any) => 
-            (item.subcode && item.subcode.toLowerCase().includes(lowerKeyword)) ||
-            (item.name && item.name.toLowerCase().includes(lowerKeyword))
-          );
-        }
-      }
-    });
+    if (!isNumeric) {
+      Swal.fire({
+        html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">รหัสวิชาประกอบด้วยตัวเลขเท่านั้น</div>',
+        icon: 'error',
+        confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
+        confirmButtonColor: '#000000',
+        color: '#000000'
+      });
+      return;
+    }
+    this.http.get<any>(`${this.constants.API}/category/all/subject-to-edit/${subcode}`)
+      .subscribe({
+        next: (res) => {
+          if (res.status) {
+            this.subjectsList = res.data;
+          }
+        },
+      });
   }
 
   back() {

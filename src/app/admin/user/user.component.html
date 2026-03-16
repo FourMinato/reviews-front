@@ -51,19 +51,28 @@
                 </div>
 
                 <div class="user-role">
-                    <span class="badge" [ngClass]="user.role === 'Admin' ? 'badge-admin' : 'badge-user'">
+                    <span class="badge" [ngClass]="{
+    'badge-admin': user.role === 'Admin',
+    'badge-user': user.role === 'User',
+    'badge-suspended': user.role === 'Suspended'
+  }">
                         {{ user.role }}
                     </span>
                 </div>
 
-                <div class="user-actions">
-                    <button class="action-btn edit" title="แก้ไข" (click)="editUser(user.uid)">
-                        <i class="fas fa-pen"></i>
-                    </button>
-                    <button class="action-btn delete" title="ลบ" (click)="deleteUser(user.uid)">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
+               <div class="user-actions">
+  <button class="action-btn edit" title="แก้ไข" (click)="editUser(user.uid)">
+    <i class="fas fa-pen"></i>
+  </button>
+  <button class="action-btn delete" 
+    [title]="user.role === 'Suspended' ? 'เปิดใช้งาน' : 'ระงับ'" 
+    (click)="suspendUser(user.uid, user.role)">
+    <i class="fas" [ngClass]="user.role === 'Suspended' ? 'fa-eye' : 'fa-eye-slash'"></i>
+  </button>
+  <button class="action-btn delete" title="ลบ" (click)="deleteUser(user.uid)">
+    <i class="fas fa-trash"></i>
+  </button>
+</div>
             </div>
         </main>
     </div>

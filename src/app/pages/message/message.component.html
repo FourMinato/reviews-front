@@ -53,7 +53,11 @@
                     <div class="card-body">
                         <hr class="card-divider">
                         <div class="card-actions">
-                            <button class="btn-action-black" (click)="linkToPost(message.ref_type, message.ref_id)">ไปยังโพสต์</button>
+                           <button class="btn-action-black" 
+  *ngIf="message.ref_type && message.ref_id" 
+  (click)="linkToPost(message.ref_type, message.ref_id)">
+  ไปยังโพสต์
+</button>
                             <button class="btn-action-red" (click)="deleteMessage(message.id)">ลบข้อความ</button>
                         </div>
                     </div>

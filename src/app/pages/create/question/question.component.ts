@@ -65,25 +65,29 @@ export class QuestionComponent {
       descriptions: this.questionText,
     }
 
-    this.http.post<ApiResponse<any[]>>(`${this.constants.API}/create/question`, senderData)
-      .subscribe(res => {
-        if (res.status === true) {
-          Swal.fire({
-            html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">โพสต์ตั้งคำถามสำเร็จ</div>',
-            icon: 'success',
-            confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
-            confirmButtonColor: '#28D16F',
-            color: '#000000'
-          }).then(result => {
-            if (result.isConfirmed) {
-              history.back();
-            }
-          });
-        } else {
-          this.showError(res.message || 'เกิดข้อผิดพลาดโปรดลองอีกครั้ง');
-          return;
-        }
-      });
+this.http.post<ApiResponse<any[]>>(`${this.constants.API}/create/question`, senderData)
+  .subscribe({
+    next: (res) => {
+      if (res.status === true) {
+        Swal.fire({
+          html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">โพสต์ตั้งคำถามสำเร็จ</div>',
+          icon: 'success',
+          confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
+          confirmButtonColor: '#28D16F',
+          color: '#000000'
+        }).then(result => {
+          if (result.isConfirmed) {
+            history.back();
+          }
+        });
+      } else {
+        this.showError(res.message || 'เกิดข้อผิดพลาดโปรดลองอีกครั้ง');
+      }
+    },
+    error: (err) => {
+      this.showError(err.error?.message || 'เกิดข้อผิดพลาดโปรดลองอีกครั้ง');
+    }
+  });
 
   }
   private showError(message: string) {

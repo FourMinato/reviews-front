@@ -136,7 +136,8 @@ export class ReviewAllPostsComponent {
                 }
               },
               error: (error) => {
-                this.showError(error.error?.message || 'กรุณาลองใหม่อีกครั้ง');
+                this.showError(error.error?.message || 'เกิดข้อผิดพลาด');
+                return;
               }
             });
         }
@@ -245,7 +246,7 @@ export class ReviewAllPostsComponent {
           },
           error: (error) => {
             review.is_saved = previousState;
-            this.showError('เกิดข้อผิดพลาด');
+            this.showError(error.error?.message || 'เกิดข้อผิดพลาด');
             return;
           }
         });
@@ -279,7 +280,7 @@ export class ReviewAllPostsComponent {
         error: (error) => {
           review.is_liked = previousLikedState;
           review.like_count = previousLikeCount;
-          this.showError('เกิดข้อผิดพลาด');
+          this.showError(error.error?.message || 'เกิดข้อผิดพลาด');
           return;
         }
       });

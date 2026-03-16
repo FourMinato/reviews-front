@@ -40,7 +40,9 @@
                             <div class="pc-user-info">
                                 <img [src]="item.profile" alt="profile" class="pc-avatar">
                                 <div class="pc-user-text">
-                                    <span class="pc-username">{{ item.name }}</span>
+                                    <span class="pc-username">โพสต์ของ {{ item.name }} <br><span style="color: #ef4444;"> ถูกรายงานทั้งหมด {{item.
+report_count
+}} ครั้ง</span></span>
                                     <span class="pc-date">{{ item.date | date:'yyyy-MM-dd' }}</span>
                                 </div>
                             </div>
@@ -81,7 +83,9 @@
                             <div class="pc-user-info">
                                 <img [src]="item.profile" alt="profile" class="pc-avatar">
                                 <div class="pc-user-text">
-                                    <span class="pc-username">{{ item.name }}</span>
+                                    <span class="pc-username">{{ item.name }} <br><span style="color: #ef4444;"> ถูกรายงานทั้งหมด {{item.
+report_count
+}} ครั้ง</span></span>
                                     <span class="pc-date">{{ item.date | date:'yyyy-MM-dd' }}</span>
                                 </div>
                             </div>

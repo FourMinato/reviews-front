@@ -83,7 +83,7 @@ export class QuestionAllPostsComponent {
           },
           error: (error) => {
             question.is_saved = previousState;
-             this.showError('เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง');
+             this.showError(error.error?.message  ||'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง');
           }
         });
     }

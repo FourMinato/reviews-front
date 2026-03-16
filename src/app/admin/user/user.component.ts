@@ -33,22 +33,22 @@ export class UserComponent {
     }
   }
 
-  getAllUsers() {
-    this.http.get<any>(`${this.constants.API}/admin/get-users`)
-      .subscribe({
-        next: (res) => {
-          if (res.status) {
-            this.allUsersList = res.data.map((user: any) => ({
-              ...user,
-              profile: user.profile ? (user.profile.startsWith('http') ? user.profile : `${this.constants.API}/images/${user.profile}`) : 'https://cdn-icons-png.flaticon.com/512/149/149071.png',
-              role: user.type === 1 ? 'User' : 'Admin'
-            }));
-            this.usersList = [...this.allUsersList];
-          }
-        },
+getAllUsers() {
+  this.http.get<any>(`${this.constants.API}/admin/get-users`)
+    .subscribe({
+      next: (res) => {
+        if (res.status) {
+          this.allUsersList = res.data.map((user: any) => ({
+            ...user,
+            profile: user.profile ? (user.profile.startsWith('http') ? user.profile : `${this.constants.API}/images/${user.profile}`) : 'https://cdn-icons-png.flaticon.com/512/149/149071.png',
+            role: user.type === 1 ? 'User' : user.type === 2 ? 'Suspended' : 'Admin'
+          }));
+          this.usersList = [...this.allUsersList];
+        }
+      },
       error: () => {}
-      });
-  }
+    });
+}
   editUser(userID: number) {
     this.router.navigate(['/admin/user/detail'], {
       state: { userID: userID }
@@ -94,6 +94,42 @@ export class UserComponent {
       }
     });
   }
+  suspendUser(userID: string, role: string) {
+  if (this.isAdmin == false) {
+    this.showError('ขออภัยมีแค่ผู้ดูแลระบบเท่านั้นที่สามารถระงับบัญชีผู้ใช้งานได้');
+    return;
+  }
+
+  const isSuspended = role === 'Suspended';
+  const targetType = isSuspended ? 1 : 2; // 1 = เปิดใช้งาน, 2 = ระงับ
+  const confirmText = isSuspended ? 'ยืนยันการเปิดใช้งานบัญชีนี้?' : 'ยืนยันการระงับบัญชีผู้ใช้นี้?';
+  const confirmColor = isSuspended ? '#28D16F' : '#ff4d4d';
+
+  Swal.fire({
+    html: `<div style="font-size: 1.5rem; font-family: 'Kanit', 'Prompt', 'Mitr', 'Noto Sans Thai', sans-serif;">${confirmText}</div>`,
+    icon: 'warning',
+    confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
+    confirmButtonColor: confirmColor,
+    color: '#000000',
+    showCancelButton: true,
+    cancelButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ยกเลิก</div>',
+    cancelButtonColor: '#000000',
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.http.patch<any>(`${this.constants.API}/admin/toggle-suspend-user/${userID}`, { type: targetType })
+        .subscribe({
+          next: (res) => {
+            if (res.status) {
+              this.showSuccess(res.message);
+              this.getAllUsers();
+            } else {
+              this.showError(res.message || 'เกิดข้อผิดพลาดโปรดลองอีกครั้ง');
+            }
+          }
+        });
+    }
+  });
+}
 
   back() {
     history.back();

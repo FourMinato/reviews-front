@@ -1,4 +1,4 @@
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+﻿import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component } from '@angular/core';
 import Swal from 'sweetalert2';
 import { AuthService } from '../../service/user';
@@ -36,26 +36,18 @@ export class LoginComponent {
   confirmPassword: string = '';
 
   resetToken: string = '';
-  isOtpLoading: boolean = false;
   constructor(private http: HttpClient,
     private authService: AuthService, private router: Router, private constants: Constants) { }
 
-  ngAfterViewInit() {
-    this.waitForGrecaptcha();
-  }
-
-  private waitForGrecaptcha(attempts = 0) {
-    if (typeof grecaptcha !== 'undefined' && grecaptcha.ready) {
-      grecaptcha.ready(() => {
-        this.loadRecaptcha();
-      });
-    } else if (attempts < 10) {
-      setTimeout(() => this.waitForGrecaptcha(attempts + 1), 500);
-    }
-  }
+ngAfterViewInit() {
+  grecaptcha.ready(() => {
+    this.loadRecaptcha();
+  });
+}
   ngOnInit() {
 
   }
+  
 
   login() {
     if (!this.email.trim() || !this.password.trim()) {
@@ -117,7 +109,7 @@ export class LoginComponent {
             next: (response: any) => {
 
               if (!response.success) {
-                this.showError(response.error || 'เข้าสู่ระบบไม่สำเร็จ');
+                this.showError(response.message || 'เข้าสู่ระบบไม่สำเร็จ');
                 return;
               }
 
@@ -143,30 +135,18 @@ export class LoginComponent {
 
 
   loadRecaptcha() {
-    const container = document.getElementById('recaptcha-container');
-    if (container && typeof grecaptcha !== 'undefined') {
-      try {
-        // Clear previous instances safely if needed, but grecaptcha.render handles this 
-        // better if we don't manually mess with innerHTML unless necessary.
-        // If we must clear: container.innerHTML = '';
-        
+    setTimeout(() => {
+      if (document.getElementById('recaptcha-container')) {
+        document.getElementById('recaptcha-container')!.innerHTML = "";
+
         grecaptcha.render('recaptcha-container', {
           'sitekey': environment.reCaptchaSitekey,
           'callback': (token: any) => {
             this.captchaToken = token;
-          },
-          'expired-callback': () => {
-            this.captchaToken = '';
-          },
-          'error-callback': () => {
-            console.error('reCAPTCHA error occurred');
           }
         });
-      } catch (e) {
-        // If already rendered, we might need to reset instead
-        console.warn('reCAPTCHA render failed or already rendered:', e);
       }
-    }
+    }, 500);
   }
   back() {
     history.back();
@@ -195,7 +175,6 @@ export class LoginComponent {
       this.showError('กรุณากรอกอีเมลของคุณ');
       return;
     }
-    this.isOtpLoading = true;
     this.http.get<any>(`${this.constants.API}/user/checkemail`, {
       params: { email: this.resetEmail }
     })
@@ -207,28 +186,15 @@ export class LoginComponent {
               email: this.resetEmail
             }).subscribe({
               next: () => {
-                this.isOtpLoading = false;
                 this.forgotPasswordStep = 2; // ไปหน้ากรอก OTP
               },
-              error: (err) => {
-                this.isOtpLoading = false;
-                if (err.status === 429) {
-                  this.showError('ส่ง OTP ถี่เกินไป กรุณารอสักครู่แล้วลองใหม่');
-                } else {
-                  this.showError(err.error?.message || 'ไม่สามารถส่ง OTP ได้');
-                }
-              }
+              error: () => this.showError('ไม่สามารถส่ง OTP ได้')
             });
           } else {
-            this.isOtpLoading = false;
             this.showError('อีเมล์นี้ไม่มีในระบบ');
             return;
           }
         },
-        error: (err) => {
-          this.isOtpLoading = false;
-          this.showError(err.error?.message || 'เกิดข้อผิดพลาดในการตรวจสอบอีเมล');
-        }
       });
 
   }

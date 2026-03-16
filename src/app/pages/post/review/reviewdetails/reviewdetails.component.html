@@ -23,7 +23,8 @@
         <main>
             <div class="content" *ngFor="let data of reviews">
                 <div class="post-header">
-                    <h1 class="title">โพสต์ของ {{data.name}}</h1>
+                       <h1 class="title" *ngIf="isHidden === false">โพสต์ของ {{data.name}} </h1>
+                     <h1 class="title" *ngIf="isHidden === true" style="color: #f35c5c;">โพสต์นี้กำลังถูกปิดการมองเห็น</h1>
                     <button class="report-btn" *ngIf="!isOwner && !isAdmin"
                         (click)="reportReview(data.pid)">รายงาน</button>
                     <button class="edit-btn" *ngIf="isOwner" (click)="edtitReview()">แก้ไขรีวิว</button>
