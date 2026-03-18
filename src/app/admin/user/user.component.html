@@ -32,9 +32,11 @@
 
         <div class="tabs-header">
             <button class="tab-btn" [class.active]="currentTab === 'all'" (click)="selectTab('all')">ทั้งหมด</button>
-            <button class="tab-btn" [class.active]="currentTab === 'admin'" (click)="selectTab('admin')">ผู้ดูแลระบบ</button>
+            <button class="tab-btn" [class.active]="currentTab === 'admin'"
+                (click)="selectTab('admin')">ผู้ดูแลระบบ</button>
             <button class="tab-btn" [class.active]="currentTab === 'user'" (click)="selectTab('user')">สมาชิก</button>
-            <button class="tab-btn" [class.active]="currentTab === 'suspended'" (click)="selectTab('suspended')">ถูกระงับ</button>
+            <button class="tab-btn" [class.active]="currentTab === 'suspended'"
+                (click)="selectTab('suspended')">ถูกระงับ</button>
         </div>
 
         <main class="user-list">
@@ -68,19 +70,18 @@
                     </span>
                 </div>
 
-               <div class="user-actions">
-  <button class="action-btn edit" title="แก้ไข" (click)="editUser(user.uid)">
-    <i class="fas fa-pen"></i>
-  </button>
-  <button class="action-btn delete" 
-    [title]="user.role === 'Suspended' ? 'เปิดใช้งาน' : 'ระงับ'" 
-    (click)="suspendUser(user.uid, user.role)">
-    <i class="fas" [ngClass]="user.role === 'Suspended' ? 'fa-eye' : 'fa-eye-slash'"></i>
-  </button>
-  <button class="action-btn delete" title="ลบ" (click)="deleteUser(user.uid)">
-    <i class="fas fa-trash"></i>
-  </button>
-</div>
+                <div class="user-actions">
+                    <button class="action-btn edit" title="แก้ไข" (click)="editUser(user.uid)">
+                        <i class="fas fa-pen"></i>
+                    </button>
+                    <button class="action-btn delete" [title]="user.role === 'Suspended' ? 'เปิดใช้งาน' : 'ระงับ'"
+                        (click)="suspendUser(user.uid, user.role)">
+                        <i class="fas" [ngClass]="user.role === 'Suspended' ? 'fa-eye' : 'fa-eye-slash'"></i>
+                    </button>
+                    <button class="action-btn delete" title="ลบ" (click)="deleteUser(user.uid)">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
             </div>
 
             <div *ngIf="usersList.length === 0" class="empty-state">
