@@ -1,4 +1,4 @@
-﻿import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import Swal from 'sweetalert2';
 import { AuthService } from '../../service/user';
@@ -18,7 +18,7 @@ declare var grecaptcha: any;
 
 @Component({
   selector: 'app-login',
-  imports: [HttpClientModule, FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
@@ -40,9 +40,14 @@ export class LoginComponent {
     private authService: AuthService, private router: Router, private constants: Constants) { }
 
 ngAfterViewInit() {
-  grecaptcha.ready(() => {
-    this.loadRecaptcha();
-  });
+  const checkRecaptcha = setInterval(() => {
+    if (typeof grecaptcha !== 'undefined') {
+      clearInterval(checkRecaptcha);
+      grecaptcha.ready(() => {
+        this.loadRecaptcha();
+      });
+    }
+  }, 100);
 }
   ngOnInit() {
 
@@ -69,19 +74,21 @@ ngAfterViewInit() {
         next: (response) => {
           if (!response.status) {
             this.showError(response.message || 'เข้าสู่ระบบไม่สำเร็จ');
+            this.captchaToken = '';
+            if (typeof grecaptcha !== 'undefined') grecaptcha.reset();
             return;
           }
           this.authService.setUser(response);
           this.showSuccess(response.message || 'เข้าสู่ระบบสำเร็จ')
             .then(() => {
-              grecaptcha.reset();
-              this.loadRecaptcha();
               this.router.navigateByUrl('/');
             });
         },
 
         error: (err) => {
           this.showError(err.error?.message || 'เกิดข้อผิดพลาดจากเซิร์ฟเวอร์');
+          this.captchaToken = '';
+          if (typeof grecaptcha !== 'undefined') grecaptcha.reset();
         }
       });
   }
@@ -110,6 +117,8 @@ ngAfterViewInit() {
 
               if (!response.success) {
                 this.showError(response.message || 'เข้าสู่ระบบไม่สำเร็จ');
+                this.captchaToken = '';
+                if (typeof grecaptcha !== 'undefined') grecaptcha.reset();
                 return;
               }
 
@@ -117,14 +126,14 @@ ngAfterViewInit() {
 
               this.showSuccess(response.message || 'เข้าสู่ระบบสำเร็จ')
                 .then(() => {
-                  grecaptcha.reset();
-                  this.loadRecaptcha();
                   this.router.navigateByUrl('/');
                 });
             },
 
             error: (err) => {
               this.showError(err.error?.message || 'เกิดข้อผิดพลาดจากเซิร์ฟเวอร์');
+              this.captchaToken = '';
+              if (typeof grecaptcha !== 'undefined') grecaptcha.reset();
             }
           });
       }
@@ -143,6 +152,12 @@ ngAfterViewInit() {
           'sitekey': environment.reCaptchaSitekey,
           'callback': (token: any) => {
             this.captchaToken = token;
+          },
+          'expired-callback': () => {
+            this.captchaToken = '';
+          },
+          'error-callback': () => {
+            this.captchaToken = '';
           }
         });
       }

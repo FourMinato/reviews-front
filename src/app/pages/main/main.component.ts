@@ -1,4 +1,4 @@
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, QueryList, ViewChildren, } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -8,7 +8,7 @@ import { AuthService } from '../../service/user';
 import { Constants } from '../../config/constant';
 @Component({
   selector: 'app-main',
-  imports: [HttpClientModule, FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './main.component.html',
   styleUrl: './main.component.scss'
 })
@@ -29,7 +29,7 @@ export class MainComponent {
   }
   checkAdmin() {
     const user = this.authService.getUser();
-    if (user.type === 0) {
+    if (user.type == 1) {
       this.isAdmin = true;
     }
   }
@@ -43,7 +43,8 @@ export class MainComponent {
         },
       });
   }
-    login() {
+
+  login() {
     this.router.navigate(['/login']);
   }
   contact() {
@@ -85,18 +86,28 @@ export class MainComponent {
     });
   }
   search(subcode: string) {
-    const isNumeric = /^\d+$/.test(subcode);
-    if (subcode.length !== 7) {
-       this.showError('รหัสวิชาต้องมี 7 หลัก');
+    if (!subcode || !subcode.trim()) {
       return;
-    } else if (!isNumeric) {
-       this.showError('รหัสวิชาประกอบด้วยตัวเลขเท่านั้น');
-      return;
-    } else {
-      this.router.navigate(['/search'], {
-        state: { subcode: subcode }
-      });
     }
+
+    const isNumeric = /^\d+$/.test(subcode);
+    
+    // ถ้าเป็นตัวเลขล้วน (รหัสวิชา) และยาวเกิน 7 หลัก ให้แจ้งเตือน
+    if (isNumeric && subcode.length > 7) {
+      Swal.fire({
+        html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">รหัสวิชาต้องไม่เกิน 7 หลัก</div>',
+        icon: 'error',
+        confirmButtonText: '<div style="font-size:1.2rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ตกลง</div>',
+        confirmButtonColor: '#000000',
+        color: '#000000'
+      });
+      return;
+    } 
+    
+    // กรณีอื่นๆ (กรอกรหัสไม่ครบ 7 หลัก หรือค้นหาด้วยตัวอักษร/ชื่อวิชา) ให้ค้นหาได้เลย
+    this.router.navigate(['/search'], {
+      state: { subcode: subcode }
+    });
   }
 
   isMenuOpen: boolean = false;
@@ -104,7 +115,7 @@ export class MainComponent {
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;
   }
-    logout() {
+  logout() {
     Swal.fire({
       html: '<div style="font-size: 1.5rem; font-family: \'Kanit\', \'Prompt\', \'Mitr\', \'Noto Sans Thai\', sans-serif;">ยืนยันการออกจากระบบ?</div>',
       icon: 'warning',
@@ -121,24 +132,24 @@ export class MainComponent {
       }
     });
   }
-    private showError(message: string) {
-      Swal.fire({
-        html: `<div style="font-size: 1.5rem; font-family: 'Kanit','Prompt','Mitr','Noto Sans Thai',sans-serif;">${message}</div>`,
-        icon: 'error',
-        confirmButtonText: `<div style="font-size:1.2rem; font-family: 'Kanit','Prompt','Mitr','Noto Sans Thai',sans-serif;">ตกลง</div>`,
-        confirmButtonColor: '#000000',
-        color: '#000000'
-      });
-  
-    }
-  
-    private showSuccess(message: string) {
-      return Swal.fire({
-        html: `<div style="font-size: 1.5rem; font-family: 'Kanit','Prompt','Mitr','Noto Sans Thai',sans-serif;">${message}</div>`,
-        icon: 'success',
-        confirmButtonText: `<div style="font-size:1.2rem; font-family: 'Kanit','Prompt','Mitr','Noto Sans Thai',sans-serif;">ตกลง</div>`,
-        confirmButtonColor: '#28D16F',
-        color: '#000000'
-      });
-    }
+  private showError(message: string) {
+    Swal.fire({
+      html: `<div style="font-size: 1.5rem; font-family: 'Kanit','Prompt','Mitr','Noto Sans Thai',sans-serif;">${message}</div>`,
+      icon: 'error',
+      confirmButtonText: `<div style="font-size:1.2rem; font-family: 'Kanit','Prompt','Mitr','Noto Sans Thai',sans-serif;">ตกลง</div>`,
+      confirmButtonColor: '#000000',
+      color: '#000000'
+    });
+
+  }
+
+  private showSuccess(message: string) {
+    return Swal.fire({
+      html: `<div style="font-size: 1.5rem; font-family: 'Kanit','Prompt','Mitr','Noto Sans Thai',sans-serif;">${message}</div>`,
+      icon: 'success',
+      confirmButtonText: `<div style="font-size:1.2rem; font-family: 'Kanit','Prompt','Mitr','Noto Sans Thai',sans-serif;">ตกลง</div>`,
+      confirmButtonColor: '#28D16F',
+      color: '#000000'
+    });
+  }
 }

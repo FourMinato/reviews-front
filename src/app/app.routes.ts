@@ -25,7 +25,6 @@ import { FavoriteComponent } from './pages/favorite/favorite.component';
 import { MessageComponent } from './pages/message/message.component';
 import { EditQuestionComponent } from './pages/edit/edit-question/edit-question.component';
 import { WatchDetailsComponent } from './admin/watch-details/watch-details.component';
-
 export const routes: Routes = [
     { path: '', component: MainComponent },
     { path: 'login', component: LoginComponent },

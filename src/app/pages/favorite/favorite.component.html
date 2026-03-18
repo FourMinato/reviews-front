@@ -49,23 +49,70 @@
             <div class="list-container">
                 
                 <ng-container *ngIf="currentTab === 'review'">
-                    <div class="item-card" *ngFor="let item of myFavoriteReviews" (click)="linkToDetails(item.pid)">
-                        <div class="card-left">
-                            <span class="subject-code">{{ item.subcode }}</span>
+                    <div class="card-border" *ngFor="let review of myFavoriteReviews" (click)="linkToDetails(review.pid)">
+                        <div class="card-header">
+                            <div class="user-profile">
+                                <div class="avatar-circle">
+                                    <img [src]="review.profile.startsWith('http') ? review.profile : constants.API + '/images/' + review.profile" alt="profile" class="avatar-image">
+                                </div>
+                                <div class="user-info">
+                                    <span class="user-title">รีวิวในรายวิชา {{ review.subcode }}</span>
+                                    <span class="username">{{ review.name }}</span>
+                                    <span class="date">{{ review.date | date:'yyyy-MM-dd' }}</span>
+                                </div>
                             </div>
-                        <div class="card-right">
-                            <span class="save-date">{{ item.date | date:'dd-MM-yyyy' }}</span>
+
+                            <div class="rating-box">
+                                <div class="stars">
+                                    <span *ngFor="let star of [1,2,3,4,5]">
+                                        <i [style.color]="star <= review.rate ? '#FFCE54' : '#ccc'">★</i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-body">
+                            <p>{{ review.descriptions }}</p>
+                        </div>
+
+                        <div class="card-footer">
+                            <button class="action-btn like-btn" [class.liked]="review.is_liked"
+                                [ngStyle]="{
+                                'color': review.is_liked ? 'white' : 'black',
+                                'background-color': review.is_liked ? '#ED5565' : 'white',
+                                'border-color': review.is_liked ? '#ED5565' : 'black'
+                            }">
+                                <i class="fa" [class.fa-heart]="review.is_liked"
+                                    [class.fa-heart-o]="!review.is_liked"></i>
+                                {{ review.is_liked ? 'ถูกใจแล้ว' : 'ถูกใจ' }} {{ review.like_count }}
+                            </button>
+                            <button class="action-btn" (click)="linkToDetails(review.pid)">ความคิดเห็น {{ review.comment_count }}</button>
+                            <button class="action-btn go-to-post" (click)="linkToDetails(review.pid)">ไปยังโพสต์ต้นทาง</button>
                         </div>
                     </div>
                 </ng-container>
 
                 <ng-container *ngIf="currentTab === 'qa'">
-                    <div class="item-card" *ngFor="let item of myFavoriteQuestions" (click)="linkToQuestionDetail(item.id)">
-                        <div class="card-left">
-                            <span class="post-title">โพสต์ของ {{ item.name }}</span>
+                    <div class="card-border" *ngFor="let question of myFavoriteQuestions" (click)="linkToQuestionDetail(question.id)">
+                        <div class="card-header">
+                            <div class="user-profile">
+                                <div class="avatar-circle">
+                                    <img [src]="question.profile.startsWith('http') ? question.profile : constants.API + '/images/' + question.profile" alt="profile" class="avatar-image">
+                                </div>
+                                <div class="user-info">
+                                    <span class="username">{{ question.name }}</span>
+                                    <span class="date">{{ question.date | date:'yyyy-MM-dd' }}</span>
+                                </div>
+                            </div>
                         </div>
-                        <div class="card-right">
-                            <span class="save-date">{{ item.date | date:'dd-MM-yyyy' }}</span>
+
+                        <div class="card-body">
+                            <p>{{ question.descriptions }}</p>
+                        </div>
+
+                        <div class="card-footer">
+                            <button class="action-btn" (click)="linkToQuestionDetail(question.id)">ดูความคิดเห็น {{ question.comment_count }}</button>
+                            <button class="action-btn go-to-post" (click)="linkToQuestionDetail(question.id)">ไปยังโพสต์ต้นทาง</button>
                         </div>
                     </div>
                 </ng-container>

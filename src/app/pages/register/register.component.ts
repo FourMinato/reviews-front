@@ -68,7 +68,7 @@ export class RegisterComponent {
       password: this.password,
       anonymous_name: anonymousName,
       profile: null,
-      type: 1
+      type: 0
     };
 
   this.http.post(`${this.constants.API}/user/register`, userData)
@@ -76,17 +76,19 @@ export class RegisterComponent {
       next: (response: any) => {
         if (response.status === false) {
           this.showError(response.message || 'สมัครสมาชิกไม่สำเร็จ');
+          this.captchaToken = '';
+          if (typeof grecaptcha !== 'undefined') grecaptcha.reset();
           return;
         }
         this.showSuccess(response.message || 'สมัครสมาชิกสำเร็จ')
           .then(() => {
-            grecaptcha.reset();
-            this.loadRecaptcha();
             this.router.navigate(['/login']);
           });
       },
       error: (err) => {
         this.showError(err.error?.message || 'เกิดข้อผิดพลาดจากเซิร์ฟเวอร์');
+        this.captchaToken = '';
+        if (typeof grecaptcha !== 'undefined') grecaptcha.reset();
       }
     });
 }
@@ -121,19 +123,21 @@ export class RegisterComponent {
 
           if (response.status === false) {
             this.showError(response.message || 'สมัครสมาชิกไม่สำเร็จ');
+            this.captchaToken = '';
+            if (typeof grecaptcha !== 'undefined') grecaptcha.reset();
             return;
           }
 
           this.showSuccess(response.message || 'สมัครสมาชิกสำเร็จ')
             .then(() => {
-              grecaptcha.reset();
-              this.loadRecaptcha();
               this.router.navigate(['/login']);
             });
         },
 
         error: (err) => {
           this.showError(err.error?.message || 'เกิดข้อผิดพลาดจากเซิร์ฟเวอร์');
+          this.captchaToken = '';
+          if (typeof grecaptcha !== 'undefined') grecaptcha.reset();
         }
 
       });
@@ -151,6 +155,12 @@ export class RegisterComponent {
           'sitekey': environment.reCaptchaSitekey,
           'callback': (token: any) => {
             this.captchaToken = token;
+          },
+          'expired-callback': () => {
+            this.captchaToken = '';
+          },
+          'error-callback': () => {
+            this.captchaToken = '';
           }
         });
       }

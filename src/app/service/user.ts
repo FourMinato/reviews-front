@@ -35,18 +35,18 @@ export class AuthService {
   // ==========================================
 
   setUser(user: any) {
-    localStorage.setItem(this.userKey, JSON.stringify(user));
+    sessionStorage.setItem(this.userKey, JSON.stringify(user));
   }
 
   getUser() {
-    const data = localStorage.getItem(this.userKey);
+    const data = sessionStorage.getItem(this.userKey);
 
     try {
       if (!data) {
         // ไม่มี user → ให้ default
         return {
           uid: null,
-          type: 1
+          type: 0
         };
       }
 
@@ -54,14 +54,14 @@ export class AuthService {
 
       return {
         uid: parsed?.uid ?? null,
-        type: parsed?.type ?? 1
+        type: Number(parsed?.type || 0)
       };
 
     } catch {
       // ถ้า parse error → ส่ง default
       return {
         uid: null,
-        type: 1
+        type: 0
       };
     }
   }
@@ -72,6 +72,6 @@ export class AuthService {
   }
 
   logout() {
-    localStorage.removeItem(this.userKey);
+    sessionStorage.removeItem(this.userKey);
   }
 }

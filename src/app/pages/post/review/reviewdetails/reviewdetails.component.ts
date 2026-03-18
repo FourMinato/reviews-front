@@ -75,11 +75,15 @@ export class ReviewdetailsComponent {
   }
   checkAdmin() {
     const type = this.authService.getUser().type;
-    if (type == 0) {
+    if (type == 1) {
       this.isAdmin = true;
     }
   }
 getDetailReview() {
+  if (this.isAdmin) {
+    this.getDetailReviewAdmin();
+    return;
+  }
   this.http.get<any>(`${this.constants.API}/detail/review/${this.reviewID}`)
     .subscribe({
       next: (response) => {

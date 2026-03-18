@@ -2,14 +2,14 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Constants } from '../../../config/constant';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../../service/user';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-detail',
-  imports: [CommonModule, FormsModule, HttpClientModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './detail.component.html',
   styleUrl: './detail.component.scss'
 })
@@ -26,7 +26,7 @@ export class DetailComponent {
   }
     checkAdmin() {
     const type = this.authService.getUser().type;
-    if (type == 0) {
+    if (type == 1) {
       this.isAdmin = true;
     }
   }
@@ -38,7 +38,7 @@ export class DetailComponent {
             this.user = {
               ...res.data,
               profile: res.data.profile && res.data.profile.startsWith('http') ? res.data.profile : `${this.constants.API}/images/${res.data.profile}`,
-              role: res.data.type === 1 ? 'User' : 'Admin'
+              role: res.data.type == 1 ? 'Admin' : res.data.type == 2 ? 'Suspended' : 'User'
             };
           }
         }

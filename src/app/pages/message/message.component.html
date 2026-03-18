@@ -16,57 +16,83 @@
         <header>
             <nav>
                 <button class="back-btn" onclick="history.back()">กลับ</button>
-                <div class="logo">All Messages</div>
+                <div class="logo">การแจ้งเตือน</div>
             </nav>
         </header>
 
         <main>
-            
+            <div class="actions-header" *ngIf="messages.length > 0">
+                <div class="select-all-wrapper">
+                    <label class="checkbox-container">
+                        <input type="checkbox" [checked]="isAllSelected" (change)="toggleAllSelection()">
+                        <span class="checkmark"></span>
+                        <span class="label-text">เลือกทั้งหมด</span>
+                    </label>
+                </div>
+                <div class="batch-actions">
+                    <button class="btn-text-blue" (click)="markAllAsRead()">อ่านทั้งหมด</button>
+                    <button class="btn-text-red" [disabled]="selectedMessageIds.size === 0" (click)="deleteSelected()">ลบที่เลือก ({{selectedMessageIds.size}})</button>
+                    <button class="btn-text-red" (click)="deleteAll()">ลบทั้งหมด</button>
+                </div>
+            </div>
 
             <div class="reports-list">
-                
                 <div class="reports-card" 
                      *ngFor="let message of messages" 
-                    [class.active]="message.isExpanded"
                      [class.unread]="!message.is_read"
                      [class.read]="message.is_read"
-                     (click)="message.is_read = true; updateMessageStatus(message.id)">
+                     [class.selected]="message.selected">
                     
-                    <div class="card-header" (click)="message.isExpanded = !message.isExpanded">
-                        <div class="title-wrapper">
-                            <div class="unread-dot" *ngIf="!message.is_read"></div>
-                            
-                            <span class="report-title">
-                                {{ message.title }}
-                                <span class="message-content">{{ message.content }}</span>
-                            </span>
+                    <div class="card-content">
+                        <div class="selection-area">
+                            <label class="checkbox-container">
+                                <input type="checkbox" [checked]="message.selected" (change)="toggleSelection(message)">
+                                <span class="checkmark"></span>
+                            </label>
                         </div>
 
-                        <div class="meta-info">
-                            <span class="report-date">{{ message.date | date:'yyyy-MM-dd' }}</span>
-                            <span class="status-badge">
-                                {{ message.is_read ? 'อ่านแล้ว' : 'ใหม่' }}
-                            </span>
+                        <div class="main-content-area" (click)="message.is_read = true; updateMessageStatus(message.id); message.isExpanded = !message.isExpanded">
+                            <div class="card-header">
+                                <div class="title-wrapper">
+                                    <div class="unread-dot" *ngIf="!message.is_read"></div>
+                                    <span class="report-title">
+                                        {{ message.title }}
+                                    </span>
+                                </div>
+                                <div class="meta-info">
+                                    <span class="report-date">{{ message.date | date:'dd/MM/yyyy' }}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="message-text" [class.expanded]="message.isExpanded">
+                                {{ message.content }}
+                            </div>
                         </div>
                     </div>
 
-                    <div class="card-body">
+                    <div class="card-body" *ngIf="message.isExpanded">
                         <hr class="card-divider">
                         <div class="card-actions">
-                           <button class="btn-action-black" 
-  *ngIf="message.ref_type && message.ref_id" 
-  (click)="linkToPost(message.ref_type, message.ref_id)">
-  ไปยังโพสต์
-</button>
-                            <button class="btn-action-red" (click)="deleteMessage(message.id)">ลบข้อความ</button>
+                            <button class="btn-action-black" 
+                                    *ngIf="message.ref_type && message.ref_id" 
+                                    (click)="linkToPost(message.ref_type, message.ref_id)">
+                                ไปยังโพสต์
+                            </button>
+                            <button class="btn-action-red" (click)="deleteMessage(message.id)">ลบข้อความนี้</button>
                         </div>
                     </div>
                 </div>
-                <div class="empty-state" *ngIf="messages.length === 0">
-            <div class="empty-text">ไม่มีข้อความแจ้งเตือน</div>
-            <div class="empty-subtext">คุณยังไม่ได้รับข้อความหรือการแจ้งเตือนใดๆ ในขณะนี้</div>
-        </div>
 
+                <div class="empty-state" *ngIf="messages.length === 0">
+                    <div class="empty-icon-container">
+                        <svg class="empty-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                        </svg>
+                    </div>
+                    <div class="empty-text">ไม่มีข้อความแจ้งเตือน</div>
+                    <div class="empty-subtext">คุณยังไม่ได้รับข้อความหรือการแจ้งเตือนใดๆ ในขณะนี้</div>
+                </div>
             </div>
         </main>
     </div>

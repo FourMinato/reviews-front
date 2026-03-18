@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../service/user';
@@ -8,7 +8,7 @@ import Swal from 'sweetalert2';
 
 @Component({
     selector: 'app-watch-details',
-    imports: [CommonModule, HttpClientModule],
+    imports: [CommonModule],
     templateUrl: './watch-details.component.html',
     styleUrl: './watch-details.component.scss'
 })
@@ -27,12 +27,12 @@ export class WatchDetailsComponent {
     }
     checkAdmin() {
         const type = this.authService.getUser().type;
-        if (type == 0) {
+        if (type == 1) {
             this.isAdmin = true;
         }
     }
     getQuestions() {
-        this.http.get<any>(`${this.constants.API}/admin/get-questions`)
+        this.http.get<any>(`${this.constants.API}/admin/get-questions-hidden`)
             .subscribe({
                 next: (res) => {
                     if (res.status) {
@@ -47,7 +47,7 @@ export class WatchDetailsComponent {
             });
     }
     getReviews() {
-        this.http.get<any>(`${this.constants.API}/admin/get-review`)
+        this.http.get<any>(`${this.constants.API}/admin/get-review-hidden`)
             .subscribe({
                 next: (res) => {
                     if (res.status) {

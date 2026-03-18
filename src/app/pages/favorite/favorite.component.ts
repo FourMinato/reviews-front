@@ -20,7 +20,7 @@ export class FavoriteComponent {
   userID: string = '';
 
 
-  constructor(private http: HttpClient, private constants: Constants, private router: Router, private authService: AuthService) { }
+  constructor(private http: HttpClient, public constants: Constants, private router: Router, private authService: AuthService) { }
 
 
   ngOnInit(): void {

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../service/user';
@@ -9,7 +9,7 @@ import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-user',
-  imports: [CommonModule, HttpClientModule, FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './user.component.html',
   styleUrl: './user.component.scss'
 })
@@ -19,6 +19,7 @@ export class UserComponent {
   usersList: any[] = [];
   userName: string = '';
   isAdmin: boolean = false;
+  currentTab: string = 'all';
 
   constructor(private router: Router, private http: HttpClient, private authService: AuthService, private constants: Constants) { }
 
@@ -28,7 +29,7 @@ export class UserComponent {
   }
   checkAdmin() {
     const type = this.authService.getUser().type;
-    if (type == 0) {
+    if (type == 1) {
       this.isAdmin = true;
     }
   }
@@ -41,9 +42,9 @@ getAllUsers() {
           this.allUsersList = res.data.map((user: any) => ({
             ...user,
             profile: user.profile ? (user.profile.startsWith('http') ? user.profile : `${this.constants.API}/images/${user.profile}`) : 'https://cdn-icons-png.flaticon.com/512/149/149071.png',
-            role: user.type === 1 ? 'User' : user.type === 2 ? 'Suspended' : 'Admin'
+            role: user.type == 1 ? 'Admin' : user.type == 2 ? 'Suspended' : 'User'
           }));
-          this.usersList = [...this.allUsersList];
+          this.applyFilter();
         }
       },
       error: () => {}
@@ -54,14 +55,38 @@ getAllUsers() {
       state: { userID: userID }
     });
   }
-  searchUsers(keyword: string) {
-    if (!keyword.trim()) {
-      this.usersList = [...this.allUsersList];
-      return;
+  selectTab(tab: string) {
+    this.currentTab = tab;
+    this.applyFilter();
+  }
+
+  applyFilter() {
+    let filtered = [...this.allUsersList];
+
+    // Filter by Tab
+    if (this.currentTab === 'admin') {
+      filtered = filtered.filter(u => u.type == 1);
+    } else if (this.currentTab === 'user') {
+      filtered = filtered.filter(u => u.type == 0);
+    } else if (this.currentTab === 'suspended') {
+      filtered = filtered.filter(u => u.type == 2);
     }
-    this.usersList = this.allUsersList.filter(user =>
-      user.name.toLowerCase().includes(keyword.toLowerCase())
-    );
+
+    // Filter by Search Keyword
+    if (this.userName.trim()) {
+      const keyword = this.userName.toLowerCase();
+      filtered = filtered.filter(user =>
+        user.name.toLowerCase().includes(keyword) ||
+        user.email.toLowerCase().includes(keyword)
+      );
+    }
+
+    this.usersList = filtered;
+  }
+
+  searchUsers(keyword: string) {
+    this.userName = keyword;
+    this.applyFilter();
   }
   deleteUser(userID: string) {
     if (this.isAdmin == false) {
@@ -101,7 +126,7 @@ getAllUsers() {
   }
 
   const isSuspended = role === 'Suspended';
-  const targetType = isSuspended ? 1 : 2; // 1 = เปิดใช้งาน, 2 = ระงับ
+  const targetType = isSuspended ? 0 : 2; // 0 = เปิดใช้งานกลับเป็น User, 2 = ระงับบัญชี (Soft delete)
   const confirmText = isSuspended ? 'ยืนยันการเปิดใช้งานบัญชีนี้?' : 'ยืนยันการระงับบัญชีผู้ใช้นี้?';
   const confirmColor = isSuspended ? '#28D16F' : '#ff4d4d';
 

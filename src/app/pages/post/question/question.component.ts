@@ -36,7 +36,7 @@ export class QuestionAllPostsComponent {
   }
   checkAdmin() {
     const user = this.authService.getUser();
-    if (user.type === 0) {
+    if (user.type == 1) {
       this.isAdmin = true;
     }
   }

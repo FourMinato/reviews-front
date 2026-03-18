@@ -115,7 +115,7 @@
                                     [class.fa-heart-o]="!review.is_liked"></i>
                                 {{ review.is_liked ? 'ถูกใจแล้ว' : 'ถูกใจ' }} {{ review.like_count }}
                             </button>
-                            <button class="action-btn" (click)="linkToDetails(review.pid)">ความคิดเห็น</button>
+                            <button class="action-btn" (click)="linkToDetails(review.pid)">ความคิดเห็น {{ review.comment_count }}</button>
                             <button class="action-btn" (click)="saveReviewToFavorites(review.pid)" [ngStyle]="{
           'background-color': review.is_saved ? '#50C878' : 'white',
           'color': review.is_saved ? 'white' : 'black',

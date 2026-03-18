@@ -52,7 +52,7 @@ export class ReviewAllPostsComponent {
   }
   checkAdmin() {
     const type = this.authService.getUser().type;
-    if (type == 0) {
+    if (type == 1) {
       this.isAdmin = true;
     }
   }

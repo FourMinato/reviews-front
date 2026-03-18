@@ -88,7 +88,7 @@
 
                     <div class="card-footer">
 
-                        <button class="action-btn" (click)="linkToQuestionDetail(question.id)">ดูความคิดเห็น</button>
+                        <button class="action-btn" (click)="linkToQuestionDetail(question.id)">ดูความคิดเห็น {{ question.comment_count }}</button>
                         <button class="action-btn" (click)="saveToFavorites(question.id)" [ngStyle]="{
                                     'background-color': question.is_saved ? '#50C878' : 'white',
                                     'color':            question.is_saved ? 'white' : '#333',

@@ -29,9 +29,9 @@
                     </div>
                     <h2>ติดต่อผ่านอีเมล</h2>
                     <p>หากคุณพบปัญหาในการใช้งาน มีข้อสงสัย หรือต้องการเสนอแนะ สามารถส่งอีเมลหาทีมงานของเราได้</p>
-                    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=nightnicec@gmail.com&su=ติดต่อสอบถาม/แจ้งปัญหาการใช้งาน" target="_blank" class="email-button">
-                        เขียนอีเมลหาเรา
-                    </a>
+                    <button (click)="toggleEmailForm()" class="email-button">
+                        {{ showEmailForm ? 'ยกเลิกการเขียน' : 'เขียนอีเมลหาเรา' }}
+                    </button>
                 </div>
 
                 <div class="contact-card">
@@ -58,6 +58,36 @@
                     <a href="https://www.facebook.com/kumphalak.khansinthi" target="_blank" class="fb-button">
                         ติดต่อหาแอดมิน
                     </a>
+                </div>
+            </div>
+
+            <div class="modal-overlay" *ngIf="showEmailForm" (click)="toggleEmailForm()">
+                <div class="email-form-container" (click)="$event.stopPropagation()">
+                    <div class="form-card">
+                        <button class="close-modal" (click)="toggleEmailForm()">&times;</button>
+                        <h2>แจ้งเรื่องติดต่อสอบถาม</h2>
+                        <div class="form-group">
+                            <label>ชื่อของคุณ</label>
+                            <input type="text" [(ngModel)]="contactForm.name" placeholder="ระบุชื่อ-นามสกุล">
+                        </div>
+                        <div class="form-group">
+                            <label>อีเมลติดต่อกลับ</label>
+                            <input type="email" [(ngModel)]="contactForm.email" placeholder="example@email.com">
+                        </div>
+                        <div class="form-group">
+                            <label>หัวข้อติดต่อ</label>
+                            <input type="text" [(ngModel)]="contactForm.subject" placeholder="ระบุหัวข้อที่ต้องการติดต่อ">
+                        </div>
+                        <div class="form-group">
+                            <label>ข้อความ/รายละเอียด</label>
+                            <textarea [(ngModel)]="contactForm.message" rows="5" placeholder="กรุณาระบุรายละเอียดที่ต้องการแจ้ง..."></textarea>
+                        </div>
+                        <button class="submit-btn" (click)="sendEmail()" [disabled]="isLoading">
+                            <i class="fas fa-paper-plane" *ngIf="!isLoading"></i>
+                            <i class="fas fa-circle-notch fa-spin" *ngIf="isLoading"></i>
+                            {{ isLoading ? 'กำลังส่ง...' : 'ส่งข้อมูล' }}
+                        </button>
+                    </div>
                 </div>
             </div>
         </main>

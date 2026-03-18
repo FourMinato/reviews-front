@@ -22,15 +22,15 @@ export class OtherComponent {
   isLoggedIn: boolean = false;
   myUID: string = '';
   isOwnProfile: boolean = false;
-  constructor(private router: Router, private http: HttpClient, private constants: Constants, private authService: AuthService) { }
+  constructor(public router: Router, private http: HttpClient, public constants: Constants, private authService: AuthService) { }
   ngOnInit() {
     const ID = history.state.userID || '';
     this.userID = ID;
+    this.checkLogin();
+    this.checkUser();
     this.getUser();
     this.getReview();
     this.getQuestion();
-    this.checkLogin();
-    this.checkUser();
   }
   checkLogin() {
     this.isLoggedIn = this.authService.isLoggedIn();
@@ -55,7 +55,7 @@ export class OtherComponent {
       });
   }
   getReview() {
-    this.http.get<any>(`${this.constants.API}/user/getuser/review/${this.userID}`)
+    this.http.get<any>(`${this.constants.API}/user/getuser/review/${this.userID}/${this.myUID}`)
       .subscribe(res => {
         if (res.status === true) {
           this.reviews = res.data
@@ -63,7 +63,7 @@ export class OtherComponent {
       });
   }
   getQuestion() {
-    this.http.get<any>(`${this.constants.API}/user/getuser/question/${this.userID}`)
+    this.http.get<any>(`${this.constants.API}/user/getuser/question/${this.userID}/${this.myUID}`)
       .subscribe(res => {
         if (res.status === true) {
           this.questions = res.data

@@ -122,9 +122,52 @@
                 </div>
 
                 <div class="tab-pane active" *ngIf="currentTab === 'reviews'">
-                    <div class="list-item" *ngFor="let item of myReviews" (click)="linkToDetails(item.pid)">
-                        <span class="item-code">{{ item.subcode }}</span>
-                        <span class="item-date">{{ item.date | date:'yyyy-MM-dd' }}</span>
+                    <div class="card-border" *ngFor="let review of myReviews" (click)="linkToDetails(review.pid)">
+                        <div class="card-header">
+                            <div class="user-profile">
+                                <div class="avatar-circle">
+                                    <img [src]="review.profile.startsWith('http') ? review.profile : constants.API + '/images/' + review.profile" alt="profile" class="avatar-image">
+                                </div>
+                                <div class="user-info">
+                                    <span class="user-title">รีวิวในรายวิชา {{ review.subcode }}</span>
+                                    <span class="username">{{ review.name }}</span>
+                                    <span class="date">{{ review.date | date:'yyyy-MM-dd' }}</span>
+                                </div>
+                            </div>
+
+                            <div class="rating-box">
+                                <div class="stars">
+                                    <span *ngFor="let star of [1,2,3,4,5]">
+                                        <i [style.color]="star <= review.rate ? '#FFCE54' : '#ccc'">★</i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-body">
+                            <p>{{ review.descriptions }}</p>
+                        </div>
+
+                        <div class="card-footer">
+                            <button class="action-btn like-btn" [class.liked]="review.is_liked"
+                                [ngStyle]="{
+                                'color': review.is_liked ? 'white' : 'black',
+                                'background-color': review.is_liked ? '#ED5565' : 'white',
+                                'border-color': review.is_liked ? '#ED5565' : 'black'
+                            }">
+                                <i class="fa" [class.fa-heart]="review.is_liked"
+                                    [class.fa-heart-o]="!review.is_liked"></i>
+                                {{ review.is_liked ? 'ถูกใจแล้ว' : 'ถูกใจ' }} {{ review.like_count }}
+                            </button>
+                            <button class="action-btn" (click)="linkToDetails(review.pid)">ความคิดเห็น {{ review.comment_count }}</button>
+                            <button class="action-btn" [ngStyle]="{
+                                'background-color': review.is_saved ? '#50C878' : 'white',
+                                'color': review.is_saved ? 'white' : 'black',
+                                'border-color': review.is_saved ? '#50C878' : 'black'
+                            }">
+                                {{ review.is_saved ? 'บันทึกแล้ว' : 'บันทึกโพสต์' }}
+                            </button>
+                        </div>
                     </div>
                     <div *ngIf="myReviews.length === 0" class="empty-state">
                         คุณยังไม่มีประวัติการรีวิว
@@ -132,9 +175,33 @@
                 </div>
 
                 <div class="tab-pane active" *ngIf="currentTab === 'questions'">
-                    <div class="list-item" *ngFor="let item of myQuestions" (click)="linkToQuestionDetail(item.id)">
-                        <span class="item-code">โพสต์ตั้งคำถามเมื่อ {{ item.date| date:'yyyy-MM-dd' }}</span>
+                    <div class="card-border" *ngFor="let question of myQuestions" (click)="linkToQuestionDetail(question.id)">
+                        <div class="card-header">
+                            <div class="user-profile">
+                                <div class="avatar-circle">
+                                    <img [src]="question.profile.startsWith('http') ? question.profile : constants.API + '/images/' + question.profile" alt="profile" class="avatar-image">
+                                </div>
+                                <div class="user-info">
+                                    <span class="username">{{ question.name }}</span>
+                                    <span class="date">{{ question.date | date:'yyyy-MM-dd' }}</span>
+                                </div>
+                            </div>
+                        </div>
 
+                        <div class="card-body">
+                            <p>{{ question.descriptions }}</p>
+                        </div>
+
+                        <div class="card-footer">
+                            <button class="action-btn" (click)="linkToQuestionDetail(question.id)">ดูความคิดเห็น {{ question.comment_count }}</button>
+                            <button class="action-btn" [ngStyle]="{
+                                'background-color': question.is_saved ? '#50C878' : 'white',
+                                'color':            question.is_saved ? 'white' : '#333',
+                                'border-color':     question.is_saved ? '#50C878' : '#aaa'
+                            }">
+                                {{ question.is_saved ? 'บันทึกแล้ว' : 'บันทึกโพสต์' }}
+                            </button>
+                        </div>
                     </div>
                     <div *ngIf="myQuestions.length === 0" class="empty-state">
                         คุณยังไม่มีประวัติการตั้งคำถาม

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -10,7 +10,7 @@ import { AuthService } from '../../service/user';
 
 @Component({
   selector: 'app-create',
-  imports: [HttpClientModule, CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './create.component.html',
   styleUrl: './create.component.scss'
 })
@@ -28,7 +28,7 @@ export class CreateComponent {
   }
   checkAdmin() {
     const type = this.authService.getUser().type;
-    if (type == 0) {
+    if (type == 1) {
       this.isAdmin = true;
     }
   }

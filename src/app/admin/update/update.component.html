@@ -42,10 +42,10 @@
                 </div>
 
                 <div class="input-group">
-                    <label>การเปิดการมองเห็น (1 คือกำลังเปิดการมองเห็น)</label>
+                    <label>การเปิดการมองเห็น</label>
                     <select [(ngModel)]="subjectData.open">
-                        <option value="0" disabled>การเปิดการมองเห็น</option>
-                        <option *ngFor="let vis of visibility" [value]="vis">{{ vis }}</option>
+                        <option value="" disabled>การเปิดการมองเห็น</option>
+                        <option *ngFor="let vis of visibility" [value]="vis.value">{{ vis.label }}</option>
                     </select>
                 </div>
 

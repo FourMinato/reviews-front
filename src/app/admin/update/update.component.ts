@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -10,7 +10,7 @@ import { checkProfanity } from '../../../words/wordValidator';
 
 @Component({
   selector: 'app-update',
-  imports: [FormsModule, CommonModule, HttpClientModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './update.component.html',
   styleUrl: './update.component.scss'
 })
@@ -31,7 +31,7 @@ export class UpdateComponent {
   }
   checkAdmin() {
     const type = this.authService.getUser().type;
-    if (type == 0) {
+    if (type == 1) {
       this.isAdmin = true;
     }
   }
@@ -40,7 +40,10 @@ export class UpdateComponent {
   }
 
   categories = [1, 2, 3, 4, 5];
-  visibility = [0, 1];
+  visibility = [
+    { value: 0, label: 'ปิดรายวิชา' },
+    { value: 1, label: 'เปิดรายวิชา' }
+  ];
 
   subjectData = {
     subid: '',
@@ -144,12 +147,14 @@ export class UpdateComponent {
                 }).then(() => {
                   history.back();
                 });
+              } else {
+                this.showError(response.message || 'ไม่สามารถลบรายวิชาได้');
               }
             },
-    // ต้องเพิ่ม error handler
-    error: (err) => {
-      this.showError(err.error?.message || 'มีรีวิวอยู่ในรายวิชาขณะนี้');
-    }
+            error: (err) => {
+              const errMsg = err?.error?.message || err?.message || 'ไม่สามารถลบรายวิชาได้ (อาจมีผู้ใช้หรือรีวิวเชื่อมโยงอยู่)';
+              this.showError(errMsg);
+            }
           });
       }
     });

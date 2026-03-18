@@ -72,7 +72,7 @@ export class PostdetailsComponent {
   }
   checkAdmin() {
     const type = this.authService.getUser().type;
-    if (type == 0) {
+    if (type == 1) {
       this.isAdmin = true;
     }
   }
@@ -164,7 +164,14 @@ export class PostdetailsComponent {
     }
 
 
-  } getDetailQuestion() {
+  }
+
+  getDetailQuestion() {
+    if (this.isAdmin) {
+      this.getDetailQuestionAdmin();
+      return;
+    }
+
     this.http.get<any>(`${this.constants.API}/detail/question/${this.questionID}`)
       .subscribe({
         next: (res) => {
