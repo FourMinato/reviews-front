@@ -184,12 +184,15 @@ ngAfterViewInit() {
     this.confirmPassword = '';
   }
 
-  // ลอจิกการกดปุ่มต่างๆ ในแต่ละ Step
+  isLoadingOtp: boolean = false;
+
   requestOtp() {
     if (!this.resetEmail) {
       this.showError('กรุณากรอกอีเมลของคุณ');
       return;
     }
+    
+    this.isLoadingOtp = true;
     this.http.get<any>(`${this.constants.API}/user/checkemail`, {
       params: { email: this.resetEmail }
     })
@@ -201,17 +204,25 @@ ngAfterViewInit() {
               email: this.resetEmail
             }).subscribe({
               next: () => {
+                this.isLoadingOtp = false;
                 this.forgotPasswordStep = 2; // ไปหน้ากรอก OTP
               },
-              error: () => this.showError('ไม่สามารถส่ง OTP ได้')
+              error: (err) => {
+                this.isLoadingOtp = false;
+                this.showError(err.error?.message || 'ไม่สามารถส่ง OTP ได้');
+              }
             });
           } else {
-            this.showError('อีเมล์นี้ไม่มีในระบบ');
+            this.isLoadingOtp = false;
+            this.showError('อีเมลนี้ไม่มีในระบบ');
             return;
           }
         },
+        error: (err) => {
+          this.isLoadingOtp = false;
+          this.showError('เกิดข้อผิดพลาดในการตรวจสอบอีเมล');
+        }
       });
-
   }
 
   verifyOtp() {
